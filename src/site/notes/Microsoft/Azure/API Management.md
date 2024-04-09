@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/azure/api-management/"}
+{"dg-publish":true,"permalink":"/microsoft/azure/api-management/","tags":["gardenEntry"]}
 ---
 
 
