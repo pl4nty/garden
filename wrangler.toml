@@ -1,3 +1,0 @@
-[build.upload]
-format = "modules"
-main = "./worker.mjs"
