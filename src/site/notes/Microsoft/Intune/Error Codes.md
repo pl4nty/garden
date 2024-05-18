@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/intune/error-codes/","tags":["intune","windows"]}
+{"dg-publish":true,"permalink":"/microsoft/intune/error-codes/"}
 ---
-
 
 Microsoft Intune can manage a wide range of features across multiple operating systems - and when things go wrong, it can produce some pretty obscure error codes. I've pulled together this list of error messages from a few different sources to help with troubleshooting. And if this list doesn't help, try these lookups:
 
