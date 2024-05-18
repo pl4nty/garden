@@ -3,6 +3,7 @@
 ---
 
 ## GitHub Actions
+
 Selfhosted runners like Talos's can mount `buildkitd.toml` in a [service container](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) to enable TCP.
 
 ```yml
@@ -37,9 +38,10 @@ steps:
 	driver: remote
 	endpoint: docker-container://buildkitd
 ```
-
+<br>
 
 ## Installation
+
 Docker provides native packages for ecosystem components like `containerd` and `buildx`, but they lag behind open-source releases significantly. So I use my own install scripts for Windows (GitHub Actions) and RISC-V.
 
 ### Windows
@@ -73,6 +75,7 @@ Docker provides native packages for ecosystem components like `containerd` and `
     driver: remote
     endpoint: npipe:////./pipe/buildkitd
 ```
+<br>
 
 ### RISC-V
 
@@ -91,6 +94,7 @@ curl https://github.com/moby/buildkit/releases/download/v0.13.1/buildkit-v0.13.1
 tar Cxzvf /usr/local buildkit.tar.gz
 mkdir /etc/buildkit # add cert files here
 ```
+<br>
 
 `/usr/local/lib/systemd/system/buildkitd.service`
 ```toml
@@ -106,14 +110,19 @@ WantedBy=multi-user.target
 ```
 
 BuildKit uses 10% of disk by default, so we increase it.
+<br>
 
 ## Development
+
+It's helpful to access a remote builder locally:
 
 ```sh
 docker buildx create --name riscv --bootstrap --use --driver remote --driver-opt cacert=${PWD}/ca.pem,cert=${PWD}/cert.pem,key=${PWD}/key.pem tcp://example.com:1234
 ```
+<br>
 
-## Frontends
+### Frontends
+
 BuildKit supports custom config files (frontends), like the [[Hardware/Talos\|Talos]] `Pkgfile`, based on OCI artefacts. `docker/dockerfile-upstream` for accessing newer features doesn't have a Windows artefact, but we can build one. I did have to disable dynamic linking (remove `-d`) in the script though.
 
 ```sh
