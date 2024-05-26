@@ -9,4 +9,4 @@ It's easy to turn off for specific sites or paths using [Configuration Rules](ht
 
 ![Pasted image 20240526123830.png](/img/user/Uploads/Pasted%20image%2020240526123830.png)
 
-![Pasted image 20240526123754.png](/img/user/Uploads/Pasted%20image%2020240526123754.png)
+![Pasted image 20240526124041.png](/img/user/Uploads/Pasted%20image%2020240526124041.png)
