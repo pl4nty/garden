@@ -3,7 +3,7 @@
 ---
 
 ## Rocket Loader
-Cloudflare's [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) injects a `<script>` into the end of page bodies, which fails to load with certain web security settings and prevents other scripts from loading. I've only seen this happen with [miniflux/v2)](https://github.com/miniflux/v2), where it broke all interactive functionality like buttons.
+Cloudflare's [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) injects a `<script>` into the end of page bodies, which fails to load with certain web security settings and prevents other scripts from loading. I've only seen this happen with [miniflux/v2](https://github.com/miniflux/v2), where it broke all interactive functionality like buttons.
 
 It's easy to turn off for specific sites or paths using [Configuration Rules](https://developers.cloudflare.com/rules/configuration-rules/).
 
