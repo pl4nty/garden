@@ -6,7 +6,7 @@ An HTTP downloader with peer-to-peer and cache server capabilities. It uses a st
 
 There are currently two types of cache servers
 * Standalone: nginx on Azure Edge for Linux on Windows (EFLOW)
-* SCCM Distribution Point: IIS on Windows 
+* SCCM Distribution Point: IIS on Windows
 Both appear to be orchestrated by .NET services, but the standalone one can operate as a single container.
 
 Cache servers are accessed with
@@ -20,7 +20,7 @@ $KeyValue = irm $geo.KeyValue_EndpointFullUri
 $ContentPolicy = irm "$($KeyValue.ContentPolicy_EndpointUri)/content/<contentId>/contentpolicy?altCatalogId=<url>"
 ```
 
-`$KeyValue.Client_RegisteredCallersFilterList` has an interesting list too, maybe `MLModelDownloadJob` is related to Germanium.
+`$KeyValue.Client_RegisteredCallersFilterList` has an interesting list too. `MLModelDownloadJob` is likely related to [[Microsoft/Windows/Core AI Platform\|Core AI Platform]].
 
 ```
 BeginLoadRange.*
@@ -50,3 +50,16 @@ Microsoft Store traffic is cached, and encrypted Intune [[Microsoft/Intune/Win32
 Tenant ID isn't part of the URL, but app ID is. I forget the exact part.
 
 #TODO how is Intune content looked up? can I track it? doesn't seem to work with `altCatalogId`
+
+## PowerShell
+Delivery Optimization has a [win32 API](https://learn.microsoft.com/en-us/windows/win32/api/deliveryoptimization/) used by the winget CLI, which is the only official [public Delivery Optimization client implementation](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/DODownloader.cpp) that I'm aware of. But I want to allow arbitrary endpoints, and their implementation uses C++ so I couldn't just patch their code.
+
+I tried [Vanara.PInvoke.DOSvc](https://www.nuget.org/packages/Vanara.PInvoke.DOSvc/) for PowerShell interop, but its signatures weren't compatible with direct loading. Wrapping in a module didn't work either due to some implementation bugs. These were ikely regressions because there was an old unit test, but I couldn't fix all of them.
+
+After more digging I found [DODownloaderDotNet](https://github.com/shishirb-MSFT/DODownloaderDotNet) by [Shishir Bhat](https://github.com/shishirb-MSFT), which looks like a sample CLI tool in C# for Microsoft IT. It was pretty easy to patch and publish to PowerShell gallery.
+
+```powershell
+Install-Module PSDODownloader
+Get-DORequests
+Invoke-DORequest -Uri http://dl.delivery.mp.microsoft.com/filestreamingservice/files/52fa8751-747d-479d-8f22-e32730cc0eb1 -OutFile download.exe
+```
