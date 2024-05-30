@@ -68,6 +68,7 @@
     {% if settings.dgLinkPreview === true %}
       {%include "components/linkPreview.njk"%}
     {% endif %}
+    {%include "components/giscus.njk"%}
     {% for imp in dynamics.common.footer %}
       {% include imp %}
     {% endfor %}
