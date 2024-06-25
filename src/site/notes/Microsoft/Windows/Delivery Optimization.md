@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/windows/delivery-optimization/","updated":"2024-06-25T14:28:02.210+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/windows/delivery-optimization/","updated":"2024-06-25T14:38:32.270+10:00"}
 ---
 
 An HTTP downloader with peer-to-peer and cache server capabilities. It uses a global control plane with content-based addressing and fallback to URL-based addressing.
@@ -89,6 +89,7 @@ $Swarm = irm "$($Arrays[0].CollectiveArray)join/" -Method POST -Body ($psObject 
 
 ```
 <br>
+
 ## Intune
 Microsoft Store traffic is cached, and encrypted Intune [[Microsoft/Intune/Win32 Apps\|Win32 Apps]] too. They use Azure Storage fronted by a CDN like http://swdd02-mscdn.manage.microsoft.com/6ecd274d-26f9-49e2-b29c-60a001eaa538/2c9f680a-1d14-4b9c-9dde-868f4aa488bd/31e53840-fa0f-474c-870e-5169ce97380b.intunewin.bin
 Tenant ID isn't part of the URL, but app ID is. I forget the exact part.
