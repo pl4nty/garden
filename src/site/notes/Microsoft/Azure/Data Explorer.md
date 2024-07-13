@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/azure/data-explorer/","updated":"2024-07-13T17:09:01.567+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/azure/data-explorer/","updated":"2024-07-13T17:09:40.424+10:00"}
 ---
 
 A columnar append-only database, also known as ADX and codenamed Kusto. Extensive use internally including Aria (Windows telemetry), Defender, Log Analytics/Monitor, and maybe Geneva too. The desktop client is Explorer and web is WebExplorer.
@@ -9,7 +9,7 @@ It uses standard Entra auth so we can proxy with [[Microsoft/Azure/Front Door\|F
 
 This approach also allows request sharding, but JWT parsing isn't supported by Front Door or particularly safe (encrypted tokens in future?) so it'd need a custom hint to route by tenant/user IDs. A custom header would work for first-party clients, but not integrations like Defender/Sentinel/WebExplorer.
 
-Custom middleware would have performance impacts, so I tried a native edge solution with Cloudflare Workers. This routes to different clusters based on the `tenant_ctry` claim. If the client respects redirect response codes, GET requests could be further optimised.
+Custom middleware would have performance impacts, so I tried a native edge solution with Cloudflare Workers. This routes to different clusters based on the `tenant_ctry` claim. If the client respects redirect response codes, GET requests could be further optimised. I've only tested with WebExplorer which uses POSTs for queries.
 
 ```js
 export default {
