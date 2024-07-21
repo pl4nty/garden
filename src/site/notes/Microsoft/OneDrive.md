@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-21T14:56:51.055+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-21T14:58:43.252+10:00"}
 ---
 
 A file sync solution for consumers and commercial, latter is backed by SharePoint.
@@ -107,7 +107,6 @@ MachineId
 
 No symbols on MS Symbol Server, despite Office symbols being available. Code references `D:\dbs\sh\odct\0407_230744\client\onedrive\Product\UX\Exe\obj\amd64\OneDrive.pdb`
 
-`.sympath cache*;srv*<server>;srv*<server>
 
 ```
 https://msdl.microsoft.com/download/symbols
