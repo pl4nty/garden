@@ -22,7 +22,7 @@
         {%endif%}
     {% endmacro %}
     
-    <div x-init="isDesktop = false;" 
+    <div x-init="isDesktop = (window.innerWidth>=1400) ? true: false;" 
             x-on:resize.window="isDesktop = (window.innerWidth>=1400) ? true : false;" 
             x-data="{isDesktop: true, showFilesMobile: false}">
 
