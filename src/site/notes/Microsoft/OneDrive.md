@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-21T14:26:08.124+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-21T14:27:25.927+10:00"}
 ---
 
 A file sync solution for consumers and commercial, latter is backed by SharePoint.
@@ -126,5 +126,5 @@ https://symbols.nuget.org/download/symbols
 ```
 
 
-# PowerShell modules
+## PowerShell modules
 `EnableODIgnoreFolderListFromGPO` was looking like a great solution to avoid syncing PowerShell modules in Documents (https://github.com/PowerShell/PowerShell/issues/15552). But it [didn't actually apply](https://github.com/PowerShell/PowerShell/issues/15552#issuecomment-2067938455), and was [nuked from the docs](https://github.com/MicrosoftDocs/OfficeDocs-SharePoint/commit/e1cb55bd26176f9ce077eaaffc5369352b1fc9ee) in June... As of July, it's still part of `OneDrive.exe`.
