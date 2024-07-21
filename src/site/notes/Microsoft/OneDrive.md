@@ -1,8 +1,9 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-15T22:56:11.190+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/one-drive/","updated":"2024-07-21T14:26:08.124+10:00"}
 ---
 
-Consumer and commercial, latter is based on SharePoint
+A file sync solution for consumers and commercial, latter is backed by SharePoint.
+
 ```
 00007ff6`b7e50000 00007ff6`b817d000   OneDrive   (no symbols)           
     Loaded symbol image file: C:\Users\tom\AppData\Local\Microsoft\OneDrive\OneDrive.exe
