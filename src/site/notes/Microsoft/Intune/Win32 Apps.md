@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/intune/win32-apps/","updated":"2024-08-23T23:05:25.000+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/intune/win32-apps/","updated":"2024-08-23T23:12:20.531+10:00"}
 ---
 
 ## Format
@@ -77,8 +77,9 @@ begin {
   [System.Reflection.Assembly]::LoadWithPartialName("System.Security") | Out-Null
 
   function Unprotect-EncryptedMessage([xml]$Message) {
+    $content = [System.Convert]::FromBase64String($Message.EncryptedMessage.EncryptedContent)
     $envelopedCms = New-Object Security.Cryptography.Pkcs.EnvelopedCms
-    $envelopedCms.Decode([System.Convert]::FromBase64String($Message.EncryptedMessage.EncryptedContent))
+    $envelopedCms.Decode($content)
     $envelopedCms.Decrypt()
     return [System.Text.Encoding]::UTF8.GetString($envelopedCms.ContentInfo.Content)
   }
