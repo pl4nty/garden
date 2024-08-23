@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/intune/win32-apps/","updated":"2024-08-23T20:03:32.324+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/intune/win32-apps/","updated":"2024-08-23T23:05:25.000+10:00"}
 ---
 
 ## Format
@@ -58,10 +58,16 @@ param(
   # GUID of the Win32 app. Can be found by opening the app in the Intune portal, and copying the GUID in the URL eg 00000000-0000-0000-0000-000000000000 from https://intune.microsoft.com/#view/Microsoft_Intune_Apps/SettingsMenu/~/0/appId/00000000-0000-0000-0000-000000000000
   [parameter(ValueFromPipeline, Mandatory)][guid]$ApplicationId,
   # Intune device certificate with a private key. Defaults to the current device's certificate. Not recommended, pulling the key with Mimikatz is much easier said than done
-  [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate
+  [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+  [switch]$IsUSGov,
+  [uri]$Environment = "https://manage.microsoft.com"
 )
 
 begin {
+  if ($IsUSGov) {
+    $Environment = "https://manage.microsoft.us"
+  }
+
   if (!$Certificate) {
     Write-Verbose "Defaulting to device certificate"
     #Requires -RunAsAdministrator
@@ -72,12 +78,14 @@ begin {
 
   function Unprotect-EncryptedMessage([xml]$Message) {
     $envelopedCms = New-Object Security.Cryptography.Pkcs.EnvelopedCms
-    $envelopedCms.Decode([Convert]::FromBase64String($Message.EncryptedMessage.EncryptedContent))
+    $envelopedCms.Decode([System.Convert]::FromBase64String($Message.EncryptedMessage.EncryptedContent))
     $envelopedCms.Decrypt()
     return [System.Text.Encoding]::UTF8.GetString($envelopedCms.ContentInfo.Content)
   }
 }
 process {
+  $discovery = Invoke-RestMethod "$Environment/RestUserAuthLocationService/RestUserAuthLocationService/Certificate/ServiceAddresses" -Certificate $Certificate
+
   $body = @{
     RequestPayload     = @{
       CertificateBlob    = [System.Convert]::ToBase64String($Certificate.RawData)
@@ -93,7 +101,7 @@ process {
     SessionId          = "00000000-0000-0000-0000-000000000000"
   } | ConvertTo-Json
   
-  $uri = "https://fef.msud01.manage.microsoft.com/TrafficGateway/TrafficRoutingService/SideCar/StatelessSideCarGatewayService/SideCarGatewaySessions('00000000-0000-0000-0000-000000000000')%3Fapi-version=1.5"
+  $uri = "$(($discovery.Services | Where-Object ServiceName -eq SideCarGatewayService).Url)/SideCarGatewaySessions('00000000-0000-0000-0000-000000000000')%3Fapi-version=1.5"
   $data = Invoke-RestMethod -Uri $uri -Method Put -Headers @{Prefer = "return-content" } -ContentType "application/json" -Body $body -Certificate $Certificate
   
   $data = $data.ResponsePayload | ConvertFrom-Json
