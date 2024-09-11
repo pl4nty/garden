@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/surface/","updated":"2024-06-09T23:10:00.669+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/surface/","updated":"2024-09-11T23:02:45.854+10:00"}
 ---
 
 ## Hibernate
@@ -28,4 +28,36 @@ $vars = Get-UEFIVariable -All | select *,@{n="Value";e={$_ | Get-UEFIVariable}}
 
 This can be compared against a [DFCI test payload](https://github.com/microsoft/mu_feature_dfci/blob/main/DfciPkg/UnitTests/DfciTests/TestCases/DFCI_AllSettings/Restore.xml).
 
-![Pasted image 20240609195801.png](/img/user/Uploads/Pasted%20image%2020240609195801.png)
+```d2
+manager: MS Settings Manager {
+  SettingProviders {
+	shape: document
+  }
+  MsXmlSupportLib
+}
+MsPermissionProtocol <-> manager <-> MsAuthProtocol
+
+tools: Tools / External {
+  shape: cloud
+}
+req: UEFISettingsRequest Var {
+  shape: oval
+}
+tools -> req -> manager
+
+res: UEFISettingsResult Var {
+  shape: oval
+}
+manager -> res -> tools
+```
+
+## Storage
+Upgraded my Surface Laptop 3 to a [Micron Crucial 2400 1TB](https://www.amazon.com.au/gp/product/B0BWHDVR5R/)
+
+Before:
+![CrystalDiskMark_20240210144851_surface3old.png](/img/user/Uploads/CrystalDiskMark_20240210144851_surface3old.png)
+
+After:
+![CrystalDiskMark_20240908135104.png](/img/user/Uploads/CrystalDiskMark_20240908135104.png)
+
+#TODO cooling upgrade [Fixed Surface Laptop 3 overheating issue : r/Surface (reddit.com)](https://www.reddit.com/r/Surface/comments/pq2bbk/fixed_surface_laptop_3_overheating_issue/)
