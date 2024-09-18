@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/windows/winget/","updated":"2024-09-19T00:50:26.362+10:00"}
+{"dg-publish":true,"permalink":"/microsoft/windows/winget/","updated":"2024-09-19T00:56:08.112+10:00"}
 ---
 
 The Windows Package Manager (winget) uses package metadata from external sources to install Windows apps using traditional packaging technologies.
@@ -25,17 +25,9 @@ The Entra authentication flow is
 3. WAM uses its standard flow, like with other Microsoft apps. It checks its cache for an access token, or a refresh token to retrieve an access token, and if neither are available it prompts the user to login. This flow also handles consent.
 4. If authentication succeeds, winget sends the token to the source in the `Authorization` header, along with a standard REST request like `/manifestSearch`.
 
-```d2
-shape: sequence_diagram
-Client -> Source: /information
-source -> client: resource + scope
-WAM: Windows Account Manager
-client -> WAM: client ID + resource + scope
-WAM -> Entra: login
-Entra -> WAM: token
-WAM -> client: token
-client -> source: request + token
-```
+![Pasted image 20240919005509.png](/img/user/Uploads/Pasted%20image%2020240919005509.png)
+
+
 
 Want to try out authentication? I've implemented a winget source with authentication, custom installer upload, and support for Amazon S3 storage, but it's not ready to share publicly yet. If you're interested, email me at `[my first name]@tplant.com.au`
 
