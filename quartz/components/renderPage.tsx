@@ -235,7 +235,7 @@ export function renderPage(
               <Content {...componentData} />
               <hr />
               <div class="page-footer">
-                {afterBody.map((BodyComponent) => (
+                {slug !== "index" && afterBody.map((BodyComponent) => (
                   <BodyComponent {...componentData} />
                 ))}
               </div>
