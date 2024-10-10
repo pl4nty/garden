@@ -1,0 +1,3 @@
+[submodule "quartz/styles/quartz-themes"]
+	path = quartz/styles/quartz-themes
+	url = https://github.com/saberzero1/quartz-themes.git
