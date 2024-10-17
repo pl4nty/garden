@@ -1,4 +1,14 @@
 @use "./base.scss";
 @use "quartz-themes";
 
-// put your custom CSS here!
+// hide explorer on homepage
+// [data-slug="index"] .explorer {
+//   display: none;
+// }
+
+// right padding on content in tablet view
+.page>#quartz-body .center {
+  margin-left: 0;
+  min-width: 95%;
+  max-width: 95%;
+}

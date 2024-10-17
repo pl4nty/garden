@@ -1,5 +1,5 @@
 ---
-title: home
+title: tplant.com.au
 ---
 
 Hey, I'm Tom and this is my [digital garden](https://maggieappleton.com/garden-history). I hope my notes, ideas, and experiments might help you 😊
