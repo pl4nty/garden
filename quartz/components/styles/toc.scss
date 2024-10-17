@@ -1,9 +1,17 @@
+@use "../../styles/variables.scss" as *;
+
 .toc {
   display: flex;
   flex-direction: column;
+
   &.desktop-only {
-    display: flex;
     max-height: 40%;
+  }
+}
+
+@media all and not ($mobile) {
+  .toc {
+    display: flex;
   }
 }
 
@@ -53,7 +61,7 @@ button#toc {
     visibility: hidden;
   }
 
-  &.collapsed > .overflow::after {
+  &.collapsed>.overflow::after {
     opacity: 0;
   }
 
@@ -61,18 +69,21 @@ button#toc {
     list-style: none;
     margin: 0.5rem 0;
     padding: 0;
-    & > li > a {
+
+    &>li>a {
       color: var(--dark);
       opacity: 0.35;
       transition:
         0.5s ease opacity,
         0.3s ease color;
+
       &.in-view {
         opacity: 0.75;
       }
     }
   }
-  > ul.overflow {
+
+  >ul.overflow {
     max-height: none;
     width: 100%;
   }
