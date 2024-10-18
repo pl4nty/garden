@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/cloud/build-kit/"}
+dg-publish: true
 ---
-
 ## GitHub Actions
 
 Selfhosted runners like Talos's can mount `buildkitd.toml` in a [service container](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) to enable TCP.
@@ -123,7 +122,7 @@ docker buildx create --name riscv --bootstrap --use --driver remote --driver-opt
 
 ### Frontends
 
-BuildKit supports custom config files (frontends), like the [[Hardware/Talos\|Talos]] `Pkgfile`, based on OCI artefacts. `docker/dockerfile-upstream` for accessing newer features doesn't have a Windows artefact, but we can build one. I did have to disable dynamic linking (remove `-d`) in the script though.
+BuildKit supports custom config files (frontends), like the [[Talos|Talos]] `Pkgfile`, based on OCI artefacts. `docker/dockerfile-upstream` for accessing newer features doesn't have a Windows artefact, but we can build one. I did have to disable dynamic linking (remove `-d`) in the script though.
 
 ```sh
 PLATFORMS=windows/amd64 ./frontend/dockerfile/cmd/dockerfile-frontend/hack/release master mainline ghcr.io/pl4nty/dockerfile push
