@@ -17,11 +17,14 @@ export const sharedPageComponents: SharedLayout = {
         category: 'Announcements',
         // from data-category-id
         categoryId: 'DIC_kwDOLr2SEc4Cftp8',
+        reactionsEnabled: false,
       }
     }),
   ],
   footer: Component.Footer({
-    links: {},
+    links: {
+      License: "/license",
+    },
   }),
 }
 

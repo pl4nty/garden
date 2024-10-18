@@ -42,6 +42,15 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
         segments.push(displayedTime)
       }
 
+      segments.push(
+        <a
+          href={`https://github.com/pl4nty/garden/commits/main/${fileData.filePath}`}
+          target="_blank"
+        >
+          history
+        </a>,
+      )
+
       const segmentsElements = segments.map((segment) => <span>{segment}</span>)
 
       return (
