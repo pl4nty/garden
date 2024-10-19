@@ -43,7 +43,7 @@ const config: QuartzConfig = {
           light: "#101010", // very dark gray for background
           lightgray: "#181818", // dark gray for subtle contrast
           gray: "#7a8882", // medium dark gray for standard contrast
-          darkgray: "#B0D69D", // lighter green-gray for text
+          darkgray: "darkgray", // gray to contrast with green links
           dark: "#E0F0E9", // very light green-gray for high contrast elements
           secondary: "#66BB6A", // medium green-gray for links and highlights
           tertiary: "#81C784", // fresh green for success messages and accents
