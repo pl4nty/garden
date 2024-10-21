@@ -105,7 +105,7 @@ if ($FileSource -eq "Host") {
     $DestinationPath = "C:\Users\Public\Downloads\$($SourcePath.Name)"
   }
 
-  Copy-VMFile -VMName $Name -SourcePath $SourcePath -DestinationPath $DestinationPath -CreateFullPath -Credential $Credential
+  Copy-VMFile -VMName $Name -SourcePath $SourcePath -DestinationPath $DestinationPath -CreateFullPath
 }
 else {
   if (-not $DestinationPath) {
