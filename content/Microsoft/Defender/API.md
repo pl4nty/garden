@@ -15,6 +15,7 @@ OAuth 2.0 auth code grant with `response_mode=form_post`
 
 Returns `sccauth` cookie and redirect
 
+
 `GET /v2/advanced-hunting?tid=<tenant ID>` with `sccauth` cookie
 
 Returns page + `XSRF-TOKEN` cookie
