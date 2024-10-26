@@ -14,6 +14,7 @@ OAuth 2.0 auth code grant with `response_mode=form_post`
 * `correlation_id` guid
 
 Returns `sccauth` cookie and redirect
+
 <br>
 
 `GET /v2/advanced-hunting?tid=<tenant ID>` with `sccauth` cookie
