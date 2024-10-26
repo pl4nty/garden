@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/hardware/desktop-pc/","updated":"2024-09-15T11:39:42.178+10:00"}
+dg-publish: true
 ---
-
 Goals
 * 5120x1440 @ 165hz, slightly under 4K pixel count
 * CPU-bound productivity, gaming, some CUDA AI
@@ -17,3 +16,6 @@ https://pcpartpicker.com/user/pl4nty/saved/XtVx99
 
 couldn't get into my old account, maybe it was deleted? https://pcpartpicker.com/user/planty/
 can see a registration email but pw reset fails
+
+Don't buy acertek AIO
+Chips and cheese discord 
