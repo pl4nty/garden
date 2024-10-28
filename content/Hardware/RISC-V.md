@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/hardware/risc-v/","updated":"2024-09-14T21:27:11.417+10:00"}
+dg-publish: true
 ---
-
 ## Talos Bringup
 RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeedio/status/1778612306613829871) are starting to hit the market, so I thought I'd start on Talos support early. I worked in this order:
 
@@ -13,7 +12,7 @@ RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeed
 * pkgs
 * talos
 
-Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I installed [[Cloud/BuildKit\|BuildKit]] on a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) for native builds via GitHub Actions, but performance was still pretty poor. `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs.
+Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I installed [[BuildKit|BuildKit]] on a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) for native builds via GitHub Actions, but performance was still pretty poor. `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs.
 
 These dependencies are also missing RISC-V support:
 - [ ] [Stable Alpine release](https://gitlab.alpinelinux.org/alpine/aports/-/issues/13269), currently using `edge` in bldr
@@ -42,7 +41,7 @@ Resources:
 * https://github.com/chainsx/armbian-riscv-build/
 * https://console.scaleway.com/elastic-metal/servers
 
-#TODO rebase when 1.8 releases, add kernel configs for Lichee Pi serial, build ISO for UEFI
+#TODO rebase when ready to test, add kernel configs for Lichee Pi serial, build ISO for UEFI
 
 
 Boot logs without overlay:
