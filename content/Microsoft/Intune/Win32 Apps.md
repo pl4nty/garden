@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/intune/win32-apps/","updated":"2024-08-23T23:12:20.531+10:00"}
+dg-publish: true
 ---
-
 ## Format
 
 Intune Win32 apps use a proprietary Windows app packaging format, based on a zip file containing
