@@ -2,7 +2,7 @@
 dg-publish: true
 title: tplant.com.au
 ---
-Hey, I'm Tom and this is my [digital garden](https://maggieappleton.com/garden-history). I love (bre|m)aking all sorts of technology, and I hope my notes, ideas, and experiments might help you 😊
+Hey, I'm Tom and this is my [digital garden](https://maggieappleton.com/garden-history). I hope my notes, ideas, and experiments might help you 😊
 
 At the moment, I'm writing about
 
