@@ -21,7 +21,7 @@ export const sharedPageComponents: SharedLayout = {
       }
     }),
   ],
-  footer: Component.Footer({f
+  footer: Component.Footer({
     links: {
       License: "/License",
     },
