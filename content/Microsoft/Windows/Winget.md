@@ -77,3 +77,7 @@ Build order
 * AppInstallerCLIPackage
 * AppInstallerCLITests
 * `AppInstallerCLITests\Run-TestsInPackage.ps1 -Args "~[pips]" -BuildRoot $PWD\x64\Release\ -PackageRoot $PWD\AppInstallerCLIPackage\bin\x64\Release\ -LogTarget $PWD\AICLI-Packaged.log -ScriptWait`
+
+## Downgrade a package
+If the latest release has a critical bug (looking at you Docker Desktop), we can downgrade to an older version with `winget install Docker.DockerDesktop --version 4.34.2 --force --custom "--disable-version-check"`.
+`--force` seems necessary to bypass the check for an existing version, otherwise it'll just print this warning and skip the install: `Found an existing package already installed. Trying to upgrade the installed package...`.
