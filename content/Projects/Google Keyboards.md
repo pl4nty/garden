@@ -53,6 +53,16 @@ It was tricky to find a suitable cup (50x100mm), I ended up with a [48x65 tapere
 
 Maybe the base could have extra sides? I had 3 spares. Only had 8 spare keycaps though on an alpha set, and extras cost more than alphas.
 
+The short edge of the base is a great jig for bending diodes
+Link to readme, it's pretty good
+
 #TODO better 3d-printed case, Google one isn't fully released
 
 #TODO photos and firmware
+
+Use solder instead of wire for joins
+Compile with Arduino IDE to Leonardo target
+
+[Abandoned QMK port](https://github.com/qmk/qmk_firmware/pull/15119)
+Ported Pro Micro QWERTY layout to Vial
+ui3cp\p3c3c3c
