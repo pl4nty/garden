@@ -1,11 +1,12 @@
 ---
 dg-publish: true
 ---
-The Windows Package Manager (winget) uses package metadata from external sources to install Windows apps using traditional packaging technologies.
+	The Windows Package Manager (winget) uses package metadata from external sources to install Windows apps using traditional packaging technologies.
 The official user interface is a [C++ CLI](https://github.com/microsoft/winget-cli) shipped as part of an msix bundle (Microsoft.DesktopAppInstaller), and it also exposes a COM server for other clients like PowerShell and the Intune Management Extension.
 ## Sources
 The default app metadata sources are
 * msstore (https://storeedgefd.dsx.mp.microsoft.com/v9.0): Microsoft Store apps, exposed using the REST source type
+	* Downloads use the enterprise offline catalog (`4`) as of [this commit](https://github.com/microsoft/winget-cli/commit/06ac4715513d3807060bd2b08967e0f18934c328#diff-489237a33097c9e831c99a209b330daaa640d9bdb27872bbeb322f39c408c6bc), so authentication is required
 * winget (https://cdn.winget.microsoft.com/cache): apps from the public winget-pkgs repo, using the preindexed type. it's an SQLite index built from committed yaml, then bundled in an msix
 
 Some third-party sources
@@ -71,12 +72,12 @@ Finally, configure your winget REST source to require Entra access tokens for al
 
 ## Development
 winget is developed with C++ and Visual Studio, so I opted for a 32 core F-series Azure VM. I later downgraded to 4 core / 16GB RAM due to poor build parallelism.
-It comes with a winget DSC config for easy setup (see the README), but needs an extra command for `vcpkg`. And it only seemed to work for my Release builds, Debug builds failed with a missing dependency of sfsclient.
+It comes with a winget DSC config for easy setup (see the README), but needs an extra command for `vcpkg`. Debug builds used to fail with a missing dependency of sfsclient, but seem to work now.
 
 Build order
 * AppInstallerCLIPackage
 * AppInstallerCLITests
-* `AppInstallerCLITests\Run-TestsInPackage.ps1 -Args "~[pips]" -BuildRoot $PWD\x64\Release\ -PackageRoot $PWD\AppInstallerCLIPackage\bin\x64\Release\ -LogTarget $PWD\AICLI-Packaged.log -ScriptWait`
+* `AppInstallerCLITests\Run-TestsInPackage.ps1 -Args "~[pips]" -BuildRoot $PWD\x64\Debug\ -PackageRoot $PWD\AppInstallerCLIPackage\bin\x64\Debug\ -LogTarget $PWD\AICLI-Packaged.log -ScriptWait`
 
 ## Downgrade a package
 If the latest release has a critical bug (looking at you Docker Desktop), we can downgrade to an older version with `winget install Docker.DockerDesktop --version 4.34.2 --force --custom "--disable-version-check"`.
