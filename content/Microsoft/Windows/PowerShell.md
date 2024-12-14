@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/windows/power-shell/","updated":"2024-09-12T00:01:15.710+10:00"}
+dg-publish: true
 ---
-
 [Splatting with overload](https://beatcracker.wordpress.com/2014/12/01/splatting-and-mandatory-parameters/)
 
 ```PowerShell
@@ -47,3 +46,7 @@ while ($reader.Read()) {
 
 # $client.Close() isn't enough to unlock the db
 ```
+
+## Interop
+
+#TODO lisp https://old.reddit.com/r/PowerShell/comments/1gfe46a/craziest_thing_ever_done_with_powershell/lujalf3/?context=3 
