@@ -1,6 +1,25 @@
 ---
 dg-publish: true
 ---
+## RISC-V International Membership
+The [individual membership form](https://enrollment.lfx.linuxfoundation.org/?individual=&project=risc-v-international) attempts to block business and educational email addresses using form validation. It mistakenly blocks my email too.
+We can bypass it using [Chrome body overrides](https://developer.chrome.com/docs/devtools/overrides#make-changes), by overriding `GET https://oorh4r4cc0.execute-api.us-east-2.amazonaws.com/prod/public-domain?domain=tplant.com.au` with the following body.
+```json
+{
+    "domains": [
+        "tplant.com.au"
+    ],
+    "emails": [
+        "tplant.com.au"
+    ],
+    "meta": {
+        "offset": 0,
+        "page_size": 1,
+        "total_size": 1
+    }
+}
+```
+
 ## Talos Bringup
 RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeedio/status/1778612306613829871) are starting to hit the market, so I thought I'd start on Talos support early. I worked in this order:
 
