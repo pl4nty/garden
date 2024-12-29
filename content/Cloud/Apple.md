@@ -26,6 +26,9 @@ So I PRed a Dockerfile: `docker run --rm -v ${PWD}:/data mac_apt mac_apt_artifac
 
 ## IPAs
 iOS apps are distributed as `.ipa` files, an archive containing app metadata and contents. They can be encrypted.
-[majd/ipatool](https://github.com/majd/ipatool/) uses private APIs to download them with a valid Apple account, but it's not designed for headless use. They have pretty aggressive IP tracking and MFA is required for newly-created accounts. They've also blacklisted Docker's MAC address which ipatool was using.
+[majd/ipatool](https://github.com/majd/ipatool/) uses private APIs to download them with a valid Apple account, but it's not designed for headless use. Apple have pretty aggressive IP tracking and MFA is required for newly-created accounts. They've also blacklisted Docker's MAC address which ipatool was using, and recently disabled the endpoint for purchasing apps. Existing apps can still be downloaded.
 
-Intune's [[iOS|iOS]] DLP uses URL schemes to restrict cross-app data transfer. These are found in `Info.plist` in the `.ipa` but can be tricky to carve out for inexperienced Intune admins. I wrote a web app to automate it and pull some other metadata too: https://ios-app-data.tplant.com.au/
+Intune's [[iOS|iOS]] DLP uses URL schemes to restrict cross-app data transfer. These are found in `Info.plist` in the `.ipa`, but can be tricky to find and carve out for for admins who aren't familiar with iOS. I wrote a Go web app based on ipatool to automate it and pull some other metadata too: https://ios-app-data.tplant.com.au/
+But it's less useful now that purchasing is broken.
+
+iTunes on Windows can still generate the right headers to purchase apps, so [NyaMisty/actions-iTunes-header](https://github.com/NyaMisty/actions-iTunes-header) was built to automate the process with GitHub Actions. I built a [metadata tracker](https://github.com/pl4nty/ipa-track) with it, and it's useful for finding URIs too. ipatool would be faster for download now that its auth is fixed, but the iTunes header approach will probably be more reliable in the long term.
