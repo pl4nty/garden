@@ -19,5 +19,7 @@ Teams devices run a few Teams management apps, which orchestrate Company Portal 
 They distribute APKs via `devicemgmt-cdn.teams.microsoft.com`, which doesn't support [[Delivery Optimization|Delivery Optimization]] and the DO product team advised Android support wasn't planned. The APK CDN is Azure Front Door so it [doesn't support ExpressRoute](https://github.com/MicrosoftDocs/azure-docs/issues/99941#issuecomment-1376692620) either, even though `*.teams.microsoft.com` is on the ExpressRoute endpoints list.
 
 ## Work Profiles
-
 Google Wallet doesn't support work profiles, so virtual card apps like Weel need to be installed in the personal profile.
+
+Some apps don't request permission to both profiles, like keyboards, but we can grant it manually with `adb shell pm grant com.touchtype.swiftkey android.permission.INTERACT_ACROSS_USERS`.
+Swiftkey specifically has a function to request the permission and sync settings, but it crashes on Android 15. UI was a helpful "oops, something went wrong" and even hidden app logs didn't show a crash... Just successful [CrossProfileSender](https://github.com/google/connectedappssdk/blob/1fdd8460940e8744b8de15fbd2eb80078c3bfc8b/sdk/src/main/java/com/google/android/enterprise/connectedapps/CrossProfileSender.java#L685) logs.
