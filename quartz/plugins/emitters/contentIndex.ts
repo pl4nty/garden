@@ -8,6 +8,7 @@ import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
 import { i18n } from "../../i18n"
 import DepGraph from "../../depgraph"
+import { version } from "../../../package.json"
 
 export type ContentIndex = Map<FullSlug, ContentDetails>
 export type ContentDetails = {
