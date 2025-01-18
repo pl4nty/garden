@@ -51,13 +51,28 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndex): string {
 function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndex, limit?: number): string {
   const base = cfg.baseUrl ?? ""
 
-  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => `<item>
+  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => {
+    let modifiedDate = content.date
+    if (!modifiedDate && content.fileData!.frontmatter?.modified) {
+      modifiedDate = new Date(content.fileData!.frontmatter.modified)
+    }
+    return `<entry>
     <title>${escapeHTML(content.title)}</title>
-    <link>https://${joinSegments(base, encodeURI(slug))}</link>
-    <guid>https://${joinSegments(base, encodeURI(slug))}</guid>
-    <description>${content.richContent ?? content.description}</description>
-    <pubDate>${content.date?.toUTCString()}</pubDate>
-  </item>`
+    <link href="https://${joinSegments(base, encodeURI(slug))}" />
+    <link rel="alternate" type="text/markdown" href="https://${joinSegments(base, encodeURI(slug))}.html.md" />
+    <summary>${content.description}</summary>
+    <published>${content.date?.toISOString()}</published>
+    <updated>${modifiedDate?.toISOString()}</updated>
+    <publishedTime>${formatDate(content.date!, cfg.locale)}</publishedTime>
+    <updatedTime>${formatDate(new Date(modifiedDate!), cfg.locale)}</updatedTime>
+    ${content.tags.map((el) => `<category term="${el}" label="${el}" />`).join("\n")}
+    <author>
+      <name>Tom Plant</name>
+      <email>tom@tplant.com.au</email>
+    </author>
+    <content type="html">${content.richContent}</content>
+  </entry>`
+  }
 
   const items = Array.from(idx)
     .sort(([_, f1], [__, f2]) => {
@@ -71,23 +86,32 @@ function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndex, limit?: nu
 
       return f1.title.localeCompare(f2.title)
     })
+    .filter(([_, content]) => content.fileData?.frontmatter?.noindex !== true)
     .map(([slug, content]) => createURLEntry(simplifySlug(slug), content))
     .slice(0, limit ?? idx.size)
     .join("")
 
   return `<?xml version="1.0" encoding="UTF-8" ?>
-<?xml-stylesheet href="/static/rss.xsl" type="text/xsl"?>
-<rss version="2.0">
-    <channel>
-      <title>${escapeHTML(cfg.pageTitle)}</title>
-      <link>https://${base}</link>
-      <description>${!!limit ? i18n(cfg.locale).pages.rss.lastFewNotes({ count: limit }) : i18n(cfg.locale).pages.rss.recentNotes} on ${escapeHTML(
-        cfg.pageTitle,
-      )}</description>
-      <generator>Quartz -- quartz.jzhao.xyz</generator>
-      ${items}
-    </channel>
-  </rss>`
+<?xml-stylesheet href="/static/rss.xsl" type="text/xsl" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>${escapeHTML(cfg.pageTitle)}</title>
+  <subtitle>${!!limit ? i18n(cfg.locale).pages.rss.lastFewNotes({ count: limit }) : i18n(cfg.locale).pages.rss.recentNotes} on ${escapeHTML(
+    cfg.pageTitle,
+  )}</subtitle>
+  <link href="https://${base}" />
+  <link rel="alternate" type="text/html" href="https://${base}" />
+  <category term="evergreen" />
+  <id>https://${base}</id>
+  <updated>${idx.get("index" as FullSlug)!.date?.toISOString()}</updated>
+  <contributor>
+    <name>Tom Plant</name>
+    <email>tom@tplant.com.au</email>
+  </contributor>
+  <logo>https://${base}/icon.png</logo>
+  <icon>https://${base}/icon.png</icon>
+  <generator>Quartz v${version} -- quartz.jzhao.xyz</generator>
+  ${items}
+</feed>`
 }
 
 export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
