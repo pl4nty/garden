@@ -42,10 +42,6 @@
           href="https://www.ietf.org/rfc/rfc4287.txt" target="_blank"
           class="anchor-like"><span class="indicator-hook" />atom feed</a> of my working notes, one of many paths to this digital garden. Much of these notes/writings are written for my own
       consumption.</p>
-        <xsl:attribute name="href">
-          <xsl:value-of select="atom:link[@rel='alternate']/@href" />
-        </xsl:attribute>main
-      site &#x2192;</a>
 
       <p>Visit <a href="https://aboutfeeds.com/">About
       Feeds</a> to get started with newsreaders and subscribing. It's free. </p>
