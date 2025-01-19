@@ -34,7 +34,7 @@
   </xsl:template>
 
   <xsl:template match="atom:feed">
-    <header class="rss" xmlns="http://www.w3.org/1999/xhtml">
+    <div class="rss" xmlns="http://www.w3.org/1999/xhtml">
       <h1 class="article-title">
         <xsl:value-of select="atom:title" />
       </h1>
@@ -56,10 +56,10 @@
         </div>
         <div class="callout-content" dir="auto">
           <p dir="auto">On most slash-command supported interface, you can use the following <code>/feed
-      subscribe <xsl:value-of select="atom:link[@rel='alternate']/@href" />/feed.xml</code></p>
+      subscribe <xsl:value-of select="atom:link[@rel='alternate']/@href" />/index.xml</code></p>
         </div>
       </blockquote>
-    </header>
+    </div>
   </xsl:template>
 
   <xsl:template match="atom:entry">
