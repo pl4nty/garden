@@ -19,7 +19,6 @@ We can bypass it using [Chrome body overrides](https://developer.chrome.com/docs
     }
 }
 ```
-
 ## Talos Bringup
 RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeedio/status/1778612306613829871) are starting to hit the market, so I thought I'd start on Talos support early. I worked in this order:
 
@@ -41,13 +40,13 @@ These dependencies are also missing RISC-V support:
 - [ ] [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56)
 
 The Lichee Pi 4 has confirmed Turing Pi 2 support with networking, but no PCIe/SATA. Might be a good option if I can't get an LM3A/5A to test.
-
-## Cluster
-LM3A (spacemit K1) is shipping with a carrier board, and possibly better multicore performance than the unreleased 5A. Discord users report the 4A works (no PCIe), so 3A might be worth a shot if it ships standalone.
+## Boards
+### Milk-V
 Milk-V just announced their Jupiter/Megrez NX equivalents with the same K1/EIC7700 chips. No forum discussion let alone ETA, but they have a better track record of [mainline support](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=milk-v&archive=&delegate=).
-
-## Lichee Pi 4A
-Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their Lichee Pi 4As, so I tried booting mainline U-Boot and Linux. The boot process is:
+### Sipeed LicheePi 3A/5A
+3A only ships with a carrier board but the 8GB variant is [out of stock](https://www.aliexpress.com/item/1005007656383220.html) anyway. Based on the Spacemit K1, [mainline is in progress](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=SpaceMIT&archive=both&delegate=). Possibly better multicore performance than the unreleased 5A.
+### Sipeed Lichee Pi 4A
+Popular but slow [T-Head](https://www.t-head.cn/) RISC-V [TH1520](https://www.t-head.cn/product/yeying) SOC with a known silicon vulnerability. Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their bare metal service, so I tried booting mainline U-Boot and Linux. The boot process is:
 * Vendor U-Boot
 * Chainload [mainline U-Boot at 0xc0100000](https://wiki.sipeed.com/hardware/en/lichee/th1520/lpi4a/7_develop.html#Mainline:~:text=Mainline%20U%2Dboot%20is%20expected%20to%20be%20loaded%20at%200x1c00000)
 
@@ -62,10 +61,7 @@ Resources:
 
 #TODO rebase when ready to test, add kernel configs for Lichee Pi serial, build ISO for UEFI
 
-
-Boot logs without overlay:
-
-```
+``` fold title:"Boot logs without overlay"
 brom_ver 8
 [APP][E] protocol_connect failed, exit.
 -----------------------------------------
