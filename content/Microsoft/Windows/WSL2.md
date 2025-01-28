@@ -64,42 +64,25 @@ cp porcupine_linux.ppn.bak config/programs/wake/porcupine1/.venv/lib/python3.9/s
 ```
 
 # SSH
-Use W
-Enable ssh-agent service
-Download [npiperelay](https://github.com/jstarks/npiperelay/releases/tag/v0.1.0) and extract to get binary (README is wrong)
-Add to windows $HOME\\.wsl\\ (`ln -s ~/winhome /mnt/c/Users/tom`)
-```
-sudo apt install socat
-wget -o ~/.local/bin/wsl-ssh-agent-relay https://raw.githubusercontent.com/rupor-github/wsl-ssh-agent/master/docs/wsl-ssh-agent-relay
-chmod +x ~/.local/bin/wsl-ssh-agent-relay
-mkdir ${HOME}/.ssh
-sudo sh -c 'echo :WSLInterop:M::MZ::/init:PF > /usr/lib/binfmt.d/WSLInterop.conf'
-```
+Use Windows 24H2 which comes with recent OpenSSH in-box, or install it manually from GitHub. Then enable the ssh-agent service, requires admin unfortunately
 
-add to bashrc
-```
-${HOME}/.local/bin/wsl-ssh-agent-relay start
-export SSH_AUTH_SOCK=${HOME}/.ssh/wsl-ssh-agent.sock
-```
-
-firsttime
+Generate
 ```
 ssh-keygen -t ed25519-sk -O resident -O application=ssh:GitSigning -O verify-required
+```
+
+Add
+```
 ssh-add
 ```
-
-```
-SOPS_AGE_KEY=[see bitwarden]
-SOPS_AGE_RECIPIENTS=age18k9804sxqzuxn3pka0x6rgdqp0g7gm7w99g4lu43meqkl9s8lvrsl6n0vh
-
-```
-
-
-this might be a thing? might not work with devcontainers though
-`export SSH_SK_HELPER="/mnt/c/Program Files/OpenSSH/ssh-sk-helper.exe"`
 
 ## Shrink disk
 ```
 wsl --manage ubuntu --set-sparse true
 optimize-vhd -Path .\ext4.vhdx -Mode full
 ```
+
+## Kernel
+A few years ago, I subscribed to a GitHub issue on [10x-ing 9P filesystem performance](https://github.com/microsoft/WSL/discussions/9412#) in WSL2, in the hope that it'd be fixed soon. This morning I was pinged by another frustrated user still waiting for the fix.
+But after my work on [[Talos|Talos]], I'm pretty comfortable maintaining forked kernels. Let's see if I can build a faster kernel with Docker and BuildKit.
+
