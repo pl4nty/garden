@@ -1,14 +1,46 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/third-party-oss/","updated":"2024-09-08T11:22:22.469+10:00"}
+dg-publish: true
 ---
+https://3rdpartysource.microsoft.com/downloads or 3rdpartycode.microsoft.com
+Internal https://publish.3rdpartysource.microsoft.com `Third Party Source Code Disclosures - PROD - #2` `f55f60fc-d781-4dd1-9764-e3733137e15a`
 
-https://3rdpartysource.microsoft.com/downloads
+this has good stuff too [Accessibility Conformance Reports](https://www.microsoft.com/en-us/accessibility/conformance-reports)
+#TODO microsoft electron, edge devtools?
+
+tools/win/msedgede
+tools/win/msedgejs windbg extension
+EdgeProcessViewer
+
+CERT_SYSTEM_STORE_LOCAL_MACHINE_WCOS
+ntdev.microsoft.com
+
+handwriting uses https://github.com/chrislit/abydos
+
+l10n_util.h :(
+```cpp
+// Get the user-preferred locale, which may differ from the actual process
+// locale found with base::i18n::GetConfiguredLocale(). For example, a preferred
+// locale of "en-AU" is mapped to a process locale of "en-GB".
+COMPONENT_EXPORT(UI_BASE) std::string& GetPreferredLocale();
+```
+
+
+url_constants.h
+```
+// Edge Specific schemes
+inline constexpr char kAppInfoScheme[] = "app-info";
+inline constexpr char kEdgeReadScheme[] = "read";
+inline constexpr char kEdgeProtocolScheme[] = "microsoft-edge";
+inline constexpr char16_t kEdgeProtocolScheme16[] = u"microsoft-edge";
+inline constexpr char kEdgeWebCaptureScheme[] = "webcapture";
+inline constexpr char kEdgeScheme[] = "edge";
+```
 ## Electron
 Uses public sysroots: `https://msftelectronbuild.z5.web.core.windows.net/sysroots/toolchain/<Sha256Sum>/<Tarball>`
 
 MAS is Mac App Store, MtrwDgj is something related to Microsoft Teams Rooms on Windows
 
-![Pasted image 20240822001128.png](/img/user/Uploads/Pasted%20image%2020240822001128.png)
+![[Pasted image 20240822001128.png|Pasted image 20240822001128.png]]
 
 ```json
 {
