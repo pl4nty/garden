@@ -55,3 +55,17 @@ Which generates this ADMX and an en-US ADML
 ```
 
 ![[Pasted image 20241031003506.png|Pasted image 20241031003506.png]]
+
+
+## Docs
+ADMX/L files for Microsoft products are usually baked into Windows/Intune, but vendors aren't as lucky. They're stuck offering download links and hoping admins notice new versions.
+https://admx.help showed up a few years ago as an ad-supported community alternative. It offers a searchable web UI for common ADMX files, plus rendered settings and descriptions.
+I couldn't find the source to contribute new files though. Surely I could email the owner? No contact details anywhere so time for some OSINT.
+
+Historical whois/dns/bgp.tools found nothing. I remember when it was getadmx\[.\]com, but then the domain expired and was hijacked for porn/gambling. Its DNS had a bit more - before moving behind Cloudflare, it was hosted on a shared cPanel box in Russia. There's an [nginx open directory](http://45.89.69.168/) but any related files are long gone.
+
+![[Pasted image 20250202194539.png|Pasted image 20250202194539.png]]
+
+The oldest web.archive.org snapshot of getadmx.com is a bit more interesting. It has tons of features, surely it wasn't launched like this? After hunting through a few search engines, I found winintro\[.\]com. Its snapshots show the launch of admx.help. And its past as an SEO farm... Back to whois/dns and we got a hit - sys-professional@yandex.ru. They owned ~20 SEO farm domains pointing at https://systemcenter.wiki and later https://admx.help. [One farm](http://novacontext.com/) is still around and promoting them too. https://systemcenter.wiki actually looks useful, but the domain expired a couple days ago. Not sure why they let their domains expire. I could email that address with some auto-translated Russian to find out, doubt they'll be friendly though.
+
+[Group Policy Search](https://gpsearch.azurewebsites.net/#15910)
