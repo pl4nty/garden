@@ -35,3 +35,5 @@ git clone https://github.com/brave/brave-core src/brave
 RBE_server_address=127.0.0.1:8000 python3 third_party/reclient_configs/src/check_reclient_works.py --src_dir=..
 npm run build -- --use_remoteexec --target=brave/components/policy:pack_policy_templates
 ```
+
+reclient [doesn't support BEP yet](https://github.com/ola-rozenfeld/reclient/tree/bep) so I couldn't see much service-side, and I gave up debugging this further. Leave a comment if you have an idea I could try.
