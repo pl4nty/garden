@@ -25,21 +25,24 @@ RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeed
 * bldr
 * pkgs ca-certs and fhs
 * bldr with pkgs
+* stagex (new in v1.10)
 * toolchain
 * tools
 * pkgs
 * talos
 
-Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I installed [[BuildKit|BuildKit]] on a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) for native builds via GitHub Actions, but performance was still pretty poor. `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs.
+Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I used [namespace](http://namespace.so/) in a few repos where cross-compilation was supported, but the remainder needed native builds. At first I tried a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) to learn more about [[BuildKit|BuildKit]], but `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs. #TODO would these [publicly-available runners](https://github.com/riscv-builders/riscv-builders.github.io/) be faster? maintainer says I can try it
 
 These dependencies are also missing RISC-V support:
 - [x] [Stable Alpine release](https://gitlab.alpinelinux.org/alpine/aports/-/issues/13269), currently using `edge` in bldr. now stable, and talos swapped to [StageX](https://stagex.tools/) anyway
 - [ ] [Free NVIDIA kernel modules](https://github.com/NVIDIA/open-gpu-kernel-modules/pull/152)
 - [ ] [Non-free NVIDIA kernel modules](https://download.nvidia.com/XFree86/)
 - [x] [iPXE](https://github.com/ipxe/ipxe/pull/970). done in [#1307](https://github.com/ipxe/ipxe/pull/1307)
-- [ ] [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56)
+- [ ] [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56) coming in [#172](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/172)
 
 The Lichee Pi 4 has confirmed Turing Pi 2 support with networking, but no PCIe/SATA. Might be a good option if I can't get an LM3A/5A to test.
+
+I hit an unrecognised opcode error when assembling gcc, on a [header file related to vector extensions](https://github.com/gcc-mirror/gcc/commit/89367e794613bdeb21df3e6fc0215f0acd553ef8). Turned out to be an old gas version. The latest binutils should fix it.
 ## Boards
 ### Milk-V
 Milk-V just announced their Jupiter/Megrez NX equivalents with the same K1/EIC7700 chips. No forum discussion let alone ETA, but they have a better track record of [mainline support](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=milk-v&archive=&delegate=).
