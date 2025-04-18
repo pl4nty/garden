@@ -40,7 +40,7 @@ RBE_server_address=127.0.0.1:8000 python3 third_party/reclient_configs/src/check
 npm run build -- --use_remoteexec
 ```
 
-One of the BuildBuddy engineers kindly [replied on Github]([Reclient/chromium build support? · Issue #6134 · buildbuddy-io/buildbuddy](https://github.com/buildbuddy-io/buildbuddy/issues/6134)) so I had another attempt, but with no luck again. I went back to building on a VM :(
+One of the BuildBuddy engineers kindly [replied on Github](https://github.com/buildbuddy-io/buildbuddy/issues/6134) so I had another attempt, but with no luck again. I went back to building on a VM :(
 
 ### Revisiting the Build Event Protocol (BEP)
 
@@ -57,7 +57,7 @@ At this point I'd spent a fair bit of time reading reclient code, and both Build
 
 That was easier said than done, and I managed to build a segfaulting `scandeps_server` somehow. But `bootstrap` and `reproxy` work so I tried them out with `RBE_bes_service=remote.buildbuddy.io:443`.
 * [Rebased remote-apis-sdks b8b282b](https://github.com/pl4nty/remote-apis-sdks/commit/b8b282b7dea208eb5c5d9088ab1ee296163d9685), then [4bc1d5b with my changes](https://github.com/pl4nty/remote-apis-sdks/commit/4bc1d5b7a570783b86143e2b25b04a45fc31a592)
-* [Rebased reclient 1dab779](https://github.com/pl4nty/reclient/commit/1dab779cfb715eaa1131c3aa3bc213954febd1cd)
+* [Rebased reclient 1dab779](https://github.com/pl4nty/reclient/commit/1dab779cfb715eaa1131c3aa3bc213954febd1cd), then [3546233 with my changes](https://github.com/pl4nty/reclient/commit/3546233c4ea493a6e267213743acdfae9bcc00cf)
 
 Success! Shame Brave still won't build, but I noticed a new [request for BEP](https://github.com/bazelbuild/reclient/issues/141) so I might try upstreaming the patches. Plenty of bugs and hacks to fix first though, like `reproxy` failing to exit.
 
