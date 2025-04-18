@@ -41,6 +41,7 @@ npm run build -- --use_remoteexec
 ```
 
 One of the BuildBuddy engineers kindly [replied on Github](https://github.com/buildbuddy-io/buildbuddy/issues/6134) so I had another attempt, but with no luck again. I went back to building on a VM :(
+Later on I joined their Slack, and learned I could just `RBE_remote_headers=x-buildbuddy-api-key=mykey` instead of the fancy script...
 
 ### Revisiting the Build Event Protocol (BEP)
 
@@ -60,6 +61,8 @@ That was easier said than done, and I managed to build a segfaulting `scandeps_s
 * [Rebased reclient 1dab779](https://github.com/pl4nty/reclient/commit/1dab779cfb715eaa1131c3aa3bc213954febd1cd), then [3546233 with my changes](https://github.com/pl4nty/reclient/commit/3546233c4ea493a6e267213743acdfae9bcc00cf)
 
 Success! Shame Brave still won't build, but I noticed a new [request for BEP](https://github.com/bazelbuild/reclient/issues/141) so I might try upstreaming the patches. Plenty of bugs and hacks to fix first though, like `reproxy` failing to exit.
+[bootstrap.zip](https://github.com/user-attachments/files/19813099/bootstrap.zip)
+[reproxy.zip](https://github.com/user-attachments/files/19813098/reproxy.zip)
 
 ```
 I0418 13:25:28.592894  142102 bootstrap.go:79] Sending a shutdown request to reproxy
