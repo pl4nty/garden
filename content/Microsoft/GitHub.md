@@ -25,6 +25,16 @@ on:
   workflow_dispatch:
 ```
 
+## GitHub Flavored Markdown (GFM)
+Supports media queries, like using images to match user's colour scheme.
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="dark-mode-image.png">
+  <source media="(prefers-color-scheme: light)" srcset="light-mode-image.png">
+  <img alt="Fallback image description" src="default-image.png">
+</picture>
+```
+
 ## Automatic remediation
 GitHub's network effect as the de-facto code forge has some interesting impacts on research and remediation at scale.
 Example: [Boost changed their CDN](https://github.com/boostorg/boost/issues/996) and broke one of my pipelines. It was a simple find/replace, so Copilot helped me write a script to automate remediation not just on my repos, but any other open source repo.
