@@ -38,17 +38,18 @@ npm run build -- --use_remoteexec
 ```
 
 One of the BuildBuddy engineers kindly [replied on Github](https://github.com/buildbuddy-io/buildbuddy/issues/6134) so I had another attempt, but with no luck again. I went back to building on a VM :(
+
 Later on I joined their Slack, and learned I could just `RBE_remote_headers=x-buildbuddy-api-key=mykey` instead of the fancy script...
 
 I sent my PR to Brave and took a break from Chromium experiments until the next weekend, when I stumbled across [NativeLink's](https://nativelink.com/) new (and free) RBE preview. Surely it'll work out-of-the-box, right?
 They had a pretty great UX with mTLS and reclient envvars ready to copy/paste. I took way too long to notice a sneaky `RBE_exec_strategy=local` - it was just caching, no execution!
 
-Their RBE was very new and didn't have reclient config yet, but I fixed the strategy and `RBE_remote_headers`. Unfortunately the web UI was providing a hostname with an untrusted cert.
+Their RBE was very new and didn't have reclient config yet, but I fixed the strategy and `RBE_remote_headers`. Unfortunately I'd copied an incorrect hostname from their web app, with an untrusted cert.
 
 ![[Pasted image 20250418224529.png|Pasted image 20250418224529.png]]
 
 I pinged them on GitHub and got the correct hostname soon after, so I tried again the next day. Success! At least for the first ~30k steps, after that it stopped executing jobs. I suspect I just blew through their free tier. Either way, it saved me hours of compile time.
-```
+```sh
 /workspaces/brave-browser/src
 > autoninja -C /workspaces/brave-browser/src/out/Component brave -k 1
 Proxy started successfully.
@@ -60,8 +61,8 @@ ninja: Entering directory `/workspaces/brave-browser/src/out/Component'
 The events took a full day to show up in app.nativelink.com, but I'll chalk that up to preview or my dodgy reclient fork. More on that below... In any case, I could just [send the events to BuildBuddy instead](https://app.buildbuddy.io/invocation/de899c43-0c0c-415b-8f82-cde0ec1476d5).
 
 ![[Pasted image 20250421132149.png|Pasted image 20250421132149.png]]
-### Revisiting the Build Event Protocol (BEP)
-At this point I'd spent a fair bit of time reading reclient code, and both BuildBuddy and NativeLink were showing off fancy BEP features. Surely I could do a quick rebase of Ola's branches to try it out?
+## Revisiting the Build Event Protocol (BEP)
+At this point I'd spent a fair bit of time reading reclient code, and both BuildBuddy and NativeLink were showing off fancy BEP features for build logging/metrics. But reclient doesn't support BEP. Surely I could do a quick rebase of [Ola's](https://github.com/ola-rozenfeld/reclient/tree/bep) [branches](https://github.com/ola-rozenfeld/remote-apis-sdks/tree/bep) to try it out?
 
 ![[Pasted image 20250418230002.png|Pasted image 20250418230002.png]]
 
@@ -69,10 +70,8 @@ That was easier said than done, and I managed to build a segfaulting `scandeps_s
 * [Rebased remote-apis-sdks b8b282b](https://github.com/pl4nty/remote-apis-sdks/commit/b8b282b7dea208eb5c5d9088ab1ee296163d9685), then [4bc1d5b with my changes](https://github.com/pl4nty/remote-apis-sdks/commit/4bc1d5b7a570783b86143e2b25b04a45fc31a592)
 * [Rebased reclient 1dab779](https://github.com/pl4nty/reclient/commit/1dab779cfb715eaa1131c3aa3bc213954febd1cd), then [3546233 with my changes](https://github.com/pl4nty/reclient/commit/3546233c4ea493a6e267213743acdfae9bcc00cf)
 
-Success! Shame Brave still won't build, but I noticed a new [request for BEP](https://github.com/bazelbuild/reclient/issues/141) so I might try upstreaming the patches. Plenty of bugs and hacks to fix first though, like `reproxy` failing to exit.
-[bootstrap.zip](https://github.com/user-attachments/files/19813099/bootstrap.zip)
-[reproxy.zip](https://github.com/user-attachments/files/19813098/reproxy.zip)
-```
+Success! Shame Brave still won't build, but I noticed a new [request for BEP](https://github.com/bazelbuild/reclient/issues/141) so I might try upstreaming the patches. Plenty of bugs and hacks to fix first though, like `reproxy` occasionally failing to exit. Here's some linux/amd64 binaries if you want to try it out. [bootstrap.zip](https://github.com/user-attachments/files/19813099/bootstrap.zip) [reproxy.zip](https://github.com/user-attachments/files/19813098/reproxy.zip)
+```sh
 I0418 13:25:28.592894  142102 bootstrap.go:79] Sending a shutdown request to reproxy
 W0418 13:26:28.593439  142102 bootstrap.go:119] Reproxy Shutdown() returned error. This may be caused by it closing connections before responding to Shutdown: rpc error: code = DeadlineExceeded desc = context deadline exceeded
 W0418 13:26:28.593499  142102 main.go:162] Error shutting down reproxy: Reproxy process 139416 still running after 60 seconds. Check the logs and/or consider increasing the timeout: context deadline exceeded
@@ -80,17 +79,17 @@ W0418 13:26:28.593499  142102 main.go:162] Error shutting down reproxy: Reproxy 
 
 ![[Pasted image 20250418222557.png|Pasted image 20250418222557.png]]
 
-### Shiny new siso?
+## Shiny new siso?
 Someone mentioned on the reclient BEP issue that [siso](https://chromium.googlesource.com/infra/infra/+/refs/heads/main/go/src/infra/build/siso/)'s native RBE support will replace reclient eventually. So let's try it out. I pulled`SISO_REAPI_ADDRESS` and `SISO_CREDENTIAL_HELPER` from `main.go` to get started. I'd almost deleted that helper script after swapping to`RBE_remote_headers`, lucky I kept it.
 
 `src/brave/build/commands/lib/gnCheck.js` was handy for running `gn clean` to swap from ninja to siso. Brave had also hardcoded `use_siso=false` in a few places, and I found out why pretty quickly. 
-```
+```sh
 ERROR at //build/config/clang/clang.gni:60:5: Assertion failed.
     assert(!use_siso, "Can't use non-default rbe_exec_root with siso.")
 ```
 
 They set `rbe_exec_root` so they can have a top-level `src` directory, but siso doesn't like that.
-```
+```js
 if (this.useRemoteExec) {
     args.rbe_exec_root = this.rbeExecRoot
     args.reclient_bin_dir = path.join(this.nativeRedirectCCDir)
@@ -98,7 +97,7 @@ if (this.useRemoteExec) {
 ```
 
 And removing it doesn't help.
-```
+```sh
 W0419 01:55:38.455284   29246 action.go:449] ef748987-0392-4788-948f-c2d9a3def5e8: Remote execution failed with &{ExitCode:35 Status:LocalErrorResultStatus Err:path /workspaces/brave-browser is not under /workspaces/brave-browser/src}, Waiting for local.
 ```
 
