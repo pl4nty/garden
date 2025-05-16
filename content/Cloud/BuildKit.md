@@ -77,19 +77,21 @@ Docker provides native packages for ecosystem components like `containerd` and `
 <br>
 
 ### RISC-V
-
+Needs `xz-utils` for Dockerfile `ADD file.tar.xz`
 ```sh
-curl https://github.com/containerd/containerd/releases/download/v1.7.15/containerd-1.7.15-linux-riscv64.tar.gz -o containerd.tar.gz
+sudo apt update
+sudo apt install wget xz-utils
+wget https://github.com/containerd/containerd/releases/download/v2.0.5/containerd-2.0.5-linux-riscv64.tar.gz -O containerd.tar.gz
 tar Cxzvf /usr/local containerd.tar.gz
 mkdir -p /usr/local/lib/systemd/system/
 curl https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -o /usr/local/lib/systemd/system/containerd.service
 systemctl daemon-reload
 systemctl enable --now containerd
 
-curl https://github.com/opencontainers/runc/releases/download/v1.1.12/runc.riscv64 -o runc
+wget https://github.com/opencontainers/runc/releases/download/v1.3.0/runc.riscv64 -O runc
 install -m 755 runc /usr/local/sbin/runc
 
-curl https://github.com/moby/buildkit/releases/download/v0.13.1/buildkit-v0.13.1.linux-riscv64.tar.gz -o buildkit.tar.gz
+wget https://github.com/moby/buildkit/releases/download/v0.21.1/buildkit-v0.21.1.linux-riscv64.tar.gz -O buildkit.tar.gz
 tar Cxzvf /usr/local buildkit.tar.gz
 mkdir /etc/buildkit # add cert files here
 ```
@@ -108,18 +110,26 @@ ExecStart=/usr/local/bin/buildkitd --addr tcp://0.0.0.0:1234 --tlscacert /etc/bu
 WantedBy=multi-user.target
 ```
 
+```
+systemctl daemon-reload
+systemctl enable --now buildkitd
+```
+
 BuildKit uses 10% of disk by default, so we increase it.
 <br>
 
 ## Development
 
-It's helpful to access a remote builder locally:
-
+It's helpful to access a remote builder locally
 ```sh
-docker buildx create --name riscv --bootstrap --use --driver remote --driver-opt cacert=${PWD}/ca.pem,cert=${PWD}/cert.pem,key=${PWD}/key.pem tcp://example.com:1234
+docker buildx create --name riscv64 --bootstrap --use --driver remote --driver-opt cacert=${PWD}/ca.pem,cert=${PWD}/cert.pem,key=${PWD}/key.pem tcp://example.com:1234
 ```
-<br>
 
+BuildKit's default cache eviction values don't handle kernel builds too well, cause it uses a ton of disk towards the end (vmlinux). Old cache entries can be reviewed and cleared with
+```
+docker buildx du > cachestats
+docker buildx prune --filter until=72h
+```
 ### Frontends
 
 BuildKit supports custom config files (frontends), like the [[Talos|Talos]] `Pkgfile`, based on OCI artefacts. `docker/dockerfile-upstream` for accessing newer features doesn't have a Windows artefact, but we can build one. I did have to disable dynamic linking (remove `-d`) in the script though.
