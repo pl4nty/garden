@@ -68,6 +68,7 @@ console.log(luadec.ast_output())
 ```
 
 `set_config` looked interesting. It probably matched this UI.
+
 ![[Pasted image 20250509215832.png|Pasted image 20250509215832.png]]
 
 The code was easy to find, but I experimented with different values in the UI, and the defaults gave the best results.
