@@ -37,7 +37,7 @@ RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeed
 * bldr with stagex busybox
 * [toolchain](https://github.com/pl4nty/talos-toolchain)
 * tools
-* pkgs, with kconfig from `PLATFORM=linux/riscv64 make kernel-menuconfig` on a copied `config-arm64`
+* pkgs, with kconfig from `make kernel-menuconfig USERNAME=pl4nty PLATFORM=linux/riscv64` on a copied `config-arm64`
 * talos
 
 Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I used [namespace](http://namespace.so/) in a few repos where cross-compilation was supported, but the remainder needed native builds. At first I tried a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) to learn more about [[BuildKit|BuildKit]], but `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs. Unfortunately these [publicly-available runners](https://github.com/riscv-builders/riscv-builders.github.io/) can't run BuildKit.
@@ -47,7 +47,7 @@ These dependencies are also missing RISC-V support:
 - [ ] [Free NVIDIA kernel modules](https://github.com/NVIDIA/open-gpu-kernel-modules/pull/152)
 - [ ] [Non-free NVIDIA kernel modules](https://download.nvidia.com/XFree86/)
 - [x] [iPXE](https://github.com/ipxe/ipxe/pull/970). done in [#1307](https://github.com/ipxe/ipxe/pull/1307)
-- [ ] [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56) coming in [#172](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/172)
+- [x] [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56) coming in [#172](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/172)
 
 The Lichee Pi 4 has confirmed Turing Pi 2 support with networking, but no PCIe/SATA. Might be a good option if I can't get an LM3A/5A to test.
 
@@ -56,11 +56,12 @@ I hit an unrecognised opcode error when assembling gcc, on a [header file relate
 ### Milk-V
 Milk-V just announced their Jupiter/Megrez NX equivalents with the same K1/EIC7700 chips. No forum discussion let alone ETA, but they have a better track record of [mainline support](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=milk-v&archive=&delegate=).
 ### Sipeed LicheePi 3A/5A
-3A only ships with a carrier board but the 8GB variant is [out of stock](https://www.aliexpress.com/item/1005007656383220.html) anyway. Based on the Spacemit K1, [mainline is in progress](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=SpaceMIT&archive=both&delegate=). Likely better multicore performance than the unreleased 5A, which uses an EIC7700 or EIC7700X. Mainline progress is [tracked here](https://github.com/spacemit-com/linux/wiki), support isn't great and the version with a motherboard for flashing [isn't available anyway](https://item.taobao.com/item.htm?id=825146039008&skuId=5546630573923&spm=tbpc.tborder.item.d_title825146039008.49c56bdbBszuL1).
+3A only ships with a carrier board but the 8GB variant is [out of stock](https://www.aliexpress.com/item/1005007656383220.html) anyway. Based on the Spacemit K1, [mainline is in progress](https://github.com/spacemit-com/linux/wiki) ([Patchwork](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=SpaceMIT&archive=both&delegate=)). Likely better multicore performance than the unreleased 5A, which uses an EIC7700 or EIC7700X. Mainline progress is [tracked here](https://github.com/spacemit-com/linux/wiki), support isn't great and the version with a motherboard for flashing [isn't available anyway](https://item.taobao.com/item.htm?id=825146039008&skuId=5546630573923&spm=tbpc.tborder.item.d_title825146039008.49c56bdbBszuL1).
 ### Sipeed Lichee Pi 4A
-Popular but slow [T-Head](https://www.t-head.cn/) RISC-V [TH1520](https://www.t-head.cn/product/yeying) SOC with a known silicon vulnerability. Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their bare metal service, so I tried booting mainline U-Boot and Linux. The boot process is:
+Popular but slow [T-Head](https://www.t-head.cn/) RISC-V [TH1520](https://www.t-head.cn/product/yeying) SOC with a known silicon vulnerability. Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their bare metal service but I couldn't get it working with mainline. The boot process is:
 * Vendor U-Boot
 * Chainload [mainline U-Boot at 0xc0100000](https://wiki.sipeed.com/hardware/en/lichee/th1520/lpi4a/7_develop.html#Mainline:~:text=Mainline%20U%2Dboot%20is%20expected%20to%20be%20loaded%20at%200x1c00000)
+
 
 Resources:
 * https://github.com/dlan17/u-boot/tree/th1520/net
@@ -73,6 +74,35 @@ Resources:
 * [Overlays | TALOS LINUX](https://www.talos.dev/v1.10/advanced/overlays/#authoring-overlays)
 
 #TODO rebase when ready to test, add kernel configs for Lichee Pi serial, build ISO for UEFI
+
+## Firmware
+I saw "OpenSBI" crop up a few times when reading about firmware. This [explanation](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) was really helpful. Turns out Supervisor Binary Interface (SBI) is an optional higher-privilege supervisor firmware, like ARM Trusted Firmware (ATF) or BIOS/UEFI. OpenSBI is the reference implementation shipped in the Sipeed Lichee SBCs. I could use U-Boot/Talos in M-mode with vendor U-Boot doing DDR training etc, but then I have to partially flash the board which could be a pain. [This patchset](https://patchwork.ozlabs.org/project/uboot/list/?series=458992) swaps to S-mode and should allow a fully open firmware, so I'll try it first.
+
+## Lichee Pi 4A flashing
+Ctrl-C via serial during U-Boot
+`ums 0 mmc 0`
+Capture vhdx with Rufus
+Flash with rufus
+
+Boot button fastboot doesn't properly write u-boot, need to use `fastboot` in u-boot shell
+
+Flash U-Boot, power while holding boot button then
+```
+docker create --entrypoint sh ghcr.io/pl4nty/sbc-riscv64:8bcc7b0
+docker export -o overlay.tar.gz 789d322174957e61ebbd2c3e8bbcd7257e0266dde47fe0a1b6f450c0d1dec314
+7z e overlay.tar.gz "artifacts/riscv64/u-boot/licheepi-4a/u-boot-with-spl.bin"
+
+fastboot flash ram .\u-boot-with-spl.bin
+fastboot flash uboot .\u-boot-with-spl.bin
+fastboot reboot
+```
+
+https://github.com/revyos/thead-u-boot/blob/th1520/include/configs/light-c910.h#L75
+https://github.com/revyos/thead-u-boot/blob/93ff49d9f5bbe7942f727ab93311346173506d27/configs/light_lpi4a_defconfig
+
+
+![[Pasted image 20250609004449.png|Pasted image 20250609004449.png]]
+
 
 ``` fold title:"Boot logs without overlay"
 brom_ver 8
