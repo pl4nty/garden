@@ -82,3 +82,8 @@ Build order
 ## Downgrade a package
 If the latest release has a critical bug (looking at you Docker Desktop), we can downgrade to an older version with `winget install Docker.DockerDesktop --version 4.34.2 --force --custom "--disable-version-check"`.
 `--force` seems necessary to bypass the check for an existing version, otherwise it'll just print this warning and skip the install: `Found an existing package already installed. Trying to upgrade the installed package...`.
+
+## Store
+
+
+has this been quietly fixed? the product details endpoint lists LB as a supported market, at least on the default catalog. winget uses catalog 4 (enterprise) but I'm not building storelib just for this lol [https://displaycatalog.mp.microsoft.com/v7.0/products/9WZDNCRFJ3PZ?fieldsTemplate=Details&market=LB&languages=en&catalogIds=1](https://t.co/UG8TpLS7ku)
