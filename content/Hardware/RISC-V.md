@@ -58,10 +58,9 @@ Milk-V just announced their Jupiter/Megrez NX equivalents with the same K1/EIC77
 ### Sipeed LicheePi 3A/5A
 3A only ships with a carrier board but the 8GB variant is [out of stock](https://www.aliexpress.com/item/1005007656383220.html) anyway. Based on the Spacemit K1, [mainline is in progress](https://github.com/spacemit-com/linux/wiki) ([Patchwork](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=SpaceMIT&archive=both&delegate=)). Likely better multicore performance than the unreleased 5A, which uses an EIC7700 or EIC7700X. Mainline progress is [tracked here](https://github.com/spacemit-com/linux/wiki), support isn't great and the version with a motherboard for flashing [isn't available anyway](https://item.taobao.com/item.htm?id=825146039008&skuId=5546630573923&spm=tbpc.tborder.item.d_title825146039008.49c56bdbBszuL1).
 ### Sipeed Lichee Pi 4A
-Popular but slow [T-Head](https://www.t-head.cn/) RISC-V [TH1520](https://www.t-head.cn/product/yeying) SOC with a known silicon vulnerability. Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their bare metal service but I couldn't get it working with mainline. The boot process is:
-* Vendor U-Boot
-* Chainload [mainline U-Boot at 0xc0100000](https://wiki.sipeed.com/hardware/en/lichee/th1520/lpi4a/7_develop.html#Mainline:~:text=Mainline%20U%2Dboot%20is%20expected%20to%20be%20loaded%20at%200x1c00000)
-
+Popular but slow [T-Head](https://www.t-head.cn/) RISC-V [TH1520](https://www.t-head.cn/product/yeying) SOC with a known silicon vulnerability. Scaleway [added serial support](https://x.com/seblu84/status/1795739245211951201) to their bare metal service but I couldn't get it working with mainline. Ended up buying a module from Taobao and flashing it with the LPi 3A carrier board. [Pending](https://patchwork.kernel.org/project/linux-riscv/list/?series=&submitter=&state=*&q=TH1520&archive=both&delegate=):
+* [Fan controller](https://patchwork.ozlabs.org/project/linux-pwm/list/?series=458295&state=*), an example written as part of the Rust PWM bindings patchset so could take a while to merge...
+* [Reset controller](https://patchwork.kernel.org/project/linux-riscv/list/?series=968827)
 
 Resources:
 * https://github.com/dlan17/u-boot/tree/th1520/net
@@ -103,6 +102,7 @@ https://github.com/revyos/thead-u-boot/blob/93ff49d9f5bbe7942f727ab9331134617350
 
 ![[Pasted image 20250609004449.png|Pasted image 20250609004449.png]]
 
+Goal: [fastfetch-cli/fastfetch](https://github.com/fastfetch-cli/fastfetch) for the flex
 
 ``` fold title:"Boot logs without overlay"
 brom_ver 8
