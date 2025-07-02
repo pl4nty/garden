@@ -102,3 +102,5 @@ W0419 01:55:38.455284   29246 action.go:449] ef748987-0392-4788-948f-c2d9a3def5e
 ```
 
 I couldn't get siso's web UI (http://localhost:36423/) to load either, just kept hitting 404s.
+
+Edit: [reclient will be removed by end of September](https://groups.google.com/a/chromium.org/g/chromium-dev/c/v-WOvWUtOpg/m/kj6bhVaCBQAJ), I hope the RBE vendors and Chromium forks are ready
