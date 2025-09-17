@@ -81,21 +81,21 @@ Needs `xz-utils` for Dockerfile `ADD file.tar.xz`
 ```sh
 sudo apt update
 sudo apt install wget xz-utils
-wget https://github.com/containerd/containerd/releases/download/v2.1.1/containerd-2.1.1-linux-riscv64.tar.gz -O containerd.tar.gz
+wget https://github.com/containerd/containerd/releases/download/v2.1.4/containerd-2.1.4-linux-riscv64.tar.gz -O containerd.tar.gz
 tar Cxzvf /usr/local containerd.tar.gz
 mkdir -p /usr/local/lib/systemd/system/
 wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -O /usr/local/lib/systemd/system/containerd.service
 systemctl daemon-reload
 systemctl enable --now containerd
 
-wget https://github.com/opencontainers/runc/releases/download/v1.3.0/runc.riscv64 -O runc
+wget https://github.com/opencontainers/runc/releases/download/v1.3.1/runc.riscv64 -O runc
 install -m 755 runc /usr/local/sbin/runc
 
-wget https://github.com/moby/buildkit/releases/download/v0.22.0/buildkit-v0.22.0.linux-riscv64.tar.gz -O buildkit.tar.gz
+wget https://github.com/moby/buildkit/releases/download/v0.24.0/buildkit-v0.24.0.linux-riscv64.tar.gz -O buildkit.tar.gz
 tar Cxzvf /usr/local buildkit.tar.gz
-mkdir /etc/buildkit # add cert files here
 ```
 <br>
+`scp "C:\Users\Planty\Downloads\.certs\daemon\*" root@62.210.163.145:/etc/buildkit`
 
 `/usr/local/lib/systemd/system/buildkitd.service`
 ```toml

@@ -78,3 +78,24 @@ Concurrent local agents on feature branches using `git worktree`
 * VSCode support?
 * Dependencies - features like [pnpm workspaces](https://pnpm.io/workspaces)
 * Testing - conflicting ports
+
+Web app to generate Intune WiFi XML schema, like [daduckMSFT/WiFiProfileGenerator: Client-side web-app that will generate Android, iOS and Windows profiles in their raw format](https://github.com/daduckMSFT/WiFiProfileGenerator)
+
+Test [Rockchip NPU mainline](https://blog.tomeuvizoso.net/2025/07/rockchip-npu-update-6-we-are-in-mainline.html) on RK1, maybe send my first kernel patch to enable it?
+
+Upgrade Electron's credential storage with [Windows.Security.Credentials](https://learn.microsoft.com/en-us/uwp/api/windows.security.credentials?view=winrt-26100) and [Credential locker for Windows apps](https://learn.microsoft.com/en-us/windows/apps/develop/security/credential-locker)
+
+Web app for [finding package family names](https://learn.microsoft.com/en-us/intune/configmgr/protect/deploy-use/find-a-pfn-for-per-app-vpn#find-a-pfn-if-the-app-is-not-installed-on-a-computer)
+
+RISC-V support for tons of CNCF images now that Debian Trixie is out
+
+[My Life in Weeks by Gina Trapani](https://weeks.ginatrapani.org/)
+
+[Safeguard hold tracker](https://x.com/gwblok/status/1888986641169309792)
+
+Find out what [spectre.microsoft.com](https://crt.sh/?q=spectre.microsoft.com) is
+
+Linux kernel kconfig web app
+* [nRF Kconfig - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=nordic-semiconductor.nrf-kconfig)
+* [cateee/lkddb: Linux Kernel Driver Database](https://github.com/cateee/lkddb)
+* [zauberzeug/nicegui: Create web-based user interfaces with Python. The nice way.](https://github.com/zauberzeug/nicegui)

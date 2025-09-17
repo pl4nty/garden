@@ -30,17 +30,18 @@ Some of these are finalised on [RISC-V Technical Specifications - Home - RISC-V 
 ## Talos Bringup
 RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeedio/status/1778612306613829871) are starting to hit the market, so I thought I'd start on Talos support early. I worked in this order:
 
+* [stagex](https://github.com/pl4nty/talos-stagex), new in v1.10. stage0-3, c (gcc locally due to 8 hour build), next. run stage0-3 concurrently to load cache, then rerun
 * [bldr](https://github.com/pl4nty/talos-bldr)
-* [pkgs](https://github.com/pl4nty/talos-pkgs) ca-certs and fhs
-* bldr with ca-certs and fhs
-* [stagex](https://github.com/pl4nty/talos-stagex) (new in v1.10)
-* bldr with stagex busybox
 * [toolchain](https://github.com/pl4nty/talos-toolchain)
 * tools
-* pkgs, with kconfig from `make kernel-menuconfig USERNAME=pl4nty PLATFORM=linux/riscv64` on a copied `config-arm64`
-* talos
+* [pkgs](https://github.com/pl4nty/talos-pkgs), with kconfig from `make kernel-menuconfig USERNAME=pl4nty PLATFORM=linux/riscv64` on a copied `config-arm64`
+* talos. `crane blob ghcr.io/pl4nty/kernel@sha256:<hash> | tar -tvz usr/lib/modules/6.17.0-rc4-talos/kernel` to list modules
+
+#TODO remove tags from all repos
 
 Images can be downloaded or built from my [GitHub fork](https://github.com/pl4nty/talos). I used [namespace](http://namespace.so/) in a few repos where cross-compilation was supported, but the remainder needed native builds. At first I tried a [Scaleway RISC-V server](https://labs.scaleway.com/en/em-rv1/) to learn more about [[BuildKit|BuildKit]], but `pkgs` exceeded the 6-hour GitHub timeout repeatedly and was only able to complete by partial caching between runs. Unfortunately these [publicly-available runners](https://github.com/riscv-builders/riscv-builders.github.io/) can't run BuildKit.
+
+`pkgs` kernel builds may also fail with BTF errors due to low disk space. Since the cache is discarded on failure, it isn't immediately obvious, but builds should succeed after freeing space eg with `docker buildx prune --filter until=24h`.
 
 These dependencies are also missing RISC-V support:
 - [x] [Stable Alpine release](https://gitlab.alpinelinux.org/alpine/aports/-/issues/13269), currently using `edge` in bldr. now stable, and talos swapped to [StageX](https://stagex.tools/) anyway
@@ -74,14 +75,93 @@ Resources:
 
 #TODO rebase when ready to test, add kernel configs for Lichee Pi serial, build ISO for UEFI
 
+Vendor image writes U-Boot config at `0xdbc0`, maybe loads it somehow?
+```
+0x000dbc00: 15 C3 A1 04  73 63 72 69   70 74 61 64  64 72 3D 30    ....scriptaddr=0
+0x000dbc10: 78 30 30 35  30 30 30 30   30 00 70 78  65 66 69 6C    x00500000.pxefil
+```
+
+```ini
+scriptaddr=0x00500000
+pxefile_addr_r=0x00600000
+fdt_addr_r=0x02800000
+kernel_addr_r=0x00200000
+ramdisk_addr_r=0x06000000
+boot_conf_addr_r=0xc0000000
+aon_ram_addr=0xffffef8000
+audio_ram_addr=0x32000000
+opensbi_addr=0x0
+fwaddr=0x10000000
+splashimage=0x30000000
+splashpos=m,m
+fdt_high=0xffffffffffffffff
+kernel_addr_r=0x00200000
+kdump_buf=180M
+mmcdev=0
+mmcbootpart=2
+boot_conf_file=/extlinux/extlinux.conf
+uuid_rootfsA=80a5a8e9-c744-491a-93c1-4f4194fd690a
+partitions=name=table,size=2031KB;name=boot,size=500MiB,type=boot;name=root,size=-,type=linux,uuid=${uuid_rootfsA}
+gpt_partition=gpt write mmc ${mmcdev} $partitions
+load_aon=load mmc ${mmcdev}:${mmcbootpart} $fwaddr light_aon_fpga.bin;cp.b $fwaddr $aon_ram_addr $filesize
+load_c906_audio=load mmc ${mmcdev}:${mmcbootpart} $fwaddr light_c906_audio.bin;cp.b $fwaddr $audio_ram_addr $filesize
+finduuid=part uuid mmc ${mmcdev}:${mmcpart} uuid
+bootcmd_load=run findpart;run load_aon;run load_c906_audio; load mmc ${mmcdev}:${mmcbootpart} $opensbi_addr fw_dynamic.bin
+bootcmd=run bootcmd_load; bootslave; sysboot mmc ${mmcdev}:${mmcbootpart} any $boot_conf_addr_r $boot_conf_file;
+fdtfile=thead/light-lpi4a.dtb
+ethaddr=48:DA:35:60:00:7E
+eth1addr=48:DA:35:60:00:7F
+```
+
+First 4 sectors aren't available, I wonder what's in them?
+
+```
+LPI4A=> mmcinfo
+Device: mmc@ffe7080000
+Manufacturer ID: ec
+OEM: 0
+Name: AT2SAB 
+Bus Speed: 198000000
+Mode: HS400ES (200MHz)
+Rd Block Len: 512
+MMC version 5.1
+High Capacity: Yes
+Capacity: 28.9 GiB
+Bus Width: 8-bit DDR
+Erase Group Size: 512 KiB
+HC WP Group Size: 8 MiB
+User Capacity: 28.9 GiB WRREL
+Boot Capacity: 4 MiB ENH
+RPMB Capacity: 4 MiB ENH
+Boot area 0 is not write protected
+Boot area 1 is not write protected
+
+LPI4A=> mmc part
+Part    Start LBA       End LBA         Name        Attributes                        Type GUID                                     Partition GUID
+  1     0x00000800      0x000327ff      "EFI"       attrs:  0x0000000000000000        c12a7328-f81f-11d2-ba4b-00a0c93ec93b        757a78c6-0fc7-4a1f-b4d9-415bf5abb476
+                                                                                       (EFI System Partition)
+  2     0x00032800      0x00032fff      "BIOS"      attrs:  0x0000000000000004        21686148-6449-6e6f-744e-656564454649        64d4fc60-f88e-45e0-be0b-aa81eaf8b553
+                                                                                       (BIOS Boot Partition)
+  3     0x00033000      0x0041afff      "BOOT"      attrs:  0x0000000000000000        0fc63daf-8483-4772-8e79-3d69d8477de4        f5bbc825-324d-47ba-8160-f9fb8bea1f67
+                                                                                       (Linux Filesystem)
+  4     0x0041b000      0x0041b7ff      "META"      attrs:  0x0000000000000000        0fc63daf-8483-4772-8e79-3d69d8477de4        7d44056b-864e-4a8a-a04f-982548925256
+                                                                                       (Linux Filesystem)
+
+LPI4A=> mmc read 0x53b6b260 0 4
+
+LPI4A=> mm and md weren't found...
+```
 ## Firmware
 I saw "OpenSBI" crop up a few times when reading about firmware. This [explanation](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) was really helpful. Turns out Supervisor Binary Interface (SBI) is an optional higher-privilege supervisor firmware, like ARM Trusted Firmware (ATF) or BIOS/UEFI. OpenSBI is the reference implementation shipped in the Sipeed Lichee SBCs. I could use U-Boot/Talos in M-mode with vendor U-Boot doing DDR training etc, but then I have to partially flash the board which could be a pain. [This patchset](https://patchwork.ozlabs.org/project/uboot/list/?series=458992) swaps to S-mode and should allow a fully open firmware, so I'll try it first.
 
 ## Lichee Pi 4A flashing
+Bootloaders and disk can be flashed separately. 
+
+For disk:
 Ctrl-C via serial during U-Boot
-`ums 0 mmc 0`
+`ums 0 mmc 0` to mount MMC as USB. not available in mainline U-Boot, only vendor U-Boot (`fastboot flash ram .\u-boot-with-spl-sbc8g.bin`)
 Capture vhdx with Rufus
-Flash with rufus
+Flash raw disk with rufus
 
 Boot button fastboot doesn't properly write u-boot, need to use `fastboot` in u-boot shell
 
@@ -90,6 +170,9 @@ Flash U-Boot, power while holding boot button then
 docker create --entrypoint sh ghcr.io/pl4nty/sbc-riscv64:8bcc7b0
 docker export -o overlay.tar.gz 789d322174957e61ebbd2c3e8bbcd7257e0266dde47fe0a1b6f450c0d1dec314
 7z e overlay.tar.gz "artifacts/riscv64/u-boot/licheepi-4a/u-boot-with-spl.bin"
+
+crane export ghcr.io/pl4nty/sbc-riscv64@sha256:7e4ba860bb282e8b15e27c114082be68709c5d81792967fd0763d3c18c3a165f | tar -xv artifacts/riscv64/u-boot/licheepi-4a/u-boot-with-spl.bin 
+artifacts/riscv64/u-boot/licheepi-4a/u-boot-with-spl.bin
 
 fastboot flash ram .\u-boot-with-spl.bin
 fastboot flash uboot .\u-boot-with-spl.bin

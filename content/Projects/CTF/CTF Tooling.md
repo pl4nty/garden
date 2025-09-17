@@ -14,3 +14,8 @@ Speaking of scripts - something to automate common CTFd actions? A couple common
 * chal download
 * flag submission - pwntools has something?
 
+## Agents
+rev, especially labelling [All You Need Is MCP - LLMs Solving a DEF CON CTF Finals Challenge - Wil Gibbs](https://wilgibbs.com/blog/defcon-finals-mcp/). not sure I want to learn IDA though...
+angr? maybe pair with good templates for pwn
+[DaCodeChick/GhidraMCP: Independent fork of LaurieWired's GhidraMCP for continued development](https://github.com/DaCodeChick/GhidraMCP)
+fine-tuned agents? [this one](https://arxiv.org/html/2505.16366v1) was 7B but competitive with SOTA reasoning models. use it as sub-agents on a RunPod or something? with a reasoning agent as the orchestrator
