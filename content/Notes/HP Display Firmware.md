@@ -6,7 +6,7 @@ Server returns "not found" for non-existent, or "not a file" for directories.
 
 ILSpy helps find the remaining params pretty quickly.
 
-```C#
+```csharp
 private void InitializeFtpService()  
 {  
 	MonitorModel displayDto = agentSimoneBridge.GetDisplayDto(DisplayCurrentValues.SelectedDisplaySerialNum);  

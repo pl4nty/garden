@@ -33,7 +33,7 @@ RISC-V SBCs like the Lichee Pi 4 and [Sipeed LM3A/5A](https://twitter.com/sipeed
 * [stagex](https://github.com/pl4nty/talos-stagex), new in v1.10. stage0-3, c (gcc locally due to 8 hour build), next. run stage0-3 concurrently to load cache, then rerun
 * [bldr](https://github.com/pl4nty/talos-bldr)
 * [toolchain](https://github.com/pl4nty/talos-toolchain)
-* tools
+* [tools](https://github.com/pl4nty/talos-tools)
 * [pkgs](https://github.com/pl4nty/talos-pkgs), with kconfig from `make kernel-menuconfig USERNAME=pl4nty PLATFORM=linux/riscv64` on a copied `config-arm64`
 * talos. `crane blob ghcr.io/pl4nty/kernel@sha256:<hash> | tar -tvz usr/lib/modules/6.17.0-rc4-talos/kernel` to list modules
 
