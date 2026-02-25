@@ -13,6 +13,33 @@ Some third-party sources
 * https://pkgmgr-wgrest-pme.azurefd.net/api: built for Intune integration based on [microsoft/winget-cli-restsource](https://github.com/microsoft/winget-cli-restsource), but was eventually disabled
 * https://cloudflightio.github.io/winget-pkgs: an interesting preindexed source, using GitHub for manifest storage, Actions to build the index, and Pages to expose it to users. I [added support for Azure Static Web Apps](https://github.com/pl4nty/winget-pkgs-selfhost/pull/1/files) in the hope of enabling authentication, but it's not supported for preindexed sources 
 
+## Preindexed
+The preindexed source with Index v2 is an SQLite database bundled in a signed MSIX package. It doesn't store installer data though, just points to manifests served from a CDN. The package version manifests ([selfhost example](https://github.com/pl4nty/winget-pkgs-selfhost/tree/main/cache/packages), [community example](https://cdn.winget.microsoft.com/cache/packages/IDMComputerSolutions,Inc.UltraEdit/8dc924fc/versionData.mszyml), [decompressed](https://cyberchef.tplant.com.au/#recipe=From_Hex('Auto')Raw_Inflate(0,0,'Adaptive',false,false)&input=M2Q4Y2JkMGFjMjMwMTgwMGY3M2M0NTFlNDA5YmZmZGZkNTBhNzYxMDA0ZDEzZGY2NGIyMGQwYTZkMmE0N2Q3ZTNiYzkwZDM3ZGRkNWI3YzdhY2EzNjhlZjNkM2FlM2RkNjNjMTNiN2EyMDFjYzI3ODdkNzgzYzg3OTI1M2FjYWQ5MjRjODZmZTdlNTllNmVmZDZlMmZhNWNhNmFkZTVhNWQ0ZDM1MDQ2ZjI5YWRhMWFhZTkwMWJmOWU3YzQ2YWE3OGY0N2U1NGFkZjNjZTZhMzE0OWE4MTg5NDBhM2I2Y2EwMTk3ZGM5OTIwMjQ4MzMxODFhMTg5NGI2NzY1NTA1NDAxOTNkMjlhMTQzZTIyYTVhODBmMjkwMzBhZDAwZg)) use a rare (unique?) MSZIP compression format (`application/x-ms-zip-yaml`) and shortened keys ([source](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/PackageVersionDataManifest.cpp)). Here's a Kaitai Struct for them:
+```yml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kaitai-io/ksy_schema/refs/heads/master/ksy_schema.json
+meta:
+  id: mszyml
+  endian: le
+  ks-opaque-types: true
+seq:
+  - id: unknown
+    type: u8
+  - id: size_uncompressed
+    type: u8
+    repeat: expr
+    repeat-expr: 2
+  - id: size
+    type: u4
+  - id: signature
+    contents: 'CK'
+  - id: data
+    size: size-2
+    doc: size is sig+data
+    # raw isn't supported
+    # process: zlib
+```
+
+
 ## Authentication
 winget sources can be public, require client certificate authentication, or request Entra authentication.
 
