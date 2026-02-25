@@ -307,52 +307,6 @@ What is `IsServicesContentVerificationEnabled` and the `DO-Timestamp`, `DO-Conte
 Undocumented `SOFTWARE\Policies\Microsoft\Windows NT\DNSClient\EnableMDNS`
 
 
-## Purplecon talk
-p2pwn: hijacking Microsoft's global torrent network
-instead of "abusing"?
-
-
-tell us what this talk is about, and why people should come see it. write this in a way that people new to security would appreciate. to appear on the website
-Torrenting is only for pirates, right??? Turns out Microsoft's little-known torrent network has grown to over a billion devices, including game consoles and even IoT. Let's look under the hood to discover some novel attacks, and discuss practical defense strategies in a cloud-native world.
-
-dox urself and tell us your story
-Tom enjoys (bre|m)aking tech of all kinds. He's currently building automated endpoint management at devicie.com, and has worked to protect devices and clouds across industry, government, and higher ed. He also runs a Kubernetes homelab and a popular CTF.
-He's fond of pastel green and plant-related puns.
-
-
-talk description, including: an overview, structure, and a description of any tooling, flowcharts, spreadsheets, or mixtapes you plan to release
-
-This is my first CFP, so not sure if this is enough detail - happy to provide more, and I'd love feedback :)
-
-Goal: attendees learn about a little-known Windows/IoT feature, some novel attacks/tools, plus mitigations for it and features like it
-
-Context: what's a torrent network and why did Microsoft build one? what's it used for today?
-
-Details: high-level arch diagram - cloud services, peering. links for learning more - protocols like MS-DO/Teredo, recent Linux support (IoT)
-
-Attack 1: why poisoning content during peering is hard, several mitigations like checksums. show a passive mDNS-based AitM instead - track downloads like Windows/Defender updates and determine exploitability of target. also trigger arbitrary GET with HTTP 302, room for future research? and link to remy's torrent tracker idea using cloud service instead of AitM (https://remyhax.xyz/posts/do-harm/). plus link to ghidra/windbg setup for DoSvc
-
-Attack 2: arbitrary file upload to network via Microsoft Intune - free P2P malware distribution with encryption, firewall allowed, no TLS inspection, disk writes from SYSTEM. even bypasses ZTNA like Zscaler. yay for multi-tenant cloud! release scripts for upload/download
-
-Mitigations: show GPOs, firewall rules, detections. but network security is hard in a cloud world. discuss broader mitigations - mDNS, IPv6 tunnelling, segmentation
-
-
-free text input
-idk if this talk fits the vibe, and it'd be my first public talk too. but regardless I'm keen for the con. thanks for reviewing :)
-
-The problem - moving lots of files. Windows updates etc
-Avoided by caching on enterprise networks (SCCM/WSUS). What about consumer?
-Windows 10, version 1511 - Delivery Optimization. Peer to peer swarms
-
-Scooby pull mask off meme
-Classic msft - proprietary torrenting
-Architecture diagram - control plane, assets, clients, Connected Cache (NDA)
-Peer-to-peer file distribution, fallback to traditional HTTP hosting
-Download flow
-* Find region -> discover services and config. ratelimits, timeouts, VPN adapter regex - fun recent feature. don't want to peer over those
-* Content policy
-* 
-* Get metadata from peers - piece hashes 
 
 ## Content
 [Find files in Windows 11, version 23H2 (22631.4037) amd64 - UUP dump](https://uupdump.net/findfiles.php?id=b81608e0-6b51-4771-affc-ce14dba2ca83)

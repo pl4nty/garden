@@ -11,8 +11,8 @@ Goals
 
 AM5 socket released 2022, supported to at least 2027. Adds DDR5 support
 * CPU: Zen 5 with X3D cache? 9000X3D expected in September. May also have USB4
-* Memory: 64GB or 96GB, bandwidth? RGB not needed. 128 would require careful mobo selection
-* Graphics card: GTX 5000 series expected by Q1 25, wait and pick up a discounted 3080/4080? Need DP 1.4a or HDMI 2.1, so GTX 1080 minimum
+* Memory: 64GB or 96GB, bandwidth? RGB not needed. 128 would require careful mobo selection. Wrote this before memory shot up, oops... Guess I'm delayed another few years
+* Graphics card: monitor uses FreeSync. Nvidia would be nice for CUDA, but I can always rent a remote GPU. Need DP 1.4a or HDMI 2.1, 4K-equivalent so 9070 XT looks good
 * Mobo: Mini ITX for Terra case. B650E for PCIe 5.0
 * Power supply: won't fit in case :( Nearing end of 10yr warranty anyway
 * Storage: Crucial T500, same as homelab? or use the 5.0 T700s for way more $. Could reuse old WD Black 2TB too
@@ -28,3 +28,5 @@ I bought a [WLmouse Beast X Max](https://www.wlmouse.com/en-wl/products/beast-ma
 ## Debugging
 Currently using a cheap [sipeed/RV-Debugger-BL702](https://github.com/sipeed/RV-Debugger-BL702) for UART, but I'm looking forward to my [Glasgow Interface Explorer](https://glasgow-embedded.org/latest/intro.html) arriving soon.
 Even if it's overkill, I'm glad to support open hardware and especially [Catherine](https://github.com/whitequark)'s work.
+
+Another testing tool I can't afford... A [1G/S scope over Thunderbolt](https://www.crowdsupply.com/eevengers/thunderscope)

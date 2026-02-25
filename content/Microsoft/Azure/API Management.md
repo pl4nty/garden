@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/azure/api-management/"}
+dg-publish: true
 ---
-
 The `set-body` policy can be configured to use the [Liquid](https://shopify.github.io/liquid/basics/introduction/) templating language to transform the body of a request or response.
 
 This is useful for accessing object properties, but doesn't work on arrays because they're not a valid standalone JSON object. Instead, Liquid strips them, eg `[{},{}]` to `{},{}`. 
