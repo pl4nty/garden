@@ -5,7 +5,7 @@ The only public installer (https://links.fortinet.com/forticlient/win/vpnagent) 
 
 At least the silent installer is simple, the MSI it uses is just a PE resource.
 
-```ksy
+```yml
 meta:
   id: forticlient
   title: FortiClientVPN.exe, not the stub
