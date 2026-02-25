@@ -99,3 +99,5 @@ Linux kernel kconfig web app
 * [nRF Kconfig - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=nordic-semiconductor.nrf-kconfig)
 * [cateee/lkddb: Linux Kernel Driver Database](https://github.com/cateee/lkddb)
 * [zauberzeug/nicegui: Create web-based user interfaces with Python. The nice way.](https://github.com/zauberzeug/nicegui)
+
+WebSerial interface for this MCU tester https://www.reddit.com/r/ErgoMechKeyboards/comments/1orm7t4/cn_tester_release_announcement/ 
