@@ -1,11 +1,14 @@
 ---
 dg-publish: true
+aliases:
 ---
 ## ai - GPT Detector
 
 >Tired of Turnitin AI detector? It's time to show your reverse card...
 
 We're given 64 files each of `openai/gpt-4o` and `qwen/qwen-2.5-72b-instruct` responses to a prompt, that were randomly shuffled and used to generate an AES key to encrypt the flag (0 bit for qwen, 1 for gpt). We need to classify most of the files, so that the remaining bits can be bruteforced. We also have the response generation and encryption code, including the prompt.
+
+--- 
 
 ```python
 def generate(model):
@@ -23,7 +26,11 @@ def generate(model):
     return completion.choices[0].message.content
 ```
 
+---
+
 At first glance I found a couple of LLM detection papers including this [perplexity approach](https://arxiv.org/abs/2305.15004), but nothing that could do attribution without a bunch of expensive training data. And most of the binary classification was human vs AI, rather than model vs model. So I pivoted to binary k-means clustering with [sentence transformers](https://sbert.net/) and later [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html). This seemed pretty reasonable, the models are from different companies so surely they'd use different vocabulary? Each response was pretty large too so I assumed semantic analysis wasn't intended. Even though my teammate teddy generated a bunch of gpt responses, and got the feeling gpt responses included more scientific topics.
+
+---
 
 ```python
 
