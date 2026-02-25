@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/surface/","updated":"2024-09-11T23:02:45.854+10:00"}
+dg-publish: true
 ---
-
 ## Hibernate
 
 The Surface power plan (Balanced) doesn't expose hibernate settings by default, but we can add them.
@@ -55,9 +54,9 @@ manager -> res -> tools
 Upgraded my Surface Laptop 3 to a [Micron Crucial 2400 1TB](https://www.amazon.com.au/gp/product/B0BWHDVR5R/)
 
 Before:
-![CrystalDiskMark_20240210144851_surface3old.png](/img/user/Uploads/CrystalDiskMark_20240210144851_surface3old.png)
+![[CrystalDiskMark_20240210144851_surface3old.png|CrystalDiskMark_20240210144851_surface3old.png]]
 
 After:
-![CrystalDiskMark_20240908135104.png](/img/user/Uploads/CrystalDiskMark_20240908135104.png)
+![[CrystalDiskMark_20240908135104.png|CrystalDiskMark_20240908135104.png]]
 
 #TODO cooling upgrade [Fixed Surface Laptop 3 overheating issue : r/Surface (reddit.com)](https://www.reddit.com/r/Surface/comments/pq2bbk/fixed_surface_laptop_3_overheating_issue/)
