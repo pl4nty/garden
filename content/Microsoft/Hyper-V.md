@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/microsoft/hyper-v/","updated":"2024-09-20T18:37:51.637+10:00"}
+dg-publish: true
 ---
-
 ## Networking
 
 The default switch simply uses NAT to provide host network access, but certain firewall rules will break it.
@@ -16,7 +15,14 @@ An external switch can bypass the rules using adapter bridging, but has other do
 [Convert-WindowsImage/Convert-WindowsImage.ps1 at main · x0nn/Convert-WindowsImage (github.com)](https://github.com/x0nn/Convert-WindowsImage/blob/main/Convert-WindowsImage.ps1#L74)
 [Windows Autopilot testing with VMs – Out of Office Hours (oofhours.com)](https://oofhours.com/2023/08/23/windows-autopilot-testing-with-vms/)
 
-
+%%
+`Convert-WindowsImage.ps1 -SourcePath .\en-us_windows_11_business_editions_version_23h2_updated_dec_2023_x64_dvd_d9da936d.iso -Edition Professional -EnableDebugger Network -IPAddress 172.21.16.1 -Port 50000 -Key 3u8smyv477z20.2owh9gl90gbxx.3sfsihzgq7di4.nh8ugnmzb4l7`
+`Convert-WindowsImage` "supports" kernel debugging, but the script seems to fail. So we can edit the BCD manually. Mount the VHD, then
+```
+I:\Windows\System32\bcdedit.exe /store H:\EFI\Microsoft\Boot\BCD /set `{default`} debug on
+I:\Windows\System32\bcdedit.exe /store H:\EFI\Microsoft\Boot\BCD /dbgsettings NET HOSTIP:172.21.16.1 PORT:50000 KEY:3u8smyv477z20.2owh9gl90gbxx.3sfsihzgq7di4.nh8ugnmzb4l7
+```
+%%
 
 Regular
 ```powershell
@@ -45,7 +51,7 @@ function Copy-VMFileRelative ($VMName, [System.IO.FileInfo]$SourcePath) {
 ```
 
 The cmdlet also has a `-FileSource` parameter which looks like it meant to support VM to host copying. But the only valid parameter is `-FileSource Host`...
-At first I tried `New-PSSession -VMName` and `Copy-Item -FromSession` with local admin credentials, but `Copy-Item` is blocked by Constrained Language Mode ([[Microsoft/Windows/WDAC/WDAC\|Windows/WDAC/WDAC]]).
+At first I tried `New-PSSession -VMName` and `Copy-Item -FromSession` with local admin credentials, but `Copy-Item` is blocked by Constrained Language Mode ([[Windows/WDAC/WDAC|Windows/WDAC/WDAC]]).
  #TODO can Remote PowerShell work with Entra creds? I think jborean looked at this
 
 I took a brief detour looking at [clixml deserialisation exploits](https://www.truesec.com/hub/blog/attacking-powershell-clixml-deserialization) against the host... But that seemed like overkill.
@@ -105,7 +111,7 @@ if ($FileSource -eq "Host") {
     $DestinationPath = "C:\Users\Public\Downloads\$($SourcePath.Name)"
   }
 
-  Copy-VMFile -VMName $Name -SourcePath $SourcePath -DestinationPath $DestinationPath -CreateFullPath
+  Copy-VMFile -VMName $Name -SourcePath $SourcePath -DestinationPath $DestinationPath -CreateFullPath -Credential $Credential
 }
 else {
   if (-not $DestinationPath) {
@@ -127,3 +133,5 @@ else {
 ```
 
 #TODO provide `SourcePath` completion when source is the guest?
+
+
