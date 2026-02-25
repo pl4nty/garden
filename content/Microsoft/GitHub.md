@@ -35,6 +35,39 @@ Supports media queries, like using images to match user's colour scheme.
 </picture>
 ```
 
+## Userstyles
+[refined-github](https://github.com/refined-github/refined-github) is great, but their zero-config philosophy has some limitations. Like their feature to collapse bot PRs only works on a few well-known bots. I wrote a userstyle as a workaround.
+
+```css
+/* https://github.com/refined-github/refined-github/blob/bfd55e957ad3c95349d2925a59e0e5f83b8b2bbe/source/features/dim-bots.css */
+.js-issue-row:has(.opened-by [href*="spectopo"], [href*="UnownBot"], [href*="damn-good-b0t"], [href*="wingetbot"]) {
+    & > *, & .Box-row--drag-hide {
+		transition: 100ms opacity; /* Match `mark-merge-commits-in-list` */
+	}
+
+	/* Commit titles, dim */
+	&:not(.rgh-tagged, :hover) > *,
+	/* PR row, dim */
+		&:not(.rgh-tagged, :hover)
+		.Box-row--drag-hide {
+		opacity: 50%; /* Match `mark-merge-commits-in-list` */
+	}
+
+	&:not(.rgh-tagged, .rgh-interacted) {
+		/* Reset commit title spacing */
+		.min-width-0 .mb-1 {
+			margin-bottom: 0 !important;
+		}
+
+		.mb-1 ~ * /* Commit metadata */,
+		.dropdown-signed-commit /* Commit verified label */,
+		.flex-shrink-0 .BtnGroup /* Commit buttons on side */,
+		.min-width-0 > :is(.d-block, .d-flex) /* PR */ {
+			display: none !important;
+		}
+	}
+}
+```
 ## Automatic remediation
 GitHub's network effect as the de-facto code forge has some interesting impacts on research and remediation at scale.
 Example: [Boost changed their CDN](https://github.com/boostorg/boost/issues/996) and broke one of my pipelines. It was a simple find/replace, so Copilot helped me write a script to automate remediation not just on my repos, but any other open source repo.
