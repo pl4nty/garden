@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"permalink":"/cloud/discourse/"}
+dg-publish: true
 ---
-
 [Source](https://meta.discourse.org/t/discourse-rss-feeds-list/264134)
 
 Here’s a list of most of the available RSS feeds in Discourse.
