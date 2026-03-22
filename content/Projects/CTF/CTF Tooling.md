@@ -132,3 +132,21 @@ linder St? starts with l, good italian
 
 phreaky
 call number, use dtmf
+
+
+flights - left at 2:25 fri by car, arriving 2:55. saves an hour for $40, busses are 25
+dropped by 3, cleared security by 3:05
+
+add Unicode 17 to signal. they use an Apple font which should be out by end of march
+https://github.com/signalapp/Signal-Android/issues/14321
+
+
+
+Linux disable MFA per device
+
+william@firstyear.if.au
+David M - Intune, did a talk
+
+bill bailey
+
+
