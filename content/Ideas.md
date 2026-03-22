@@ -101,3 +101,14 @@ Linux kernel kconfig web app
 * [zauberzeug/nicegui: Create web-based user interfaces with Python. The nice way.](https://github.com/zauberzeug/nicegui)
 
 WebSerial interface for this MCU tester https://www.reddit.com/r/ErgoMechKeyboards/comments/1orm7t4/cn_tester_release_announcement/ 
+
+https://github.com/microsoft/vscode-hexeditor kaitai
+Better static web server for powershell. SWS?
+* https://github.com/natemcmaster/dotnet-serve
+* https://github.com/MScholtes/WebServer
+
+[evildaemond/virtual-ripper: A rules based disk image analysis tool](https://github.com/evildaemond/virtual-ripper)
+
+ini intellisense/schema for vscode
+* https://github.com/Starry-Orbit-Studio/INI-IntelliSense
+* https://taplo.tamasfe.dev/configuration/directives.html#the-schema-directive
