@@ -76,12 +76,11 @@ Add
 ssh-add
 ```
 
-## Shrink disk
-```
-wsl --manage ubuntu --set-sparse true
-optimize-vhd -Path .\ext4.vhdx -Mode full
-```
+## Disk space management
+Shrink space with admin: `Optimize-Vhd -Path .\docker_data.vhdx -Mode Full`
 
+Enable automatic optimization with admin: `wsl --manage docker-desktop --set-sparse true --allow-unsafe`
+But `--set-sparse` doesn't actually seem to work even with admin, not sure why. It's just [calling an ioctl](https://github.com/microsoft/WSL/blob/081286da36415035f3ae45cf9e17f879199a225a/src/windows/service/exe/LxssUserSession.cpp#L1779). Can set it manually with: `fsutil sparse setFlag docker_data.vhdx`
 ## Kernel
 A few years ago, I subscribed to a GitHub issue on [10x-ing 9P filesystem performance](https://github.com/microsoft/WSL/discussions/9412#) in WSL2, in the hope that it'd be fixed soon. This morning I was pinged by another frustrated user still waiting for the fix.
 But after my work on [[Talos|Talos]], I'm pretty comfortable maintaining forked kernels. Let's see if I can build a faster kernel with Docker and BuildKit.
