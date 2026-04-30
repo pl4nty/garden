@@ -32,7 +32,7 @@ The download URL is likely Azure Blob Storage fronted by Azure CDN, and doesn't 
 
 I ported the content metadata retrieval to a PowerShell script, and it can be used with Oliver Kieselbach's [IntuneWinAppUtilDecoder.exe](https://github.com/okieselbach/Intune/raw/master/IntuneWinAppUtilDecoder/IntuneWinAppUtilDecoder/bin/Release/IntuneWinAppUtilDecoder.exe) to download and decrypt any Intune app.
 
-```ps1
+```pwsh
 <#
 .SYNOPSIS
 Get content information for an Intune Win32 application
