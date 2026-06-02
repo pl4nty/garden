@@ -4,6 +4,10 @@ dg-publish: true
 ## API
 The [GitHub API feeds endpoint](https://docs.github.com/en/rest/activity/feeds?apiVersion=2022-11-28) no longer returns private feeds like `current_user_url`, and they're not available in the GitHub homepage either. Possibly because the homepage now uses an internal server-side-rendered API.
 
+## Remote MCP
+GitHub's remote MCP at `https://api.githubcopilot.com/mcp` works out-of-the-box as a custom connector in Claude Desktop, using the `Claude Github MCP Connector` OAuth Client.
+But it can't access organisation private repositories, even in orgs with no [OAuth app access restrictions](https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/about-oauth-app-access-restrictions). You'll need to install it using this link: https://github.com/apps/Claude-Github-MCP-Connector/installations/new
+
 ## Codespaces
 Underlying VMs are missing the `ip6tables` kernel module for docker/kind, so we have to disable in the daemon.
 
