@@ -112,3 +112,5 @@ Better static web server for powershell. SWS?
 ini intellisense/schema for vscode
 * https://github.com/Starry-Orbit-Studio/INI-IntelliSense
 * https://taplo.tamasfe.dev/configuration/directives.html#the-schema-directive
+
+Rewrite https://github.com/ronomon/pure in zig for the flex

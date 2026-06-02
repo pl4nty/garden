@@ -30,3 +30,8 @@ Currently using a cheap [sipeed/RV-Debugger-BL702](https://github.com/sipeed/RV-
 Even if it's overkill, I'm glad to support open hardware and especially [Catherine](https://github.com/whitequark)'s work.
 
 Another testing tool I can't afford... A [1G/S scope over Thunderbolt](https://www.crowdsupply.com/eevengers/thunderscope)
+
+
+## Phone
+dual esim support simultaneously. 
+Bluetooth Le advanced - hearing loops? 
