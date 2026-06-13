@@ -101,6 +101,11 @@ plugins:
     order: 92
   - source: github:quartz-community/fonts
     enabled: true
+    options:
+      header: Titillium Web
+      body: Titillium Web
+      code: Fira Code
+      fontOrigin: googleFonts
   - source: github:quartz-community/remove-draft
     enabled: true
   - source: github:quartz-community/explicit-publish
@@ -201,7 +206,7 @@ plugins:
     layout:
       position: afterBody
       priority: 10
-  - source: github:quartz-community/footer
+  - source: ./plugins/footer
     enabled: true
     options:
       links:

@@ -134,10 +134,10 @@
       "installedAt": "2026-06-13T11:31:21.100Z"
     },
     "footer": {
-      "source": "github:quartz-community/footer",
-      "resolved": "https://github.com/quartz-community/footer.git",
-      "commit": "6ed61928d3c0178d7cef972ebcbca6a206a2f065",
-      "installedAt": "2026-06-13T11:31:23.422Z"
+      "source": "./plugins/footer",
+      "resolved": "/home/user/garden/plugins/footer",
+      "commit": "local",
+      "installedAt": "2026-06-13T12:47:23.547Z"
     },
     "github-flavored-markdown": {
       "source": "github:quartz-community/github-flavored-markdown",

@@ -1,10 +1,13 @@
 @use "./variables.scss" as *;
 
-// right padding on content in tablet view
-.page > #quartz-body .center {
-  margin-left: 0;
-  min-width: 95%;
-  max-width: 95%;
+// widen the layout to use more of the viewport (matches the old v4 site)
+.page {
+  max-width: 95vw;
+}
+
+// remove the green navigation progress bar shown during SPA navigation
+.navigation-progress {
+  display: none !important;
 }
 
 // giscus opacity
@@ -12,6 +15,7 @@
   opacity: 0.7;
 }
 
+// footer: single row, links pushed to the edges
 footer ul {
   justify-content: space-between;
   width: 95%;
