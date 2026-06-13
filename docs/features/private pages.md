@@ -13,13 +13,11 @@ There may be some notes you want to avoid publishing as a website. Quartz suppor
 If you'd like to only publish a select number of notes, you can instead use [[ExplicitPublish]] which will filter out all notes except for any that have `publish: true` in the frontmatter.
 
 > [!warning]
-> Regardless of the filter plugin used, **all non-markdown files will be emitted and available publically in the final build.** This includes files such as images, voice recordings, PDFs, etc. One way to prevent this and still be able to embed local images is to create a folder specifically for public media and add the following two patterns to the ignorePatterns array.
->
-> `"!(PublicMedia)**/!(*.md)", "!(*.md)"`
+> Regardless of the filter plugin used, **all non-markdown files will be emitted and available publically in the final build.** This includes files such as images, voice recordings, PDFs, etc.
 
 ## `ignorePatterns`
 
-This is a field in `quartz.config.ts` under the main [[configuration]] which allows you to specify a list of patterns to effectively exclude from parsing all together. Any valid [fast-glob](https://github.com/mrmlnc/fast-glob#pattern-syntax) pattern works here.
+This is a field in `quartz.config.yaml` under the main [[configuration]] which allows you to specify a list of patterns to effectively exclude from parsing all together. Any valid [fast-glob](https://github.com/mrmlnc/fast-glob#pattern-syntax) pattern works here.
 
 > [!note]
 > Bash's glob syntax is slightly different from fast-glob's and using bash's syntax may lead to unexpected results.
@@ -28,7 +26,7 @@ Common examples include:
 
 - `some/folder`: exclude the entire of `some/folder`
 - `*.md`: exclude all files with a `.md` extension
-- `!*.md` exclude all files that _don't_ have a `.md` extension
+- `!(*.md)` exclude all files that _don't_ have a `.md` extension. Note that negations _must_ parenthesize the rest of the pattern!
 - `**/private`: exclude any files or folders named `private` at any level of nesting
 
 > [!warning]

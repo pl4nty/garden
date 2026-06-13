@@ -1,7 +1,12 @@
 ---
 title: GitHubFlavoredMarkdown
+description: GitHub Flavored Markdown support (tables, task lists, footnotes, strikethrough).
 tags:
   - plugin/transformer
+image:
+repository: "[quartz-community/github-flavored-markdown](https://github.com/quartz-community/github-flavored-markdown)"
+enabled: true
+required: false
 ---
 
 This plugin enhances Markdown processing to support GitHub Flavored Markdown (GFM) which adds features like autolink literals, footnotes, strikethrough, tables and tasklists.
@@ -19,5 +24,6 @@ This plugin accepts the following configuration options:
 ## API
 
 - Category: Transformer
-- Function name: `Plugin.GitHubFlavoredMarkdown()`.
-- Source: [`quartz/plugins/transformers/gfm.ts`](https://github.com/jackyzha0/quartz/blob/v4/quartz/plugins/transformers/gfm.ts).
+- Function name: `ExternalPlugin.GitHubFlavoredMarkdown()`.
+- Source: [`quartz-community/github-flavored-markdown`](https://github.com/quartz-community/github-flavored-markdown)
+- Install: `npx quartz plugin add github:quartz-community/github-flavored-markdown`

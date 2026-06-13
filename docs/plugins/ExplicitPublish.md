@@ -1,7 +1,12 @@
 ---
 title: ExplicitPublish
+description: "Only publishes pages explicitly marked with publish: true."
 tags:
   - plugin/filter
+image:
+repository: "[quartz-community/explicit-publish](https://github.com/quartz-community/explicit-publish)"
+enabled: false
+required: false
 ---
 
 This plugin filters content based on an explicit `publish` flag in the frontmatter, allowing only content that is explicitly marked for publication to pass through. It's the opt-in version of [[RemoveDrafts]]. See [[private pages]] for more information.
@@ -14,5 +19,6 @@ This plugin has no configuration options.
 ## API
 
 - Category: Filter
-- Function name: `Plugin.ExplicitPublish()`.
-- Source: [`quartz/plugins/filters/explicit.ts`](https://github.com/jackyzha0/quartz/blob/v4/quartz/plugins/filters/explicit.ts).
+- Function name: `ExternalPlugin.ExplicitPublish()`.
+- Source: [`quartz-community/explicit-publish`](https://github.com/quartz-community/explicit-publish)
+- Install: `npx quartz plugin add github:quartz-community/explicit-publish`

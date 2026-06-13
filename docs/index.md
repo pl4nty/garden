@@ -1,46 +1,69 @@
 ---
-title: Welcome to Quartz 4
+title: Welcome to Quartz 5
 ---
 
 Quartz is a fast, batteries-included static-site generator that transforms Markdown content into fully functional websites. Thousands of students, developers, and teachers are [[showcase|already using Quartz]] to publish personal notes, websites, and [digital gardens](https://jzhao.xyz/posts/networked-thought) to the web.
 
 ## 🪴 Get Started
 
-Quartz requires **at least [Node](https://nodejs.org/) v20** and `npm` v9.3.1 to function correctly. Ensure you have this installed on your machine before continuing.
+Quartz requires **at least [Node](https://nodejs.org/) v22** and `npm` v10.9.2 to function correctly. Ensure you have these installed on your machine before continuing. See the [[getting-started/index#Prerequisites|prerequisites]] for help installing them.
 
-Then, in your terminal of choice, enter the following commands line by line:
+> [!tip] GitHub users
+> You can also use the **[GitHub template](https://github.com/jackyzha0/quartz/generate)** to create your repository in one click, then clone that instead. See [[installation#Option A Use the GitHub Template Recommended|Option A]] in the installation guide.
 
 ```shell
+# 1. Clone the Quartz repository
 git clone https://github.com/jackyzha0/quartz.git
 cd quartz
+
+# 2. Install dependencies
 npm i
+
+# 3. Initialize your site (choose a template, set your base URL, import content)
 npx quartz create
+
+# 4. Install plugins referenced by your chosen template
+npx quartz plugin install --from-config
+
+# 5. Preview your site locally
+npx quartz build --serve
 ```
 
-This will guide you through initializing your Quartz with content. Once you've done so, see how to:
+Your site is now running at `http://localhost:8080`. From here:
 
-1. [[authoring content|Writing content]] in Quartz
-2. [[configuration|Configure]] Quartz's behaviour
-3. Change Quartz's [[layout]]
-4. [[build|Build and preview]] Quartz
-5. Sync your changes with [[setting up your GitHub repository|GitHub]]
-6. [[hosting|Host]] Quartz online
+- **[[authoring-content|Write content]]** in the `content/` folder
+- **[[installation|Push to GitHub]]** with `npx quartz sync`
+- **[[hosting|Deploy]]** to GitHub Pages, Cloudflare, Netlify, or Vercel
 
-If you prefer instructions in a video format you can try following Nicole van der Hoeven's
-[video guide on how to set up Quartz!](https://www.youtube.com/watch?v=6s6DT1yN4dw&t=227s)
+For the full walkthrough, see the [[getting-started/index|Getting Started]] guide.
+
+### Returning User?
+
+Already have a Quartz repository and cloning it on a new machine?
+
+```shell
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+npm ci
+npx quartz plugin install
+npx quartz build --serve
+```
+
+> [!tip]
+> If you hit build errors on a fresh clone, try `npx quartz plugin install --latest` to refresh plugins to their latest versions. See [[troubleshooting#Plugins fail to build on a fresh clone]] for details.
 
 ## 🔧 Features
 
-- [[Obsidian compatibility]], [[full-text search]], [[graph view]], note transclusion, [[wikilinks]], [[backlinks]], [[features/Latex|Latex]], [[syntax highlighting]], [[popover previews]], [[Docker Support]], [[i18n|internationalization]], [[comments]] and [many more](./features) right out of the box
-- Hot-reload for both configuration and content
+- [[Obsidian compatibility]], [[full-text search]], [[graph view]], [[wikilinks|wikilinks, transclusions]], [[plugins/Backlinks]], [[features/Latex|Latex]], [[syntax highlighting]], [[popover previews]], [[Docker Support]], [[i18n|internationalization]], [[features/comments|comments]] and [many more](./features/) right out of the box
+- Hot-reload on configuration edits and incremental rebuilds for content edits
 - Simple JSX layouts and [[creating components|page components]]
 - [[SPA Routing|Ridiculously fast page loads]] and tiny bundle sizes
 - Fully-customizable parsing, filtering, and page generation through [[making plugins|plugins]]
 
-For a comprehensive list of features, visit the [features page](/features). You can read more about the _why_ behind these features on the [[philosophy]] page and a technical overview on the [[architecture]] page.
+For a comprehensive list of features, visit the [features page](./features/). You can read more about the _why_ behind these features on the [[philosophy]] page and a technical overview on the [[architecture]] page.
 
 ### 🚧 Troubleshooting + Updating
 
-Having trouble with Quartz? Try searching for your issue using the search feature. If you haven't already, [[upgrading|upgrade]] to the newest version of Quartz to see if this fixes your issue.
+Having trouble with Quartz? Try searching for your issue using the search feature or check the [[troubleshooting]] page. If you haven't already, [[upgrading|upgrade]] to the newest version of Quartz to see if this fixes your issue.
 
-If you're still having trouble, feel free to [submit an issue](https://github.com/jackyzha0/quartz/issues) if you feel you found a bug or ask for help in our [Discord Community](https://discord.gg/cRFFHYye7t).
+If you're still having trouble, feel free to [submit an issue](https://github.com/jackyzha0/quartz/issues) if you feel you found a bug or ask for help in our [Discord Community](https://discord.gg/cRFFHYye7t). You can also browse the [[community]] page for third-party plugins and resources.
