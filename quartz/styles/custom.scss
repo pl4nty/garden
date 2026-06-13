@@ -1,3 +1,18 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// right padding on content in tablet view
+.page > #quartz-body .center {
+  margin-left: 0;
+  min-width: 95%;
+  max-width: 95%;
+}
+
+// giscus opacity
+.page-footer {
+  opacity: 0.7;
+}
+
+footer ul {
+  justify-content: space-between;
+  width: 95%;
+}
