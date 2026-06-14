@@ -1,10 +1,5 @@
 @use "./variables.scss" as *;
 
-// widen the layout to use more of the viewport (matches the old v4 site)
-.page {
-  max-width: 95vw;
-}
-
 // remove the green navigation progress bar shown during SPA navigation
 .navigation-progress {
   display: none !important;
