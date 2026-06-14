@@ -54,7 +54,7 @@ function u2(e2, t2, n2, o2, i2, u3) {
 
 // src/components/styles/socials.scss
 var socials_default =
-  ".socials {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 0.9rem;\n  align-items: center;\n  margin-top: 0.6rem;\n}\n.socials .social-link {\n  color: var(--darkgray);\n  background: none;\n  padding: 0;\n  display: inline-flex;\n  align-items: center;\n  opacity: 0.8;\n  transition: color 0.2s ease, opacity 0.2s ease;\n}\n.socials .social-link:hover {\n  color: var(--secondary);\n  opacity: 1;\n}\n.socials .social-icon {\n  display: inline-flex;\n}\n.socials .social-icon svg {\n  width: 1.3rem;\n  height: 1.3rem;\n  display: block;\n}";
+  ".socials {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 0.9rem;\n  align-items: center;\n}\n.socials .social-link {\n  color: var(--darkgray);\n  background: none;\n  padding: 0;\n  display: inline-flex;\n  align-items: center;\n  opacity: 0.8;\n  transition: color 0.2s ease, opacity 0.2s ease;\n}\n.socials .social-link:hover {\n  color: var(--secondary);\n  opacity: 1;\n}\n.socials .social-icon {\n  display: inline-flex;\n}\n.socials .social-icon svg {\n  width: 1.3rem;\n  height: 1.3rem;\n  display: block;\n}";
 
 // src/components/Socials.tsx
 var icons = {

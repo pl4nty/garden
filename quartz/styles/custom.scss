@@ -62,21 +62,22 @@ footer {
   font-weight: 450;
 }
 
-// ----------------------------------------------------------------------------
-// Explorer: always show the file list and drop the "Explorer" collapse toggle.
-// This also fixes the upstream SPA bug where, on mobile, the menu would flash
-// open and then play its closing animation after navigating — with no toggle
-// and no max-height transition, there's no open/close animation to replay.
-// ----------------------------------------------------------------------------
-button#explorer {
-  display: none;
+// Tighten the gap between the page title and the socials row on desktop/tablet
+// (the left sidebar's 1.2rem item gap is too much under the name).
+@media all and not ($mobile) {
+  .socials {
+    margin-top: -0.7rem;
+  }
 }
 
-#explorer-content,
-#explorer-content.collapsed {
-  max-height: none !important;
-  visibility: visible !important;
-  transition: none !important;
+// ----------------------------------------------------------------------------
+// Explorer: drop the desktop "Explorer ⌄" collapse toggle so the file list is
+// always shown. The active component is the remote quartz-community/explorer
+// plugin, whose desktop toggle is `.explorer-toggle.desktop-explorer` (the
+// mobile hamburger `.mobile-explorer` is left intact).
+// ----------------------------------------------------------------------------
+.explorer button.desktop-explorer {
+  display: none !important;
 }
 
 // ----------------------------------------------------------------------------
@@ -108,17 +109,20 @@ button#explorer {
 }
 
 // ----------------------------------------------------------------------------
-// Mobile: keep the left sidebar (explorer) accessible instead of hidden.
-// It wraps onto its own full-width row beneath the top toolbar.
+// Mobile: the explorer is a full-screen hamburger drawer. Disable its slide
+// transition so the upstream SPA bug can't play — on navigation the drawer
+// briefly renders open (SSR default) then the script collapses it, animating
+// closed. With no transition that state change is instant, so there's no flash.
 // ----------------------------------------------------------------------------
 @media all and ($mobile) {
-  .page > #quartz-body .sidebar.left {
-    flex-wrap: wrap;
+  .explorer .explorer-content {
+    transition: none !important;
   }
 
-  .page > #quartz-body .sidebar.left .explorer {
-    flex-basis: 100%;
-    width: 100%;
-    margin-top: 1rem;
+  // Socials sit inline in the top bar (its item gap is 0): align them with the
+  // title and give them a little breathing room from the name.
+  .socials {
+    margin-top: 0;
+    margin-left: 0.6rem;
   }
 }
