@@ -113,7 +113,7 @@ plugins:
     enabled: false
   - source: github:quartz-community/alias-redirects
     enabled: true
-  - source: github:quartz-community/content-index
+  - source: ./plugins/content-index
     enabled: true
     options:
       enableSiteMap: true
@@ -207,6 +207,7 @@ plugins:
     layout:
       position: afterBody
       priority: 10
+      condition: not-index
   - source: ./plugins/footer
     enabled: true
     options:

@@ -1,0 +1,116 @@
+{
+  "name": "@quartz-community/content-index",
+  "version": "0.1.0",
+  "description": "Content index emitter plugin for Quartz. Generates sitemap, RSS feed, and content index JSON.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Quartz Community",
+  "homepage": "https://quartz.jzhao.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quartz-community/content-index"
+  },
+  "keywords": [
+    "quartz",
+    "quartz-plugin",
+    "content-index",
+    "emitter",
+    "sitemap",
+    "rss"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier . --check",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run lint && npm run format && npm run test"
+  },
+  "peerDependencies": {
+    "vfile": "^6.0.3"
+  },
+  "peerDependenciesMeta": {
+    "vfile": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types",
+    "@quartz-community/utils": "github:quartz-community/utils"
+  },
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "github-slugger": "^2.0.0",
+    "hast-util-to-html": "^9.0.0",
+    "hast-util-to-jsx-runtime": "^2.3.6",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  },
+  "quartz": {
+    "name": "content-index",
+    "displayName": "Content Index",
+    "category": "emitter",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "enableSiteMap": true,
+      "enableRSS": true,
+      "rssLimit": 10,
+      "rssFullHtml": false,
+      "rssSlug": "index",
+      "includeEmptyFiles": true
+    },
+    "optionSchema": {
+      "enableSiteMap": {
+        "type": "boolean"
+      },
+      "enableRSS": {
+        "type": "boolean"
+      },
+      "rssLimit": {
+        "type": "number"
+      },
+      "rssFullHtml": {
+        "type": "boolean"
+      },
+      "rssSlug": {
+        "type": "string"
+      },
+      "includeEmptyFiles": {
+        "type": "boolean"
+      }
+    }
+  },
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10.9.2"
+  }
+}

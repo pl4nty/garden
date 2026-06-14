@@ -56,9 +56,9 @@
       "installedAt": "2026-06-13T11:31:23.419Z"
     },
     "content-index": {
-      "source": "github:quartz-community/content-index",
-      "resolved": "https://github.com/quartz-community/content-index.git",
-      "commit": "c3d4f5c85311712c3355cd71da46b28e2d8eba71",
+      "source": "./plugins/content-index",
+      "resolved": "/home/user/garden/plugins/content-index",
+      "commit": "local",
       "installedAt": "2026-06-13T11:31:21.667Z"
     },
     "content-meta": {
