@@ -1,3 +1,5 @@
+@use "sass:map";
+
 @use "./variables.scss" as *;
 @use "./syntax.scss";
 @use "./callouts.scss";
@@ -7,10 +9,13 @@ html {
   text-size-adjust: none;
   overflow-x: hidden;
   width: 100vw;
+
+  @media all and ($mobile) {
+    scroll-padding-top: 4rem;
+  }
 }
 
-body,
-section {
+body {
   margin: 0;
   box-sizing: border-box;
   background-color: var(--light);
@@ -23,7 +28,6 @@ section {
   padding: 0 0.1rem;
   border-radius: 5px;
 }
-
 ::selection {
   background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
   color: var(--darkgray);
@@ -39,28 +43,37 @@ li,
 ol,
 ul,
 .katex,
-.math {
+.math,
+.typst-doc,
+g[class~="typst-text"] {
   color: var(--darkgray);
   fill: var(--darkgray);
-  hyphens: auto;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
-p,
-ul,
-text,
-a,
-li,
-ol,
-ul,
-.katex,
-.math {
-  overflow-wrap: anywhere;
-  /* tr and td removed from list of selectors for overflow-wrap, allowing them to use default 'normal' property value */
+path[class~="typst-shape"] {
+  stroke: var(--darkgray);
 }
 
 .math {
   &.math-display {
     text-align: center;
+  }
+}
+
+article {
+  > mjx-container.MathJax,
+  blockquote > div > mjx-container.MathJax {
+    display: flex;
+    > svg {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  blockquote > div > mjx-container.MathJax > svg {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -75,7 +88,7 @@ a {
   color: var(--secondary);
 
   &:hover {
-    color: var(--tertiary) !important;
+    color: var(--tertiary);
   }
 
   &.internal {
@@ -85,12 +98,20 @@ a {
     border-radius: 5px;
     line-height: 1.4rem;
 
+    &.broken {
+      color: var(--secondary);
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
     &:has(> img) {
-      background-color: none;
+      background-color: transparent;
       border-radius: 0;
       padding: 0;
     }
-
     &.tag-link {
       &::before {
         content: "#";
@@ -102,34 +123,47 @@ a {
     height: 1ex;
     margin: 0 0.15em;
 
-    >path {
+    > path {
       fill: var(--dark);
     }
   }
 }
 
-.desktop-only {
-  display: initial;
+.flex-component {
+  display: flex;
+}
 
+.desktop-only {
+  display: contents;
+  &.flex-component {
+    display: flex;
+  }
   @media all and ($mobile) {
+    &.flex-component {
+      display: none;
+    }
     display: none;
   }
 }
 
 .mobile-only {
   display: none;
-
+  &.flex-component {
+    display: none;
+  }
   @media all and ($mobile) {
-    display: initial;
+    &.flex-component {
+      display: flex;
+    }
+    display: contents;
   }
 }
 
 .page {
-  max-width: calc(#{map-get($breakpoints, desktop)} + 300px);
+  max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
   margin: 0 auto;
-
   & article {
-    &>h1 {
+    & > h1 {
       font-size: 2rem;
     }
 
@@ -144,50 +178,48 @@ a {
       color: var(--gray);
     }
 
-    & li>* {
+    & li > * {
       margin-top: 0;
       margin-bottom: 0;
     }
 
-    p>strong {
+    p > strong {
       color: var(--dark);
     }
   }
 
-  &>#quartz-body {
+  & > #quartz-body {
     display: grid;
-    grid-template-columns: #{map-get($desktopGrid, templateColumns)};
-    grid-template-rows: #{map-get($desktopGrid, templateRows)};
-    column-gap: #{map-get($desktopGrid, columnGap)};
-    row-gap: #{map-get($desktopGrid, rowGap)};
-    grid-template-areas: #{map-get($desktopGrid, templateAreas)};
+    grid-template-columns: #{map.get($desktopGrid, templateColumns)};
+    grid-template-rows: #{map.get($desktopGrid, templateRows)};
+    column-gap: #{map.get($desktopGrid, columnGap)};
+    row-gap: #{map.get($desktopGrid, rowGap)};
+    grid-template-areas: #{map.get($desktopGrid, templateAreas)};
 
-    @media all and ($desktop) {
-      grid-template-columns: #{map-get($tabletGrid, templateColumns)};
-      grid-template-rows: #{map-get($tabletGrid, templateRows)};
-      column-gap: #{map-get($tabletGrid, columnGap)};
-      row-gap: #{map-get($tabletGrid, rowGap)};
-      grid-template-areas: #{map-get($tabletGrid, templateAreas)};
+    @media all and ($tablet) {
+      grid-template-columns: #{map.get($tabletGrid, templateColumns)};
+      grid-template-rows: #{map.get($tabletGrid, templateRows)};
+      column-gap: #{map.get($tabletGrid, columnGap)};
+      row-gap: #{map.get($tabletGrid, rowGap)};
+      grid-template-areas: #{map.get($tabletGrid, templateAreas)};
     }
-
     @media all and ($mobile) {
-      grid-template-columns: #{map-get($mobileGrid, templateColumns)};
-      grid-template-rows: #{map-get($mobileGrid, templateRows)};
-      column-gap: #{map-get($mobileGrid, columnGap)};
-      row-gap: #{map-get($mobileGrid, rowGap)};
-      grid-template-areas: #{map-get($mobileGrid, templateAreas)};
+      grid-template-columns: #{map.get($mobileGrid, templateColumns)};
+      grid-template-rows: #{map.get($mobileGrid, templateRows)};
+      column-gap: #{map.get($mobileGrid, columnGap)};
+      row-gap: #{map.get($mobileGrid, rowGap)};
+      grid-template-areas: #{map.get($mobileGrid, templateAreas)};
     }
 
-    @media all and ($desktop) {
+    @media all and not ($desktop) {
       padding: 0 1rem;
     }
-
     @media all and ($mobile) {
       margin: 0 auto;
     }
 
     & .sidebar {
-      gap: 2rem;
+      gap: 1.2rem;
       top: 0;
       box-sizing: border-box;
       padding: $topSpacing 2rem 2rem 2rem;
@@ -200,7 +232,6 @@ a {
       z-index: 1;
       grid-area: grid-sidebar-left;
       flex-direction: column;
-
       @media all and ($mobile) {
         gap: 0;
         align-items: center;
@@ -217,29 +248,25 @@ a {
       grid-area: grid-sidebar-right;
       margin-right: 0;
       flex-direction: column;
-
       @media all and ($mobile) {
         margin-left: inherit;
         margin-right: inherit;
       }
-
-      @media all and ($desktop) {
+      @media all and not ($desktop) {
         position: initial;
         height: unset;
         width: 100%;
         flex-direction: row;
         padding: 0;
-
-        &>* {
+        & > * {
           flex: 1;
+          max-height: 24rem;
         }
-
-        &>.toc {
+        & > .toc {
           display: none;
         }
       }
     }
-
     & .page-header,
     & .page-footer {
       margin-top: 1rem;
@@ -248,14 +275,13 @@ a {
     & .page-header {
       grid-area: grid-header;
       margin: $topSpacing 0 0 0;
-
       @media all and ($mobile) {
         margin-top: 0;
         padding: 0;
       }
     }
 
-    & .center>article {
+    & .center > article {
       grid-area: grid-center;
     }
 
@@ -269,19 +295,59 @@ a {
       min-width: 100%;
       margin-left: auto;
       margin-right: auto;
-
-      @media all and ($desktop) {
+      @media all and ($tablet) {
         margin-right: 0;
       }
-
       @media all and ($mobile) {
+        margin-right: 0;
         margin-left: 0;
       }
     }
-
     & footer {
       margin-left: 0;
     }
+  }
+}
+
+// ============================================================================
+// Page Frame Overrides
+// ============================================================================
+
+// Full-width frame: no sidebars, center content spans full width
+.page[data-frame="full-width"] > #quartz-body {
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "grid-header"
+    "grid-center"
+    "grid-footer";
+
+  @media all and ($tablet) {
+    grid-template-columns: auto;
+  }
+
+  & .center.full-width {
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+// Minimal frame: no sidebars, no header/footer chrome, body content only + footer
+.page[data-frame="minimal"] > #quartz-body {
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "grid-center"
+    "grid-footer";
+
+  @media all and ($tablet) {
+    grid-template-columns: auto;
+  }
+
+  & .center.minimal {
+    max-width: 100%;
+    min-width: 100%;
+    margin: 0;
   }
 }
 
@@ -341,7 +407,7 @@ thead {
   font-weight: revert;
   margin-bottom: 0;
 
-  article>&>a[role="anchor"] {
+  article > & > a[role="anchor"] {
     color: var(--dark);
     background-color: transparent;
   }
@@ -353,7 +419,7 @@ h3,
 h4,
 h5,
 h6 {
-  &[id]>a[href^="#"] {
+  &[id] > a[href^="#"] {
     margin: 0 0.5rem;
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -362,8 +428,12 @@ h6 {
     user-select: none;
   }
 
-  &[id]:hover>a {
+  &[id]:hover > a {
     opacity: 1;
+  }
+
+  &:not([id]) > a[role="anchor"] {
+    display: none;
   }
 }
 
@@ -400,18 +470,18 @@ figure[data-rehype-pretty-code-figure] {
   line-height: 1.6rem;
   position: relative;
 
-  &>[data-rehype-pretty-code-title] {
+  & > [data-rehype-pretty-code-title] {
     font-family: var(--codeFont);
     font-size: 0.9rem;
     padding: 0.1rem 0.5rem;
     border: 1px solid var(--lightgray);
-    width: max-content;
+    width: fit-content;
     border-radius: 5px;
     margin-bottom: -0.5rem;
     color: var(--darkgray);
   }
 
-  &>pre {
+  & > pre {
     padding: 0;
   }
 }
@@ -428,7 +498,7 @@ pre {
     border: none;
   }
 
-  &>code {
+  & > code {
     background: none;
     padding: 0;
     font-size: 0.85rem;
@@ -443,7 +513,7 @@ pre {
       border-radius: 5px;
     }
 
-    &>[data-line] {
+    & > [data-line] {
       padding: 0 0.25rem;
       box-sizing: border-box;
       border-left: 3px solid transparent;
@@ -464,11 +534,11 @@ pre {
       }
     }
 
-    &[data-line-numbers-max-digits="2"]>[data-line]::before {
+    &[data-line-numbers-max-digits="2"] > [data-line]::before {
       width: 2rem;
     }
 
-    &[data-line-numbers-max-digits="3"]>[data-line]::before {
+    &[data-line-numbers-max-digits="3"] > [data-line]::before {
       width: 3rem;
     }
   }
@@ -492,7 +562,7 @@ p {
 .table-container {
   overflow-x: auto;
 
-  &>table {
+  & > table {
     margin: 1rem;
     padding: 1.5rem;
     border-collapse: collapse;
@@ -502,7 +572,7 @@ p {
       min-width: 75px;
     }
 
-    &>* {
+    & > * {
       line-height: 2rem;
     }
   }
@@ -520,7 +590,6 @@ td {
 
 tr {
   border-bottom: 1px solid var(--lightgray);
-
   &:last-child {
     border-bottom: none;
   }
@@ -530,9 +599,10 @@ img {
   max-width: 100%;
   border-radius: 5px;
   margin: 1rem 0;
+  content-visibility: auto;
 }
 
-p>img+em {
+p > img + em {
   display: block;
   transform: translateY(-1rem);
 }
@@ -552,40 +622,33 @@ video {
 }
 
 .spacer {
-  flex: 1 1 auto;
+  flex: 2 1 auto;
 }
 
 div:has(> .overflow) {
-  display: flex;
-  overflow-y: auto;
   max-height: 100%;
+  overflow-y: hidden;
 }
 
 ul.overflow,
 ol.overflow {
   max-height: 100%;
   overflow-y: auto;
+  width: 100%;
+  margin-bottom: 0;
 
   // clearfix
   content: "";
   clear: both;
 
-  &>li:last-of-type {
-    margin-bottom: 30px;
+  & > li.overflow-end {
+    height: 0.5rem;
+    margin: 0;
   }
 
-  /*&:after {
-    pointer-events: none;
-    content: "";
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-    background: linear-gradient(transparent 0px, var(--light));
-  }*/
+  &.gradient-active {
+    mask-image: linear-gradient(to bottom, black calc(100% - 50px), transparent 100%);
+  }
 }
 
 .transclude {
@@ -595,6 +658,7 @@ ol.overflow {
 }
 
 .katex-display {
+  display: initial;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -605,4 +669,15 @@ iframe.pdf {
   height: 100%;
   width: 100%;
   border-radius: 5px;
+}
+
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--secondary);
+  transition: width 0.2s ease;
+  z-index: 9999;
 }

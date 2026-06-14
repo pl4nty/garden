@@ -1,23 +1,22 @@
-@use "./base.scss";
-// @use "quartz-themes";
+@use "./variables.scss" as *;
 
-// hide explorer on homepage
-// [data-slug="index"] .explorer {
-//   display: none;
-// }
+// widen the layout to use more of the viewport (matches the old v4 site)
+.page {
+  max-width: 95vw;
+}
 
-// right padding on content in tablet view
-.page>#quartz-body .center {
-  margin-left: 0;
-  min-width: 95%;
-  max-width: 95%;
+// remove the green navigation progress bar shown during SPA navigation
+.navigation-progress {
+  display: none !important;
 }
 
 // giscus opacity
 .page-footer {
   opacity: 0.7;
 }
+
+// footer: single row, links pushed to the edges
 footer ul {
-  justify-content: space-between; // align one each left and right
-  width: 95%; // match content
+  justify-content: space-between;
+  width: 95%;
 }

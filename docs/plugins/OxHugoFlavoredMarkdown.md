@@ -1,7 +1,12 @@
 ---
 title: OxHugoFlavoredMarkdown
+description: Compatibility for ox-hugo exported Org-mode files.
 tags:
   - plugin/transformer
+image:
+repository: "[quartz-community/ox-hugo](https://github.com/quartz-community/ox-hugo)"
+enabled: false
+required: false
 ---
 
 This plugin provides support for [ox-hugo](https://github.com/kaushalmodi/ox-hugo) compatibility. See [[OxHugo compatibility]] for more information.
@@ -25,5 +30,6 @@ This plugin accepts the following configuration options:
 ## API
 
 - Category: Transformer
-- Function name: `Plugin.OxHugoFlavoredMarkdown()`.
-- Source: [`quartz/plugins/transformers/oxhugofm.ts`](https://github.com/jackyzha0/quartz/blob/v4/quartz/plugins/transformers/oxhugofm.ts).
+- Function name: `ExternalPlugin.OxHugoFlavoredMarkdown()`.
+- Source: [`quartz-community/ox-hugo`](https://github.com/quartz-community/ox-hugo)
+- Install: `npx quartz plugin add github:quartz-community/ox-hugo`
