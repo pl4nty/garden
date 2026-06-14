@@ -2,8 +2,7 @@
 dg-publish: true
 title: Tom Plant
 ---
-![[45422.webp|45422.webp]]
-
+![[45422.webp|Floral page divider by Macrovector]]
 Hi! I'm Tom, and this is my [digital garden](https://maggieappleton.com/garden-history). It holds my notes, ideas, and experiments, especially on technical topics. I hope they're helpful to you 😊
 
 Over the years I've explored many topics, so you're welcome to stay a while and take a look around. Recently, I've written about
