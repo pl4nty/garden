@@ -119,10 +119,20 @@ footer {
     transition: none !important;
   }
 
-  // Socials sit inline in the top bar (its item gap is 0): align them with the
-  // title and give them a little breathing room from the name.
+  // Let the top bar wrap, keep the name on one line, and drop the socials onto
+  // their own row beneath it (instead of squeezing beside the name and forcing
+  // it to wrap). order: 99 sends socials last so the search/toggles stay on the
+  // top row and socials land on a line of their own.
+  .page > #quartz-body .sidebar.left {
+    flex-wrap: wrap;
+  }
+  .page-title {
+    white-space: nowrap;
+  }
   .socials {
-    margin-top: 0;
-    margin-left: 0.6rem;
+    order: 99;
+    flex-basis: 100%;
+    margin-top: 0.4rem;
+    margin-left: 0;
   }
 }
