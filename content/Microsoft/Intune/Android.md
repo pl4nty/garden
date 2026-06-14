@@ -7,7 +7,7 @@ Device emulators are helpful for faster testing iteration and testing sensor inp
 I first attempted to use Windows [[Subsystem for Android|Subsystem for Android]], and bypassed the region restrictions that block it in Australia. I was able to install Company Portal, but the work profile API was very broken even after I sideloaded its APKs. So I turned to the official [[Hardware/Android|Android]] SDK.
 
 After installing the Company Portal APK, this snippet was helpful for parsing log exports:
-```PowerShell
+```powershell
 $file = .\CompanyPortal_0.log
 (Get-Content $file -Raw) -replace "`r`n","NEWLINE" -replace "NEWLINE([0-9]{4})","`n`$1" -replace "`t{2,}",";" | Set-Content $file
 $data = Import-Csv -Delimiter "`t" -Header "time","level","class","code","code2" $file | % { $_.time=[Datetime]::Parse($_.time); $_ }

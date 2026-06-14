@@ -1,0 +1,34 @@
+.socials {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+
+  & .social-link {
+    color: var(--darkgray);
+    background: none;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.8;
+    transition:
+      color 0.2s ease,
+      opacity 0.2s ease;
+
+    &:hover {
+      color: var(--secondary);
+      opacity: 1;
+    }
+  }
+
+  & .social-icon {
+    display: inline-flex;
+
+    & svg {
+      width: 1.3rem;
+      height: 1.3rem;
+      display: block;
+    }
+  }
+}

@@ -3,15 +3,15 @@ dg-publish: true
 ---
 [Splatting with overload](https://beatcracker.wordpress.com/2014/12/01/splatting-and-mandatory-parameters/)
 
-```PowerShell
+```powershell
 Connect-PnPOnline -Url [tenant].sharepoint.com -Interactive -LaunchBrowser
 ```
 
-```PowerShell
+```powershell
 Import-Module Microsoft.Online.SharePoint.PowerShell -UseWindowsPowerShell
 ```
 
-```PowerShell
+```powershell
 $data = Invoke-MgGraphRequest -Uri "dummy" -Method GET -OutputType HttpResponseMessage
 $data.RequestMessage.Headers.Authorization.Parameter
 ```

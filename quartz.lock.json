@@ -62,10 +62,10 @@
       "installedAt": "2026-06-13T11:31:21.667Z"
     },
     "content-meta": {
-      "source": "github:quartz-community/content-meta",
-      "resolved": "https://github.com/quartz-community/content-meta.git",
-      "commit": "dd6e94b5ca1cb195104a2b5e624a43ee6aa0a324",
-      "installedAt": "2026-06-13T11:31:22.498Z"
+      "source": "./plugins/content-meta",
+      "resolved": "/home/user/garden/plugins/content-meta",
+      "commit": "local",
+      "installedAt": "2026-06-14T10:55:00.000Z"
     },
     "content-page": {
       "source": "github:quartz-community/content-page",

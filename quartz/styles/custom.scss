@@ -1,10 +1,5 @@
 @use "./variables.scss" as *;
 
-// widen the layout to use more of the viewport (matches the old v4 site)
-.page {
-  max-width: 95vw;
-}
-
 // remove the green navigation progress bar shown during SPA navigation
 .navigation-progress {
   display: none !important;
@@ -19,4 +14,160 @@
 footer ul {
   justify-content: space-between;
   width: 95%;
+}
+
+// tighten the gap below the footer text (default was 4rem) so it roughly
+// matches the small gap between the footer line and its text
+footer {
+  margin-bottom: 1rem;
+}
+
+// ----------------------------------------------------------------------------
+// Graph: paint the container and its (transparent) canvas with the theme
+// background so the graph doesn't flash white while the PIXI canvas
+// re-initialises on SPA navigation in dark mode.
+// ----------------------------------------------------------------------------
+.graph > .graph-outer,
+.graph > .graph-outer canvas {
+  background-color: var(--light);
+}
+
+// ----------------------------------------------------------------------------
+// Scrollbars — theme every scrollbar (explorer, code blocks, TOC, tables,
+// the page itself, etc.) instead of the default OS chrome
+// ----------------------------------------------------------------------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--gray);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    background-color: var(--secondary);
+  }
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// ----------------------------------------------------------------------------
+// Site (brand) title: lighter weight
+// ----------------------------------------------------------------------------
+.page-title {
+  font-weight: 450;
+}
+
+// Tighten the gap between the page title and the socials row on desktop/tablet
+// (the left sidebar's 1.2rem item gap is too much under the name); likewise
+// shrink the gap between the toolbar (search + icons) and the file tree so it
+// matches the small gap between the search bar and the icons beside it.
+@media all and not ($mobile) {
+  .socials {
+    margin-top: -0.7rem;
+  }
+  // Shrink the gap between the toolbar (search + icons) and the file tree so it
+  // matches the small gap between the search bar and the icons beside it. The
+  // explorer container is pulled up, and its content's default 0.5rem top
+  // margin is removed so the first tree row sits right under the search bar.
+  .page > #quartz-body .sidebar.left .explorer {
+    margin-top: -0.8rem;
+  }
+  .page > #quartz-body .sidebar.left .explorer .explorer-content {
+    margin-top: 0;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Explorer: drop the desktop "Explorer ⌄" collapse toggle so the file list is
+// always shown. The active component is the remote quartz-community/explorer
+// plugin, whose desktop toggle is `.explorer-toggle.desktop-explorer` (the
+// mobile hamburger `.mobile-explorer` is left intact).
+// ----------------------------------------------------------------------------
+.explorer button.desktop-explorer {
+  display: none !important;
+}
+
+// ----------------------------------------------------------------------------
+// More breathing room between the body text and the sidebars (desktop).
+// Widening the sidebars' inner padding keeps the header and article aligned.
+// On the right, the TOC stays pinned to the top while the backlinks and graph
+// are pushed to the bottom (margin-top: auto absorbs the free space above them).
+// ----------------------------------------------------------------------------
+@media all and ($desktop) {
+  .page > #quartz-body .sidebar.left {
+    padding-right: 3.5rem;
+  }
+
+  .page > #quartz-body .sidebar.right {
+    padding-left: 3.5rem;
+  }
+
+  // Pin the backlinks + graph cluster to the bottom of the right sidebar while
+  // the TOC stays at the top. The auto top-margin lands on whichever of the two
+  // comes first (backlinks is absent on pages with no inbound links); when both
+  // are present, the graph drops back to the normal gap so they stay together.
+  .page > #quartz-body .sidebar.right > .backlinks,
+  .page > #quartz-body .sidebar.right > .graph {
+    margin-top: auto;
+  }
+  .page > #quartz-body .sidebar.right > .backlinks ~ .graph {
+    margin-top: 0;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Mobile: the explorer is a full-screen hamburger drawer. Disable its slide
+// transition so the upstream SPA bug can't play — on navigation the drawer
+// briefly renders open (SSR default) then the script collapses it, animating
+// closed. With no transition that state change is instant, so there's no flash.
+// ----------------------------------------------------------------------------
+@media all and ($mobile) {
+  .explorer .explorer-content {
+    transition: none !important;
+  }
+
+  // Reduce the top padding so it's even with the 1rem left/bottom padding.
+  .page > #quartz-body .sidebar.left {
+    padding-top: 1rem;
+  }
+
+  // Align the hamburger above the github icon: drop the button's left padding
+  // and offset the lucide-menu icon's internal 4px so it lines up with the
+  // socials icons below it.
+  .explorer .mobile-explorer {
+    padding-left: 0;
+    margin-left: -4px;
+  }
+
+  // Let the top bar wrap, keep the name on one line, and drop the socials onto
+  // their own row beneath it (instead of squeezing beside the name and forcing
+  // it to wrap). order: 99 sends socials last so the search/toggles stay on the
+  // top row and socials land on a line of their own.
+  .page > #quartz-body .sidebar.left {
+    flex-wrap: wrap;
+  }
+  .page-title {
+    white-space: nowrap;
+  }
+  .socials {
+    order: 99;
+    flex-basis: 100%;
+    margin-top: 0.4rem;
+    margin-left: 0;
+  }
 }

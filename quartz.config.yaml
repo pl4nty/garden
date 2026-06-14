@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "tplant.com.au"
-  pageTitleSuffix: ""
+  pageTitle: "Tom Plant"
+  pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
   analytics:
@@ -16,7 +16,7 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Raleway
+      header: Titillium Web
       body: Titillium Web
       code: Fira Code
     colors:
@@ -31,8 +31,8 @@ configuration:
         highlight: "rgba(46, 125, 50, 0.15)"
         textHighlight: "rgba(46, 125, 50, 0.15)"
       darkMode:
-        light: "#101010"
-        lightgray: "#181818"
+        light: "#141414"
+        lightgray: "#1f1f1f"
         gray: "#7a8882"
         darkgray: "darkgray"
         dark: "#E0F0E9"
@@ -72,7 +72,7 @@ plugins:
     order: 50
     layout:
       position: right
-      priority: 30
+      priority: 10
       display: desktop-only
   - source: github:quartz-community/crawl-links
     enabled: true
@@ -103,7 +103,7 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Raleway
+      header: Titillium Web
       body: Titillium Web
       code: Fira Code
       fontOrigin: googleFonts
@@ -137,12 +137,12 @@ plugins:
     layout:
       position: left
       priority: 50
-      display: desktop-only
+      display: all
   - source: github:quartz-community/graph
     enabled: true
     layout:
       position: right
-      priority: 10
+      priority: 30
   - source: github:quartz-community/search
     enabled: true
     layout:
@@ -155,14 +155,14 @@ plugins:
     enabled: true
     layout:
       position: right
-      priority: 50
+      priority: 20
   - source: github:quartz-community/article-title
     enabled: true
     layout:
       position: beforeBody
       priority: 10
       condition: not-index
-  - source: github:quartz-community/content-meta
+  - source: ./plugins/content-meta
     enabled: true
     layout:
       position: beforeBody
@@ -215,6 +215,17 @@ plugins:
     options:
       links:
         License: /License
+  - source: ./plugins/socials
+    enabled: true
+    options:
+      links:
+        GitHub: https://github.com/pl4nty
+        LinkedIn: https://linkedin.com/in/tomplant
+        Homelab: https://lab.tplant.com.au/
+        Status: https://status.tplant.com.au/
+    layout:
+      position: left
+      priority: 15
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
