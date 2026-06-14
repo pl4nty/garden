@@ -94,8 +94,16 @@ button#explorer {
     padding-left: 3.5rem;
   }
 
-  .page > #quartz-body .sidebar.right .backlinks {
+  // Pin the backlinks + graph cluster to the bottom of the right sidebar while
+  // the TOC stays at the top. The auto top-margin lands on whichever of the two
+  // comes first (backlinks is absent on pages with no inbound links); when both
+  // are present, the graph drops back to the normal gap so they stay together.
+  .page > #quartz-body .sidebar.right > .backlinks,
+  .page > #quartz-body .sidebar.right > .graph {
     margin-top: auto;
+  }
+  .page > #quartz-body .sidebar.right > .backlinks ~ .graph {
+    margin-top: 0;
   }
 }
 
