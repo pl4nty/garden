@@ -16,7 +16,7 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Raleway
+      header: Titillium Web
       body: Titillium Web
       code: Fira Code
     colors:
