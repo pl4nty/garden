@@ -63,6 +63,23 @@ footer {
 }
 
 // ----------------------------------------------------------------------------
+// Explorer: always show the file list and drop the "Explorer" collapse toggle.
+// This also fixes the upstream SPA bug where, on mobile, the menu would flash
+// open and then play its closing animation after navigating — with no toggle
+// and no max-height transition, there's no open/close animation to replay.
+// ----------------------------------------------------------------------------
+button#explorer {
+  display: none;
+}
+
+#explorer-content,
+#explorer-content.collapsed {
+  max-height: none !important;
+  visibility: visible !important;
+  transition: none !important;
+}
+
+// ----------------------------------------------------------------------------
 // More breathing room between the body text and the sidebars (desktop).
 // Widening the sidebars' inner padding keeps the header and article aligned.
 // On the right, the TOC stays pinned to the top while the backlinks and graph

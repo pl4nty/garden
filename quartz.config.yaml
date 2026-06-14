@@ -215,6 +215,17 @@ plugins:
     options:
       links:
         License: /License
+  - source: ./plugins/socials
+    enabled: true
+    options:
+      links:
+        GitHub: https://github.com/pl4nty
+        LinkedIn: https://linkedin.com/in/tomplant
+        Homelab: https://lab.tplant.com.au/
+        Status: https://status.tplant.com.au/
+    layout:
+      position: left
+      priority: 15
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
