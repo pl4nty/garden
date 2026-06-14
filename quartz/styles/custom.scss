@@ -23,6 +23,16 @@ footer {
 }
 
 // ----------------------------------------------------------------------------
+// Graph: paint the container and its (transparent) canvas with the theme
+// background so the graph doesn't flash white while the PIXI canvas
+// re-initialises on SPA navigation in dark mode.
+// ----------------------------------------------------------------------------
+.graph > .graph-outer,
+.graph > .graph-outer canvas {
+  background-color: var(--light);
+}
+
+// ----------------------------------------------------------------------------
 // Scrollbars — theme every scrollbar (explorer, code blocks, TOC, tables,
 // the page itself, etc.) instead of the default OS chrome
 // ----------------------------------------------------------------------------
