@@ -16,7 +16,7 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
+      header: Raleway
       body: Titillium Web
       code: Fira Code
     colors:
@@ -24,7 +24,7 @@ configuration:
         light: "#FFFFFF"
         lightgray: "#F8F8F8"
         gray: "#B0B0B0"
-        darkgray: "#505050"
+        darkgray: "#666666"
         dark: "#303030"
         secondary: "#2E7D32"
         tertiary: "#388E3C"
@@ -103,7 +103,7 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
+      header: Raleway
       body: Titillium Web
       code: Fira Code
       fontOrigin: googleFonts
