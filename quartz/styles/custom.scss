@@ -15,3 +15,75 @@ footer ul {
   justify-content: space-between;
   width: 95%;
 }
+
+// tighten the gap below the footer text (default was 4rem) so it roughly
+// matches the small gap between the footer line and its text
+footer {
+  margin-bottom: 1rem;
+}
+
+// ----------------------------------------------------------------------------
+// Scrollbars — theme every scrollbar (explorer, code blocks, TOC, tables,
+// the page itself, etc.) instead of the default OS chrome
+// ----------------------------------------------------------------------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--gray);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    background-color: var(--secondary);
+  }
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// ----------------------------------------------------------------------------
+// Site (brand) title: lighter weight
+// ----------------------------------------------------------------------------
+.page-title {
+  font-weight: 450;
+}
+
+// ----------------------------------------------------------------------------
+// More breathing room between the body text and the left sidebar (desktop).
+// Widening the sidebar's right padding keeps the header and article aligned.
+// ----------------------------------------------------------------------------
+@media all and ($desktop) {
+  .page > #quartz-body .sidebar.left {
+    padding-right: 3.5rem;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Mobile: keep the left sidebar (explorer) accessible instead of hidden.
+// It wraps onto its own full-width row beneath the top toolbar.
+// ----------------------------------------------------------------------------
+@media all and ($mobile) {
+  .page > #quartz-body .sidebar.left {
+    flex-wrap: wrap;
+  }
+
+  .page > #quartz-body .sidebar.left .explorer {
+    flex-basis: 100%;
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
