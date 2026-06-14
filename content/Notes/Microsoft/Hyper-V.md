@@ -51,7 +51,7 @@ function Copy-VMFileRelative ($VMName, [System.IO.FileInfo]$SourcePath) {
 ```
 
 The cmdlet also has a `-FileSource` parameter which looks like it meant to support VM to host copying. But the only valid parameter is `-FileSource Host`...
-At first I tried `New-PSSession -VMName` and `Copy-Item -FromSession` with local admin credentials, but `Copy-Item` is blocked by Constrained Language Mode ([[Windows/WDAC/WDAC|Windows/WDAC/WDAC]]).
+At first I tried `New-PSSession -VMName` and `Copy-Item -FromSession` with local admin credentials, but `Copy-Item` is blocked by Constrained Language Mode ([[WDAC|WDAC]]).
  #TODO can Remote PowerShell work with Entra creds? I think jborean looked at this
 
 I took a brief detour looking at [clixml deserialisation exploits](https://www.truesec.com/hub/blog/attacking-powershell-clixml-deserialization) against the host... But that seemed like overkill.
