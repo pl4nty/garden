@@ -73,9 +73,14 @@ footer {
 }
 
 // Tighten the gap between the page title and the socials row on desktop/tablet
-// (the left sidebar's 1.2rem item gap is too much under the name).
+// (the left sidebar's 1.2rem item gap is too much under the name); likewise
+// shrink the gap between the toolbar (search + icons) and the file tree so it
+// matches the small gap between the search bar and the icons beside it.
 @media all and not ($mobile) {
   .socials {
+    margin-top: -0.7rem;
+  }
+  .page > #quartz-body .sidebar.left .explorer {
     margin-top: -0.7rem;
   }
 }
@@ -127,6 +132,19 @@ footer {
 @media all and ($mobile) {
   .explorer .explorer-content {
     transition: none !important;
+  }
+
+  // Reduce the top padding so it's even with the 1rem left/bottom padding.
+  .page > #quartz-body .sidebar.left {
+    padding-top: 1rem;
+  }
+
+  // Align the hamburger above the github icon: drop the button's left padding
+  // and offset the lucide-menu icon's internal 4px so it lines up with the
+  // socials icons below it.
+  .explorer .mobile-explorer {
+    padding-left: 0;
+    margin-left: -4px;
   }
 
   // Let the top bar wrap, keep the name on one line, and drop the socials onto
