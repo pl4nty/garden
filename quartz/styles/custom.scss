@@ -63,12 +63,22 @@ footer {
 }
 
 // ----------------------------------------------------------------------------
-// More breathing room between the body text and the left sidebar (desktop).
-// Widening the sidebar's right padding keeps the header and article aligned.
+// More breathing room between the body text and the sidebars (desktop).
+// Widening the sidebars' inner padding keeps the header and article aligned.
+// On the right, the TOC stays pinned to the top while the backlinks and graph
+// are pushed to the bottom (margin-top: auto absorbs the free space above them).
 // ----------------------------------------------------------------------------
 @media all and ($desktop) {
   .page > #quartz-body .sidebar.left {
     padding-right: 3.5rem;
+  }
+
+  .page > #quartz-body .sidebar.right {
+    padding-left: 3.5rem;
+  }
+
+  .page > #quartz-body .sidebar.right .backlinks {
+    margin-top: auto;
   }
 }
 
