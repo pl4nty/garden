@@ -80,8 +80,15 @@ footer {
   .socials {
     margin-top: -0.7rem;
   }
+  // Shrink the gap between the toolbar (search + icons) and the file tree so it
+  // matches the small gap between the search bar and the icons beside it. The
+  // explorer container is pulled up, and its content's default 0.5rem top
+  // margin is removed so the first tree row sits right under the search bar.
   .page > #quartz-body .sidebar.left .explorer {
-    margin-top: -0.7rem;
+    margin-top: -0.8rem;
+  }
+  .page > #quartz-body .sidebar.left .explorer .explorer-content {
+    margin-top: 0;
   }
 }
 
