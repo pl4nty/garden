@@ -8,11 +8,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <title>Atom - <xsl:value-of select="/atom:feed/atom:title" /></title>
-        <link rel="icon" href="./static/icon.webp" />
-        <link href="/index.css" rel="stylesheet" type="text/css" />
+        <link rel="icon" href="/static/icon.png" />
         <style type="text/css">
-          body{max-width:768px;margin:0 auto}section{margin:30px
-          15px}hgroup{margin-bottom:2rem}a{text-decoration:none}
+          :root{--light:#fff;--lightgray:#f8f8f8;--gray:#b0b0b0;--darkgray:#666;--dark:#303030;--secondary:#2e7d32;--tertiary:#388e3c;--highlight:#2e7d3226;--bodyFont:"Titillium Web",system-ui,sans-serif;--headerFont:"Raleway",system-ui,sans-serif;--codeFont:"Fira Code",monospace}
+          @media(prefers-color-scheme:dark){:root{--light:#101010;--lightgray:#181818;--gray:#7a8882;--darkgray:darkgray;--dark:#e0f0e9;--secondary:#66bb6a;--tertiary:#81c784}}
+          body{max-width:768px;margin:0 auto;background:var(--light);color:var(--darkgray);font-family:var(--bodyFont)}
+          h1,h2,h3{font-family:var(--headerFont);color:var(--dark)}
+          a{color:var(--secondary);text-decoration:none}
+          code{font-family:var(--codeFont);background:var(--lightgray);border-radius:4px;padding:.1em .3em}
+          section{margin:30px 15px}hgroup{margin-bottom:2rem}
         </style>
       </head>
       <body>
