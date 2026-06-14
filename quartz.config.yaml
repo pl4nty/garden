@@ -103,7 +103,7 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Raleway
+      header: Titillium Web
       body: Titillium Web
       code: Fira Code
       fontOrigin: googleFonts
