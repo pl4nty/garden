@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-10-26
 ---
 ## RISC-V International
 The [individual membership form](https://enrollment.lfx.linuxfoundation.org/?individual=&project=risc-v-international) attempts to block business and educational email addresses using form validation. It mistakenly blocks my email too.
