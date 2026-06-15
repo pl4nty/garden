@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 ## Rocket Loader
 Cloudflare's [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) injects a `<script>` into the end of page bodies, which fails to load with certain web security settings and prevents other scripts from loading. This happens with [miniflux/v2](https://github.com/miniflux/v2), where it broke all interactive functionality like buttons, and [hedgedoc v1](https://docs.hedgedoc.org/guides/reverse-proxy/#cloudflare) where the UI didn't render.
