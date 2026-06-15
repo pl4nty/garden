@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 DBaaS like Firebase, seems like it has better defaults though. Similar anon/service_role keys. https://github.com/zernonia/supabase-schema is handy for visualizing the schema. #TODO write a Firebase-style mass scanner?
 
