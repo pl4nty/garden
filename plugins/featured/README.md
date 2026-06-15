@@ -5,8 +5,8 @@ on the homepage — each entry shows the post title (linked) and its date — pl
 "See N more →" link to the posts folder.
 
 It only renders on the site index (`slug === "index"`); on every other page it
-renders nothing, so it's safe to place in a shared layout slot such as
-`afterBody`.
+renders nothing, so it's safe to place in a shared layout slot such as the
+`left` sidebar.
 
 ## Options
 
@@ -34,8 +34,8 @@ as posts are added or removed.
       - posts/building-australia's-largest-highschool-ctf
       - posts/use-a-custom-outlook.com-email-address-without-godaddy
   layout:
-    position: afterBody
-    priority: 5
+    position: left
+    priority: 40
 ```
 
 ## Building

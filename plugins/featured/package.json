@@ -55,8 +55,8 @@
     "components": {
       "Featured": {
         "displayName": "Featured",
-        "defaultPosition": "afterBody",
-        "defaultPriority": 5
+        "defaultPosition": "left",
+        "defaultPriority": 40
       }
     },
     "optionSchema": {

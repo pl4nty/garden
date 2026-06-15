@@ -237,8 +237,8 @@ plugins:
         - "posts/building-australia's-largest-highschool-ctf"
         - "posts/use-a-custom-outlook.com-email-address-without-godaddy"
     layout:
-      position: afterBody
-      priority: 5
+      position: left
+      priority: 40
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
