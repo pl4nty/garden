@@ -233,9 +233,9 @@ plugins:
       title: Featured
       folder: posts
       posts:
-        - "posts/finding-an-unreleased-windows-feature---tenant-restrictions-v2-(trv2)"
         - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/use-a-custom-outlook.com-email-address-without-godaddy"
+        - "posts/finding-an-unreleased-windows-feature"
+        - "posts/use-a-custom-outlook.com-email-without-godaddy"
     layout:
       position: left
       priority: 40
