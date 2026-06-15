@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 Windows Autopilot is Microsoft's Out-Of-Box-Experience (OOBE) enrollment method for MDMs like Intune.
 
