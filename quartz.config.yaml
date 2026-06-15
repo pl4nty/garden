@@ -227,6 +227,18 @@ plugins:
     layout:
       position: left
       priority: 15
+  - source: ./plugins/featured
+    enabled: true
+    options:
+      title: Featured
+      folder: posts
+      posts:
+        - "posts/finding-an-unreleased-windows-feature---tenant-restrictions-v2-(trv2)"
+        - "posts/building-australia's-largest-highschool-ctf"
+        - "posts/use-a-custom-outlook.com-email-address-without-godaddy"
+    layout:
+      position: afterBody
+      priority: 5
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer

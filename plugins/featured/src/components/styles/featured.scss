@@ -1,0 +1,50 @@
+.featured {
+  margin-top: 2rem;
+
+  & .featured-title {
+    margin-bottom: 0.6rem;
+  }
+
+  & .featured-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  & .featured-item {
+    margin: 0 0 1.2rem 0;
+  }
+
+  & .featured-link {
+    font-family: var(--headerFont);
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    color: var(--secondary);
+    background-color: transparent;
+  }
+
+  & .featured-link:hover {
+    color: var(--tertiary);
+  }
+
+  & .featured-date {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+
+  & .featured-more {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-family: var(--headerFont);
+    font-weight: 600;
+    color: var(--secondary);
+    background-color: transparent;
+  }
+
+  & .featured-more:hover {
+    color: var(--tertiary);
+  }
+}
