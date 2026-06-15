@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-03-23
 ---
 [Crikeycon](https://crikeycon.com/) is a not-so-small one-day conference in Brisbane. The vibes are excellent and I always end up chatting with mates all day, so I didn't play much of the CTF - only a quick misc that got surprisingly few solves.
 
