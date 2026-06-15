@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-06-02
 ---
 Sometimes one of my ideas coalesces into a nice, well-defined unit. Better to end up here than abandoned in the far corners of my memory.
 Outcomes required, but "just for fun" is as valid as any. Feasibility: optional. Inspired by [Jacky's list](https://jzhao.xyz/thoughts/idea-list)
