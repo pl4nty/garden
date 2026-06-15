@@ -2,7 +2,7 @@
 dg-publish: true
 modified: 2023-01-31
 ---
-For background info on tenant restrictions, check out my [previous post]().
+For background info on tenant restrictions, check out my [[Finding an unreleased Windows feature|previous post]].
 
 ## Cloud Identity Service
 
