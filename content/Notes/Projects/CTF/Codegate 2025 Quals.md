@@ -1,6 +1,6 @@
 ---
 dg-publish: true
-aliases:
+modified: 2026-02-25
 ---
 ## ai - GPT Detector
 
