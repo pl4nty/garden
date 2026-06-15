@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-07-20
 ---
 [Assigned Access](https://learn.microsoft.com/en-us/windows/configuration/assigned-access/) is a Windows feature that you can use to configure a device as a kiosk or with a restricted user experience.
 Steven (Steve) Hosking from msft sydney has worked a ton on it, did talks at workplace ninjas.
