@@ -143,6 +143,7 @@ plugins:
     layout:
       position: right
       priority: 30
+      condition: not-index
   - source: github:quartz-community/search
     enabled: true
     layout:

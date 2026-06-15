@@ -22,6 +22,14 @@ footer {
   margin-bottom: 1rem;
 }
 
+// Hide the site footer on the homepage. The footer is a structural layout slot
+// (not a right/left/beforeBody component), so the `condition: not-index` config
+// option doesn't reach it — hide it via CSS instead. The graph is hidden through
+// that condition in quartz.config.yaml.
+body[data-slug="index"] footer {
+  display: none;
+}
+
 // ----------------------------------------------------------------------------
 // Graph: paint the container and its (transparent) canvas with the theme
 // background so the graph doesn't flash white while the PIXI canvas
