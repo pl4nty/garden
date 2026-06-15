@@ -114,3 +114,7 @@ ini intellisense/schema for vscode
 * https://taplo.tamasfe.dev/configuration/directives.html#the-schema-directive
 
 Rewrite https://github.com/ronomon/pure in zig for the flex
+
+## Cloud / CTF
+"DoH" inspired by https://blog.scrt.ch/2023/04/13/insomnihack-2023-ctf-teaser-doh-writeup/
+something IPv6?
