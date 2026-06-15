@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-06-02
 ---
 ## API
 The [GitHub API feeds endpoint](https://docs.github.com/en/rest/activity/feeds?apiVersion=2022-11-28) no longer returns private feeds like `current_user_url`, and they're not available in the GitHub homepage either. Possibly because the homepage now uses an internal server-side-rendered API.
