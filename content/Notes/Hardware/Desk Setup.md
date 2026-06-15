@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-06-02
 ---
 ## PC
 [PCPartPicker](https://au.pcpartpicker.com/user/pl4nty/saved/Mv284D). A pretty cursed full-tower from highschool, complete with obnoxious case and Haswell CPU.
