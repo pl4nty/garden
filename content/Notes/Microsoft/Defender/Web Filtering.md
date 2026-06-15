@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-04-07
 ---
 [Web content filtering](https://learn.microsoft.com/en-us/defender-endpoint/web-content-filtering) would be a useful security control, if certain admins didn't block the `Uncategorized` category... Lots of cool apps like to use fresh domains. 
 Fortunately it's only implemented in browsers using a process allowlist, so I found a few bypasses. `curl` is an obvious one if you don't need a UI. Or in 2025, you could just download [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/) and rename `chrome.exe`.
