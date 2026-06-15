@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 x86 System On Module with a custom 260-pin SODIMM pinout and plenty of I/O. 2x Intel N100 SKUs, 1x N305 SKU. N305 is new in Jan 2025 and unreviewed, plus fairly expensive vs traditional socketed CPUs.
 
