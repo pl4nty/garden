@@ -12,3 +12,28 @@ But... I couldn't find a good flag/function to overwrite. And I don't want to ri
 Probably a skill issue but I learnt a bit on the way, and I'll send a PR to get jadx added to [[Winget|Winget]].
 
 ![[Pasted image 20250525125609.png|Pasted image 20250525125609.png]]
+
+## Emulation
+Install the [Android Studio](https://developer.android.com/studio) commandline tools, then
+```powershell
+.\cmdline-tools\latest\bin\sdkmanager --install "system-images;android-33;google_apis_playstore;x86_64"
+.\cmdline-tools\latest\bin\avdmanager create avd --name android33 --package "system-images;android-33;google_apis_playstore;x86_64"
+mkdir platforms && mkdir platform-tools
+.\emulator\emulator -avd android33 -qemu -m 3000
+```
+
+I automated some config:
+```powershell
+$config =  "$env:USERPROFILE\.android\avd\android33.avd\config.ini"
+(Get-Content $config) -replace 'hw.keyboard .*','hw.keyboard = yes' | Set-Content $config
+```
+
+But did these manually
+* Dark theme
+* Screen size - pixel 5 2340x1080 @ 440ppi
+* Screenshot location to pictures instead of desktop
+
+## Debugging
+Connect via USB or TCP eg `adb connect usb`
+Install apk: `adb install "<app>.apk"`
+Copy file: `adb push filepath /sdcard`
