@@ -1,0 +1,60 @@
+// Sized for the narrow left sidebar (sits under the search toolbar, above the
+// explorer tree). The heading matches the explorer's folder headers ("Notes" /
+// "Posts"); items are a touch bolder than tree entries with a date line beneath.
+.featured {
+  margin: 0;
+
+  & .featured-title {
+    font-family: var(--headerFont);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--secondary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.5rem;
+  }
+
+  & .featured-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  & .featured-item {
+    margin: 0 0 0.7rem 0;
+  }
+
+  & .featured-link {
+    display: block;
+    font-family: var(--headerFont);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    color: var(--dark);
+    background-color: transparent;
+  }
+
+  & .featured-link:hover {
+    color: var(--tertiary);
+  }
+
+  & .featured-date {
+    display: block;
+    margin-top: 0.1rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  & .featured-more {
+    display: inline-block;
+    margin-top: 0.1rem;
+    font-family: var(--headerFont);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--secondary);
+    background-color: transparent;
+  }
+
+  & .featured-more:hover {
+    color: var(--tertiary);
+  }
+}

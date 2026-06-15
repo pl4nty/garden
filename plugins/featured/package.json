@@ -1,0 +1,77 @@
+{
+  "name": "@tplant/featured",
+  "version": "0.1.0",
+  "description": "Renders a 'Featured' list of hand-picked posts (title + date) on the homepage, with a 'See N more' link to the posts folder",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "featured",
+    "displayName": "Featured",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "title": "Featured",
+      "posts": [],
+      "folder": "posts",
+      "showMore": true
+    },
+    "components": {
+      "Featured": {
+        "displayName": "Featured",
+        "defaultPosition": "left",
+        "defaultPriority": 40
+      }
+    },
+    "optionSchema": {
+      "title": {
+        "type": "string"
+      },
+      "posts": {
+        "type": "array"
+      },
+      "folder": {
+        "type": "string"
+      },
+      "showMore": {
+        "type": "boolean"
+      }
+    }
+  }
+}

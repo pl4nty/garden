@@ -150,8 +150,6 @@ plugins:
       position: left
       priority: 20
       group: toolbar
-      groupOptions:
-        grow: true
   - source: github:quartz-community/backlinks
     enabled: true
     layout:
@@ -223,10 +221,30 @@ plugins:
         GitHub: https://github.com/pl4nty
         LinkedIn: https://linkedin.com/in/tomplant
         Homelab: https://lab.tplant.com.au/
-        Status: https://status.tplant.com.au/
     layout:
       position: left
       priority: 15
+      group: toolbar
+      groupOptions:
+        grow: true
+  - source: ./plugins/featured
+    enabled: true
+    options:
+      title: Featured
+      folder: posts
+      posts:
+        - "posts/building-australia's-largest-highschool-ctf"
+        - "posts/finding-an-unreleased-windows-feature"
+        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+    layout:
+      position: left
+      priority: 40
+  - source: ./plugins/explorer-tweaks
+    enabled: true
+    layout:
+      position: body
+      priority: 110
+      display: all
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
