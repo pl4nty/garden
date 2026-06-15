@@ -2,7 +2,7 @@
 // explorer tree). The heading matches the explorer's folder headers ("Notes" /
 // "Posts"); items are a touch bolder than tree entries with a date line beneath.
 .featured {
-  margin: 0 0 0.4rem 0;
+  margin: 0;
 
   & .featured-title {
     font-family: var(--headerFont);

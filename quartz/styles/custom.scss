@@ -80,23 +80,50 @@ body[data-slug="index"] footer {
   font-weight: 450;
 }
 
-// Tighten the gap between the page title and the socials row on desktop/tablet
-// (the left sidebar's 1.2rem item gap is too much under the name); likewise
-// shrink the gap between the toolbar (search + icons) and the file tree so it
-// matches the small gap between the search bar and the icons beside it.
+// Drop the file tree's default 0.5rem top margin on desktop/tablet; the
+// sidebar's own 1.2rem flex gap already separates it from whatever sits above
+// (the Featured list on the homepage, the search/socials row elsewhere). The
+// earlier negative-margin pull-ups were tuned for the old layout where the
+// search bar sat directly above the tree and made Notes look squashed.
 @media all and not ($mobile) {
-  .socials {
-    margin-top: -0.7rem;
-  }
-  // Shrink the gap between the toolbar (search + icons) and the file tree so it
-  // matches the small gap between the search bar and the icons beside it. The
-  // explorer container is pulled up, and its content's default 0.5rem top
-  // margin is removed so the first tree row sits right under the search bar.
-  .page > #quartz-body .sidebar.left .explorer {
-    margin-top: -0.8rem;
-  }
   .page > #quartz-body .sidebar.left .explorer .explorer-content {
     margin-top: 0;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Top toolbar row: the socials icons share one row with the search / theme /
+// reading-mode icons. Socials is grouped with them (layout group "toolbar") and
+// grows to fill the row, pushing the three utility icons to the right edge.
+// Render search as a bare icon button — drop the "Search" label and the bar
+// chrome — so it matches the darkmode / reader-mode icons beside it.
+// ----------------------------------------------------------------------------
+.search > .search-button {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  color: var(--darkgray);
+
+  & p {
+    display: none;
+  }
+
+  & svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  & svg .search-path {
+    stroke: currentColor;
+  }
+
+  &:hover {
+    color: var(--secondary);
   }
 }
 
@@ -183,20 +210,13 @@ body[data-slug="index"] footer {
     margin-left: -4px;
   }
 
-  // Let the top bar wrap, keep the name on one line, and drop the socials onto
-  // their own row beneath it (instead of squeezing beside the name and forcing
-  // it to wrap). order: 99 sends socials last so the search/toggles stay on the
-  // top row and socials land on a line of their own.
+  // Let the top bar wrap and keep the name on one line. Socials now lives in the
+  // grouped toolbar row (with search / theme / reading), so it no longer needs
+  // its own reflow rule here.
   .page > #quartz-body .sidebar.left {
     flex-wrap: wrap;
   }
   .page-title {
     white-space: nowrap;
-  }
-  .socials {
-    order: 99;
-    flex-basis: 100%;
-    margin-top: 0.4rem;
-    margin-left: 0;
   }
 }
