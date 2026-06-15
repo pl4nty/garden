@@ -111,6 +111,22 @@ body[data-slug="index"] footer {
 }
 
 // ----------------------------------------------------------------------------
+// Explorer: long post titles wrap to 2–3 lines in the narrow sidebar and the
+// plugin renders each leaf link inline with no spacing, so wrapped titles run
+// straight into the next post and the list reads as a squashed block. Render
+// each file link as its own block with a tighter line-height (wrapped lines of
+// one title stay grouped) and add vertical padding (a clear gap between
+// distinct posts, larger than the gap between a title's own wrapped lines).
+// Targets the remote quartz-community/explorer leaf links (`a.nav-file-title`),
+// leaving folder titles untouched.
+// ----------------------------------------------------------------------------
+.explorer .explorer-content ul li > a.nav-file-title {
+  display: block;
+  line-height: 1.3;
+  padding: 0.25rem 0;
+}
+
+// ----------------------------------------------------------------------------
 // More breathing room between the body text and the sidebars (desktop).
 // Widening the sidebars' inner padding keeps the header and article aligned.
 // On the right, when a TOC is present it stays pinned to the top while the
