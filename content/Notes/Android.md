@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-06-10
 ---
 ## Patching with Revanced
 I end up using Linkedin on Android occasionally for work. The only think I dislike more than its unhinged slop posts, is the incessant ads.

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-07-02
 ---
 Building Chromium-based projects has been a bit of an adventure. Saner devs would just spin up a beefy VM, but I thought there must be a more efficient way. For what it's worth - I eventually used a VM at least once.
 

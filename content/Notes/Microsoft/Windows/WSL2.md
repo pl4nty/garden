@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-04-30
 ---
 ## Firewall (patched)
 Uses a Hyper-V switch called WSL, windows firewall blocks traffic to host by default but host is auto-configured as DNS resolver in /etc/resolv.conf!

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 Administrative XML (ADMX) is an XML-based file format for defining Group Policy settings in Windows, superseding the bespoke ADM format.
 They provide a structured way to manage registry-based policy settings, including language resource files (ADMLs) for rendering a user interface.

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 Google Japan build fun input devices for April Fools, and a lot of the build files (schematics/firmware) are on [GitHub](https://github.com/google/mozc-devices). I wanted to try building some myself, but first I had to calculate costs.
 

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-10-26
 ---
 On Windows, it's updated via HP Display Center - a UWP app built with .NET Framework. The config file leaks the FTP prefix for firmware downloads, including dev/staging: https://ftp.hp.com/pub/danda/com.hp.danda.firmware.bucket/displays/
 Server returns "not found" for non-existent, or "not a file" for directories.

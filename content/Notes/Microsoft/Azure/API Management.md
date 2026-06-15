@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 The `set-body` policy can be configured to use the [Liquid](https://shopify.github.io/liquid/basics/introduction/) templating language to transform the body of a request or response.
 

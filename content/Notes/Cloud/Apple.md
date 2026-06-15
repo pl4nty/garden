@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 ## FSEvents
 FSEvents files are written to disk by macOS APIs and contain historical records of file system activity that occurred for a particular volume. They can be found on devices running macOS and devices that were plugged in to a device running macOS. They are GZIP format, so you can also try carving for GZIPs to find FSEvents files that may be unallocated.

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-07-02
 ---
 I was making some PCB business cards based on [wh201906/RFIDetector](https://github.com/wh201906/RFIDetector/), and realised I don't really have a nice font for designs like this.
 Figured I'd pick something open-source and I found a couple great sources

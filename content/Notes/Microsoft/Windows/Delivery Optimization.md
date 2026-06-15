@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 An HTTP downloader with peer-to-peer and cache server capabilities. It uses a global control plane with content-based addressing and fallback to URL-based addressing.
 

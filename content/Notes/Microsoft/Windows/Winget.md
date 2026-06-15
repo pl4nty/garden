@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 	The Windows Package Manager (winget) uses package metadata from external sources to install Windows apps using traditional packaging technologies.
 The official user interface is a [C++ CLI](https://github.com/microsoft/winget-cli) shipped as part of an msix bundle (Microsoft.DesktopAppInstaller), and it also exposes a COM server for other clients like PowerShell and the Intune Management Extension.

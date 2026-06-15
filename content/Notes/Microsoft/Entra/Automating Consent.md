@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 Dynamic consent (`/adminconsent?scope=...`) only works with delegated scopes, not app roles. So if we don't want to consent to all roles (`scope=.default`), we have to call Graph manually. Fortunately Azure CLI has the correct Graph delegated scopes. Unfortunately, the API doesn't use names like My.Scope - it uses GUIDs that we have to lookup manually.
 

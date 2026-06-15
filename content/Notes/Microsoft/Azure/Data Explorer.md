@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 A columnar append-only database, also known as ADX and codenamed Kusto. Extensive use internally including Aria (Windows telemetry), Defender, Log Analytics/Monitor, and maybe Geneva too. The desktop client is Explorer and web is WebExplorer.
 

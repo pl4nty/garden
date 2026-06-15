@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-05-18
 ---
 Defender downloads AV signatures from versioned cabinet files hosted on [[Delivery Optimization|Delivery Optimization]]. A lot of bespoke scripts also use this redirection [web service](https://www.microsoft.com/en-us/wdsi/defenderupdates) to download them for offline or unstable clients like VDI, so I thought I'd have a crack at diffing them. Cabinets are available for base+delta versions or just deltas.
 

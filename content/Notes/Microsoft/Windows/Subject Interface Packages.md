@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-09-17
 ---
 [Take a SIP: A Refreshing Look at Subject Interface Packages | Splunk](https://www.splunk.com/en_us/blog/security/take-a-sip-a-refreshing-look-at-subject-interface-packages.html)
 A graeber classic [SpecterOps_Subverting_Trust_in_Windows.pdf](https://specterops.io/wp-content/uploads/sites/3/2022/06/SpecterOps_Subverting_Trust_in_Windows.pdf)

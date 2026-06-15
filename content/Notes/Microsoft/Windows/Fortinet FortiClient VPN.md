@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-03-22
 ---
 The only public installer (https://links.fortinet.com/forticlient/win/vpnagent) is an interactive-only stub that downloads an exe with silent args, so I thought I'd rev the download process to get the silent installer. But it's very cooked. I guess they reused the firmware update protocol from their appliances???
 

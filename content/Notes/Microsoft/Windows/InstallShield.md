@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 Installing apps on Windows has always been pretty cursed, especially in the early days before Windows Installer (MSI). [InstallShield](https://en.wikipedia.org/wiki/InstallShield) helped back in the 90s by unpacking files, setting regkeys, etc all from a single exe.
 Inno, NSIS, and good old MSI are much better nowadays, but a lot of old software still uses one of many InstallShield variants... And since my [work](https://devicie.com) involves silently installing/updating apps on lots of devices, these proprietary old product(s) became my problem.

@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2026-02-25
 ---
 The Windows debugger. Noone knows for sure how to pronounce it, but everyone has opinions. I'd love to know the etymology of these ones I've heard:
 * windog - Christian? from Crowdstrike at BSides Canberra, might've been '23 or '24. Need to check cause I might've mishead
