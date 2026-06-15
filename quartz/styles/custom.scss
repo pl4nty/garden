@@ -113,8 +113,9 @@ body[data-slug="index"] footer {
 // ----------------------------------------------------------------------------
 // More breathing room between the body text and the sidebars (desktop).
 // Widening the sidebars' inner padding keeps the header and article aligned.
-// On the right, the TOC stays pinned to the top while the backlinks and graph
-// are pushed to the bottom (margin-top: auto absorbs the free space above them).
+// On the right, when a TOC is present it stays pinned to the top while the
+// backlinks and graph are pushed to the bottom (margin-top: auto absorbs the
+// free space above them); with no TOC they sit at the top instead.
 // ----------------------------------------------------------------------------
 @media all and ($desktop) {
   .page > #quartz-body .sidebar.left {
@@ -125,15 +126,19 @@ body[data-slug="index"] footer {
     padding-left: 3.5rem;
   }
 
-  // Pin the backlinks + graph cluster to the bottom of the right sidebar while
-  // the TOC stays at the top. The auto top-margin lands on whichever of the two
-  // comes first (backlinks is absent on pages with no inbound links); when both
-  // are present, the graph drops back to the normal gap so they stay together.
-  .page > #quartz-body .sidebar.right > .backlinks,
-  .page > #quartz-body .sidebar.right > .graph {
+  // Pin the backlinks + graph cluster to the bottom of the right sidebar, but
+  // only when a table of contents is present to anchor against the top (the TOC
+  // is desktop-only, so :has(.toc) also scopes this to pages that actually have
+  // one). Without a TOC there's nothing above them, so they sit at the top in
+  // normal flow instead of floating at the bottom. The auto top-margin lands on
+  // whichever of the two comes first (backlinks is absent on pages with no
+  // inbound links); when both are present, the graph drops back to the normal
+  // gap so they stay together.
+  .page > #quartz-body .sidebar.right:has(.toc) > .backlinks,
+  .page > #quartz-body .sidebar.right:has(.toc) > .graph {
     margin-top: auto;
   }
-  .page > #quartz-body .sidebar.right > .backlinks ~ .graph {
+  .page > #quartz-body .sidebar.right:has(.toc) > .backlinks ~ .graph {
     margin-top: 0;
   }
 }
