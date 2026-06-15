@@ -9,23 +9,15 @@ const NotFound: QuartzComponent = ({ cfg, ctx }: QuartzComponentProps) => {
     <article class="popover-hint">
       <h1>404</h1>
       <p class="error-poem">
-        Once upon a midnight dreary,
+        Once upon a midnight dreary, while I web surfed, weak and weary,
         <br />
-        While I web surfed, weak and weary,
+        For many a quaint and curious page of forgotten lore—
         <br />
-        For pages long forgotten yore.
+        When I clicked my fav'rite href, suddenly there came a warning,
         <br />
-        When I clicked my fav'rite href,
+        and my heart was filled with mourning, mourning for my dear amour,
         <br />
-        Suddenly there came a warning,
-        <br />
-        and my heard was filled with mourning,
-        <br />
-        Mourning for my dear amour,
-        <br />
-        "Tis not possible!", I muttered,
-        <br />
-        "Give thine pages, I emplore!"
+        "Tis not possible!", I muttered, "Give thine pages, I implore!"
         <br />
         Quoth the server, <strong>404</strong>.
       </p>
