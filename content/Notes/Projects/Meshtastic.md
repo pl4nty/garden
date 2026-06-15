@@ -1,5 +1,6 @@
 ---
 dg-publish: true
+modified: 2025-03-30
 ---
 Community-run LoRA mesh network, at least three nodes in Canberra and more during BSides.
 
