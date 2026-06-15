@@ -67,7 +67,7 @@ export default ((opts?: Partial<FeaturedOptions>) => {
 
     return (
       <div class={`featured ${displayClass ?? ""}`}>
-        <h2 class="featured-title">{options.title}</h2>
+        {options.title && <h2 class="featured-title">{options.title}</h2>}
         <ul class="featured-list">
           {featured.map((f) => {
             const href = resolveRelative(fileData.slug, f.slug!);

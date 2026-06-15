@@ -93,10 +93,11 @@ body[data-slug="index"] footer {
 
 // ----------------------------------------------------------------------------
 // Top toolbar row: the socials icons share one row with the search / theme /
-// reading-mode icons. Socials is grouped with them (layout group "toolbar") and
-// grows to fill the row, pushing the three utility icons to the right edge.
+// reading-mode icons, all left-aligned with a small gap between the two groups.
 // Render search as a bare icon button — drop the "Search" label and the bar
-// chrome — so it matches the darkmode / reader-mode icons beside it.
+// chrome — so it matches the darkmode / reader-mode icons beside it. Flex-centre
+// the button and make the svg a block (sized to the 20px darkmode/reader icons)
+// so the magnifier lines up vertically instead of riding high on its baseline.
 // ----------------------------------------------------------------------------
 .search > .search-button {
   background-color: transparent;
@@ -107,6 +108,9 @@ body[data-slug="index"] footer {
   width: auto;
   min-width: 0;
   height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--darkgray);
 
   & p {
@@ -114,8 +118,9 @@ body[data-slug="index"] footer {
   }
 
   & svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   & svg .search-path {
@@ -125,6 +130,14 @@ body[data-slug="index"] footer {
   &:hover {
     color: var(--secondary);
   }
+}
+
+// Nudge the search/theme/reading cluster away from the socials icons by a small
+// fixed gap (the layout group's own gap sits between each icon). Socials no
+// longer grows, so the two groups sit close together rather than at opposite
+// edges of the sidebar.
+.search {
+  margin-left: 0.75rem;
 }
 
 // ----------------------------------------------------------------------------
