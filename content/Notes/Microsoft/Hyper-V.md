@@ -135,3 +135,14 @@ else {
 #TODO provide `SourcePath` completion when source is the guest?
 
 
+
+## Autopilot/Intune VM
+
+Download ISO from [Visual Studio Pro](https://my.visualstudio.com) (latest patches) or Microsoft if not licensed.
+Exclude `powershell.exe` from Defender, then on an SSD with admin privileges:
+`Convert-WindowsImage.ps1 -SourcePath Win11_22H2_EnglishInternational_x64v2.iso -WorkingDirectory . -Edition Professional`
+Ignore the `Get-DiskImage` error. Copy to USB.
+
+## Installing from ISO
+
+Win11 Insider Preview ISO requires a keypress to boot but didn't accept input quickly enough. Send a CTRL-ALT-DELETE to reset the process, and spam a key to boot the installer.
