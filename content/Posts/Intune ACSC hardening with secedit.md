@@ -9,7 +9,7 @@ These policies are fantastic for anyone looking to implement ACSC best practices
 
 ### Security-ACSC_Hardening-secedit-Detect.ps1
 
-```PowerShell
+```powershell
 # Force audit policy subcategory settings to override audit policy category settings: Enabled
 $SCENoApplyLegacyAuditPolicy = Get-ItemPropertyValue -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name SCENoApplyLegacyAuditPolicy
 # Amount of idle time required before suspending session: 15 minutes
@@ -54,7 +54,7 @@ exit 1
 
 ### Security-ACSC_Hardening-secedit-Remediate.ps1
 
-```PowerShell
+```powershell
 # Force audit policy subcategory settings to override audit policy category settings: Enabled
 Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name SCENoApplyLegacyAuditPolicy -Value 1 -Type DWord
 # Amount of idle time required before suspending session: 15 minutes
