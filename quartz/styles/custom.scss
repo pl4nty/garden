@@ -161,11 +161,12 @@ body[data-slug="index"] footer {
   height: 1.25rem;
 }
 
-// Small fixed gap between the socials group and the search/theme/reading group
+// Fixed gap between the socials group and the search/theme/reading group
 // (socials no longer grows, so the two clusters sit close together rather than
-// at opposite edges of the sidebar).
+// at opposite edges of the sidebar). The layout group's own 0.5rem gap sits
+// between every icon; this margin adds to it, giving ~30px between the groups.
 .sidebar.left .search {
-  margin-left: 0.75rem;
+  margin-left: 1.375rem;
 }
 
 // ----------------------------------------------------------------------------
