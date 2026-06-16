@@ -119,8 +119,8 @@ body[data-slug="index"] footer {
 
   & svg {
     display: block;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
 
   & svg .search-path {
@@ -130,6 +130,30 @@ body[data-slug="index"] footer {
   &:hover {
     color: var(--secondary);
   }
+}
+
+// Line the toolbar icons up exactly. Each plugin ships its own button metrics
+// (the socials icons are 1.3rem, darkmode is a 32px-tall button with absolutely
+// positioned 20px icons, reader applies an internal svg transform), which left
+// them looking mismatched. Centre every item on the row and give them all one
+// icon size. Scoped under .sidebar.left (and with that prefix for specificity)
+// so these win over each plugin's own rules without affecting anything else.
+.sidebar.left .flex-component {
+  align-items: center;
+}
+
+.sidebar.left .readermode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar.left .socials .social-icon svg,
+.sidebar.left .search > .search-button svg,
+.sidebar.left .darkmode svg,
+.sidebar.left .readermode svg {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 // Nudge the search/theme/reading cluster away from the socials icons by a small
