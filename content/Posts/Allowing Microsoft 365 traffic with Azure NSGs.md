@@ -6,7 +6,7 @@ Azure [network security groups](https://learn.microsoft.com/en-us/azure/virtual-
 
 Recently I deployed a hybrid Exchange environment in Azure, which requires inbound SMTP and HTTPS traffic. Within minutes I received hundreds of malicious requests from all over the internet (observed via [NSG traffic analytics](https://learn.microsoft.com/en-us/azure/network-watcher/traffic-analytics)). So I wrote a quick script to create inbound NSG rules for the required Exchange Online IP ranges. This could easily be repurposed for other services or outbound rules too.
 
-```PowerShell
+```powershell
 $EXCLUDE_IPV6 = $false
 
 # Get Exchange IPv4 CIDRs, filtering out the Common ServiceArea. Note that NSGs don't support v4 and v6 in the same rule as of writing, and PowerShell doesn't have a built-in parser to differentiate
