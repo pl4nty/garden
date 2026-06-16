@@ -21,7 +21,7 @@ In the meantime, CTFd had beefed up their automation tooling, and offered paid h
 
 It also doesn't natively support different scoreboards for team divisions (eg beginner, intermediate, advanced). There's a [plugin](https://github.com/durkinza/CTFd_Split_Scoreboard) but I ran out of time to update it for the latest CTFd version, so I wrote a script to parse division winners from a scoreboard export:
 
-```PowerShell
+```powershell
 $scores = Import-Csv '.\PECAN+ CTF 2023-scoreboard.csv' | where "Non-student team" -eq $false | select @{n='score2';e={[int]$_.score}},* | sort score2 -Descending
 $scores | where "All-female team" -eq $true | select -First 1 "user name", score2
 $scores | where "Indigenous player(s) in team" -eq $true | select -First 1 "user name", score2
@@ -56,7 +56,7 @@ Most students weren't comfortable with SSH so xRDP was critical, but tuning it w
 
 Besides performance, we also had to grant access with unique and secure accounts - some students wanted to pwn each other rather than the actual challenges. I used a quick script to generate accounts and distributed the credentials in a CSV. I also [patched our 2022 scoreboard](https://github.com/ECUComputingAndSecurity/rctf) to support single sign-on with these accounts, but that was too complex in hindsight.
 
-```PowerShell
+```powershell
 Import-Module Passphraser
 $accounts = @()
 0..599 | % {
