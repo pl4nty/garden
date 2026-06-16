@@ -225,12 +225,10 @@ plugins:
       position: left
       priority: 15
       group: toolbar
-      groupOptions:
-        grow: true
   - source: ./plugins/featured
     enabled: true
     options:
-      title: Featured
+      title: ""
       folder: posts
       posts:
         - "posts/building-australia's-largest-highschool-ctf"

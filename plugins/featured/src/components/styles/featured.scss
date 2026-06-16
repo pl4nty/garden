@@ -2,7 +2,9 @@
 // explorer tree). The heading matches the explorer's folder headers ("Notes" /
 // "Posts"); items are a touch bolder than tree entries with a date line beneath.
 .featured {
-  margin: 0;
+  // Pull the file tree up by a third of the sidebar's 1.2rem flex gap so the
+  // space beneath the Featured list is a touch tighter (1.2rem -> 0.8rem).
+  margin: 0 0 -0.4rem 0;
 
   & .featured-title {
     font-family: var(--headerFont);

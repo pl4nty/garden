@@ -55,7 +55,7 @@ function u2(e2, t2, n2, o2, i2, u3) {
 
 // src/components/styles/featured.scss
 var featured_default =
-  ".featured {\n  margin: 0;\n}\n.featured .featured-title {\n  font-family: var(--headerFont);\n  font-size: 0.95rem;\n  font-weight: 600;\n  color: var(--secondary);\n  margin: 0 0 0.5rem 0;\n  line-height: 1.5rem;\n}\n.featured .featured-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n.featured .featured-item {\n  margin: 0 0 0.7rem 0;\n}\n.featured .featured-link {\n  display: block;\n  font-family: var(--headerFont);\n  font-weight: 600;\n  font-size: 0.95rem;\n  line-height: 1.3;\n  color: var(--dark);\n  background-color: transparent;\n}\n.featured .featured-link:hover {\n  color: var(--tertiary);\n}\n.featured .featured-date {\n  display: block;\n  margin-top: 0.1rem;\n  font-size: 0.8rem;\n  color: var(--gray);\n}\n.featured .featured-more {\n  display: inline-block;\n  margin-top: 0.1rem;\n  font-family: var(--headerFont);\n  font-size: 0.85rem;\n  font-weight: 600;\n  color: var(--secondary);\n  background-color: transparent;\n}\n.featured .featured-more:hover {\n  color: var(--tertiary);\n}";
+  ".featured {\n  margin: 0 0 -0.4rem 0;\n}\n.featured .featured-title {\n  font-family: var(--headerFont);\n  font-size: 0.95rem;\n  font-weight: 600;\n  color: var(--secondary);\n  margin: 0 0 0.5rem 0;\n  line-height: 1.5rem;\n}\n.featured .featured-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n.featured .featured-item {\n  margin: 0 0 0.7rem 0;\n}\n.featured .featured-link {\n  display: block;\n  font-family: var(--headerFont);\n  font-weight: 600;\n  font-size: 0.95rem;\n  line-height: 1.3;\n  color: var(--dark);\n  background-color: transparent;\n}\n.featured .featured-link:hover {\n  color: var(--tertiary);\n}\n.featured .featured-date {\n  display: block;\n  margin-top: 0.1rem;\n  font-size: 0.8rem;\n  color: var(--gray);\n}\n.featured .featured-more {\n  display: inline-block;\n  margin-top: 0.1rem;\n  font-family: var(--headerFont);\n  font-size: 0.85rem;\n  font-weight: 600;\n  color: var(--secondary);\n  background-color: transparent;\n}\n.featured .featured-more:hover {\n  color: var(--tertiary);\n}";
 
 // src/components/Featured.tsx
 var defaultOptions = {
@@ -86,7 +86,7 @@ var Featured_default = (opts) => {
     return u2("div", {
       class: `featured ${displayClass ?? ""}`,
       children: [
-        u2("h2", { class: "featured-title", children: options.title }),
+        options.title ? u2("h2", { class: "featured-title", children: options.title }) : null,
         u2("ul", {
           class: "featured-list",
           children: featured.map((f) => {
