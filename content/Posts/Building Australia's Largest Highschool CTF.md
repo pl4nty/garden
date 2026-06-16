@@ -1,6 +1,7 @@
 ---
 dg-publish: true
 modified: 2023-12-30
+title: Building Australia's Largest* Highschool CTF
 ---
 \*probably
 
