@@ -70,4 +70,4 @@ That `devices` property also looked interesting. After even more OSINT, it parti
 
 The rule supports standard Azure AD [device filters](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-condition-filters-for-devices#filter-for-devices-graph-api), which could be particularly useful for PAW implementations.
 
-That's about it for implementing this feature, feel free to experiment in your own tenants. In part 2, we'll play with Windows binaries to find out how this all works, and hopefully shed some light on the extra WDAC/firewall option.
+That's about it for implementing this feature, feel free to experiment in your own tenants. In [[Tenant Restrictions v2 under the hood|part 2]], we'll play with Windows binaries to find out how this all works, and hopefully shed some light on the extra WDAC/firewall option.
