@@ -451,3 +451,27 @@ CDN -> local network.device3: "      Pieces Hash File (PHF)\n + pieces" {
 # }
 
 ```
+
+
+## URL Format
+`winget download` gets a 7-day expiry, whereas [msft-store.tplant.com.au/api/Packages?inputform=productid&Id=9wzdncrfj3pz&environment=Production](https://msft-store.tplant.com.au/api/Packages?inputform=productid&Id=9wzdncrfj3pz&environment=Production) URLs expire in ~15 minutes
+
+`http://<host>/filestreamingservice/files/<file guid>?P1=<expiry epoch>&P2=404&P3=2&P4=<url(b64(66-byte signature))`, but the last two b64 chars are always padding. maybe it's some embedded scheme
+
+some files don't require the query params, like 
+
+dl.delivery.mp.microsoft.com
+tlu.dl.delivery.mp.microsoft.com
+msedge.f.dl.delivery.mp.microsoft.com
+msedge.f.tlu.dl.delivery.mp.microsoft.com
+msedge.b.tlu.dl.delivery.mp.microsoft.com
+msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com
+msk8s.f.tlu.dl.delivery.mp.microsoft.com
+msk8s.b.tlu.dl.delivery.mp.microsoft.com
+storeapps.f.tlu.dl.delivery.mp.microsoft.com
+1b.tlu.dl.delivery.mp.microsoft.com
+\[2-16\].tlu.dl.delivery.mp.microsoft.com
+sphere.sb.dl.delivery.mp.microsoft.com
+catalog.sf.dl.delivery.mp.microsoft.com
+
+https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/fa84cc49-18b2-4c26-b389-90c96e6ae0d2/public/windows11.0-kb5054156-x64_a0c1638cbcf4cf33dbe9a5bef69db374b4786974.msu
