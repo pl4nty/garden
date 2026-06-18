@@ -124,6 +124,8 @@ plugins:
     enabled: true
     options:
       colorScheme: darkMode
+      # avoid "Tom Plant | Tom Plant"
+      excludeRoot: true
   - source: github:quartz-community/cname
     enabled: true
   - source: github:quartz-community/canvas-page
