@@ -2,8 +2,7 @@
 dg-publish: true
 modified: 2026-06-02
 ---
-Sometimes one of my ideas coalesces into a nice, well-defined unit. Better to end up here than abandoned in the far corners of my memory.
-Outcomes required, but "just for fun" is as valid as any. Feasibility: optional. Inspired by [Jacky's list](https://jzhao.xyz/thoughts/idea-list)
+Sometimes one of my ideas coalesces into a nice, well-defined unit. Better to end up here than abandoned. Inspired by [Jacky's list](https://jzhao.xyz/thoughts/idea-list)
 ## Technical
 Automatic Docker packaging
 * Inspired by a [David Fowler tweet](https://x.com/davidfowl/status/1880714530390786268) about lang support for compile to Docker
@@ -48,8 +47,6 @@ Cursed highspeed [LattePanda Mu](https://www.dfrobot.com/kit-004.html)adapter
 
 Flex pcb and colour? 
 
-Send eBay find to hexf/thomas
-
 Azure BIOS password management service
 * generate passwords service-side, and fail open. polling is necessary anyway for rotation
 * function to auth Intune client certs
@@ -70,15 +67,8 @@ Add Process ID to Get-Service https://old.reddit.com/r/dotnet/comments/1jcot21/n
 
 Automate source extraction from js + sourcemaps https://github.com/unblu/js-source-extractor
 
-Move Obsidian out of OneDrive?
-
 Hunt for Edge CLI args https://github.com/beverloo/peter.sh/blob/master/services/services/command-line-flags/CommandLineFlags.php#L376
 https://textslashplain.com/2022/01/05/edge-command-line-arguments/
-
-Concurrent local agents on feature branches using `git worktree`
-* VSCode support?
-* Dependencies - features like [pnpm workspaces](https://pnpm.io/workspaces)
-* Testing - conflicting ports
 
 Web app to generate Intune WiFi XML schema, like [daduckMSFT/WiFiProfileGenerator: Client-side web-app that will generate Android, iOS and Windows profiles in their raw format](https://github.com/daduckMSFT/WiFiProfileGenerator)
 

@@ -475,3 +475,5 @@ sphere.sb.dl.delivery.mp.microsoft.com
 catalog.sf.dl.delivery.mp.microsoft.com
 
 https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/fa84cc49-18b2-4c26-b389-90c96e6ae0d2/public/windows11.0-kb5054156-x64_a0c1638cbcf4cf33dbe9a5bef69db374b4786974.msu
+  
+https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/2342e2ed-4dcb-4f4b-b315-2f4a351074f5/public/mde.wsl_x64_1.26.427.1_822e1e4d10f53d0a9db7f63c59069cb50c740429.msi
