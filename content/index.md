@@ -4,12 +4,13 @@ title: Tom Plant
 modified: 2025-03-30
 ---
 ![[45422.webp|Floral page divider by Macrovector]]
-Hi! I'm Tom, and this is my [digital garden](https://maggieappleton.com/garden-history). It holds my notes, ideas, and experiments, especially on technical topics. I hope they're helpful to you 😊
+hey! I'm Tom, a hacker and maker from Melbourne, Australia. check [[About|About]] if you want to know more 😊
 
-Over the years I've explored many topics, so you're welcome to stay a while and take a look around. Recently, I've written about
+this website is my [digital garden](https://maggieappleton.com/garden-history). I like to explore, experiment, and (sometimes) write. I hope you enjoy your stay!
 
-* [[Notes/Microsoft/Intune/index|Microsoft Intune]] and [[Notes/Microsoft/Windows/index|Windows]] from my work at [Devicie](https://devicie.com/)
-* Cloud-native tech from my [[Homelab|homelab]] and contributions to [OTel](https://opentelemetry.io/) and [[BuildKit|BuildKit]]
-* Linux and hardware (ARM/RISC-V SBCs) from my contributions to [[Talos|Talos Linux]]
+recently, I've been thinking about
+- [lesser-known](https://github.com/microsoft/winget-pkgs) [package](https://www.nuget.org/) [managers](https://www.powershellgallery.com/), their contents (inspired by [Bill](https://billdemirkapi.me/leveraging-big-data-for-vulnerability-discovery-at-scale/)), and their supply chains
+- the future of [CTFs](https://en.wikipedia.org/wiki/Capture_the_flag_(cybersecurity)) in a world with AI, especially [my CTF for newcomers](https://pecanplus.org). I hope we can [save CTFs](https://osec.io/blog/save-ctfs-fund) with [creative formats](https://overseers.ctf.ing/)
+- independent, personal AI ecosystems. I want to [own my data](https://github.com/stacklok/toolhive) and its APIs, not hand it all to a vendor
 
-I always enjoy chatting with someone new, so leave a comment or email me to get in touch. My email is in my git commits!
+I'm always keen for a chat, leave a comment on any page or email me: tom\[at\]tplant.com.au
