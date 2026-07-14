@@ -229,6 +229,8 @@ plugins:
       position: left
       priority: 15
       group: toolbar
+  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
+  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
   - source: ./plugins/featured
     enabled: true
     options:
@@ -241,6 +243,22 @@ plugins:
     layout:
       position: left
       priority: 40
+      display: desktop-only
+  # Mobile: same list, moved to the bottom of the homepage (after the content)
+  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
+  - source: ./plugins/featured
+    enabled: true
+    options:
+      title: "Top posts"
+      folder: posts
+      posts:
+        - "posts/building-australia's-largest-highschool-ctf"
+        - "posts/finding-an-unreleased-windows-feature"
+        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+    layout:
+      position: afterBody
+      priority: 5
+      display: mobile-only
   - source: ./plugins/explorer-tweaks
     enabled: true
     layout:
