@@ -60,3 +60,17 @@
     color: var(--tertiary);
   }
 }
+
+// Below 800px the sidebar copy is hidden and a second copy renders at the
+// bottom of the homepage (afterBody). Undo the sidebar's negative margin and
+// give the heading a bit more presence so it reads as its own page section.
+@media (max-width: 800px) {
+  .featured {
+    margin: 0.5rem 0 0 0;
+
+    & .featured-title {
+      font-size: 1.2rem;
+      line-height: 1.3;
+    }
+  }
+}
