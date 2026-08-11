@@ -14,3 +14,9 @@ recently, I've been thinking about
 - independent, personal AI ecosystems. I want to [own my data](https://github.com/stacklok/toolhive) and its APIs, not hand it all to a vendor
 
 I'm always keen for a chat, leave a comment on any page or email me: tom\[at\]tplant.com.au
+
+<div style="text-align: center">
+<p>friends</p>
+<a href="https://nullablevo.id.au"><img src="https://nullablevo.id.au/images/button.png" alt="nullablevo.id.au"></a>
+<a href="https://seall.dev/" target="_blank"><img src="https://seall.dev/sealldev.gif" width="88" height="31"></a>
+</div>
