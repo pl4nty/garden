@@ -1,8 +1,7 @@
 ---
 dg-publish: true
 ---
-hey! you can call me tom, or pl4nty (/ˈplaːnti/). I'm a 20-something guy from Australia, living in Melbourne after spending time all over the country.
-I enjoy breaking and making all sorts of systems, especially software. I'm also fond of [[Books|novels]], nature, and opera (as well as [art song](https://en.wikipedia.org/wiki/Art_song)).
+hey! you can call me tom, or pl4nty (/ˈplaːnti/). I'm a 20-something guy from Australia, living in Melbourne after spending time all over the country. I enjoy breaking and making all sorts of systems, especially software. I'm also fond of [[Books|novels]], nature, and opera (as well as [art song](https://en.wikipedia.org/wiki/Art_song)).
 
 if we happen to cross paths, I’m always down to grab coffee or say hi! I travel to Sydney pretty often, and some other places too:
 * [PECAN+ 2026](https://pecanplus.org/) in Perth
@@ -14,7 +13,7 @@ if we happen to cross paths, I’m always down to grab coffee or say hi! I trave
 
 some communities I'm involved with
 * organiser of [PECAN+](https://pecanplus.org/)
-* [Emu Exploit](https://emu.team/) capture-the-flag team, [ICC](https://icc.ecsc.eu/)/[ECSC]([https://ecsc.eu/](https://en.wikipedia.org/wiki/European_Cybersecurity_Challenge)), and the aussie CTF scene in general
+* [Emu Exploit](https://emu.team/) capture-the-flag team, [ICC](https://icc.ecsc.eu/)/[ECSC](https://en.wikipedia.org/wiki/European_Cybersecurity_Challenge), and the aussie CTF scene in general
 * the [Australian National University](https://www.anu.edu.au/), and its venerable [CompSci Students' Association](https://cs.club.anu.edu.au/)
 * [National Youth Science Forum](https://www.nysf.edu.au/)
 * [Workplace Ninjas Australia](https://au.wpninjas.global/)
