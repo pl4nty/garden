@@ -68,7 +68,7 @@ Sure enough, `System32\mpssvc.dll` contains this one-liner: `O:SYG:SYD:(XA;;0x1;
 
 That's all I have for this feature, I hope you enjoyed.
 
-Non-Tenant Restrictions Policy Allow Rule
+%%Non-Tenant Restrictions Policy Allow Rule
 This rule allows traffic to endpoints which are not policy defined M365 endpoints
 
 Tenant Restrictions - Loopback Allow Rule
@@ -451,4 +451,4 @@ Tenant Restrictions event log
 "Tenant Restrictions V2 not enabled" in teams logs.txt
 screenshots and procmon dump in downloads
 
-hyperv inherited activation
+hyperv inherited activation%%

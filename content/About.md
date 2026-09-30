@@ -1,7 +1,7 @@
 ---
 dg-publish: true
 ---
-hey! you can call me tom, or pl4nty (/ˈplaːnti/). I'm a 20-something guy from Australia, living in Melbourne after spending time all over the country. I enjoy breaking and making all sorts of systems, especially software. I'm also fond of [[Books|novels]], nature, and opera (as well as [art song](https://en.wikipedia.org/wiki/Art_song)).
+hey! you can call me tom, or pl4nty (/ˈplaːnti/). I'm a 20-something guy from Australia, living in Melbourne after spending time all over the country. I enjoy breaking and making all sorts of systems, especially software. I'm also fond of [[Books|novels]], nature, good coffee, and opera (as well as [art song](https://en.wikipedia.org/wiki/Art_song)).
 
 if we happen to cross paths, I’m always down to grab coffee or say hi! I travel to Sydney pretty often, and some other places too:
 * [PECAN+ 2026](https://pecanplus.org/) in Perth
