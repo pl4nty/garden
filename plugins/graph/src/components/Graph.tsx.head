@@ -1,0 +1,27 @@
+import type { VNode, JSX } from "preact";
+
+// All types use any to avoid conflicts with Quartz's internal types
+// This ensures the plugins work without type declaration issues
+
+export type QuartzComponentProps = {
+  ctx: any;
+  externalResources: any;
+  fileData: any;
+  cfg: any;
+  children: any[];
+  tree: any;
+  allFiles: any[];
+  displayClass?: "mobile-only" | "desktop-only";
+} & JSX.IntrinsicAttributes & {
+    [key: string]: any;
+  };
+
+export type QuartzComponent = ((props: QuartzComponentProps) => VNode) & {
+  css?: string | undefined;
+  beforeDOMLoaded?: string | undefined;
+  afterDOMLoaded?: string | undefined;
+};
+
+export type QuartzComponentConstructor<Options extends object | undefined = undefined> = (
+  opts: Options,
+) => QuartzComponent;
