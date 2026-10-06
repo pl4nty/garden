@@ -30,6 +30,31 @@ const keepFolderState = `
         if (!shouldBeOpen) outer.classList.remove("open");
       });
   }
+  // Clicking a folder's name navigates to its index page; the explorer then
+  // auto-opens it as the active folder, and restore() would collapse it again
+  // straight away because the name link (unlike the chevron) doesn't save any
+  // state. Record the click as "open" so the folder stays expanded. Capture
+  // phase, so it runs before the SPA router handles the click.
+  document.addEventListener(
+    "click",
+    (e) => {
+      const link = e.target.closest && e.target.closest(".explorer .folder-container a");
+      if (!link) return;
+      const path = link.closest(".folder-container").getAttribute("data-folderpath");
+      if (!path) return;
+      let saved = [];
+      try {
+        saved = JSON.parse(localStorage.getItem("fileTree") || "[]");
+      } catch (e) {}
+      const entry = saved.find((s) => s.path === path);
+      if (entry) entry.collapsed = false;
+      else saved.push({ path, collapsed: false });
+      try {
+        localStorage.setItem("fileTree", JSON.stringify(saved));
+      } catch (e) {}
+    },
+    true,
+  );
   document.addEventListener("nav", () => requestAnimationFrame(restore));
   requestAnimationFrame(restore);
 })();
