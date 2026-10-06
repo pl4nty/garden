@@ -17,7 +17,7 @@ Prices are in USD without shipping unless otherwise specified. I used JLC's docs
 | Cable A; JST ZH 1.5mm pitch 8pin 100mm forward double head | 25 units                    |                                            |
 | Cable B; JST ZH 1.5mm pitch 7pin 100mm forward double head | 1 unit                      |                                            |
 | Pin Header; 1x4 pin 2.54mm pitch 12+mm height (sample)     | 52 headers                  |                                            |
-| 3D printed case                                            | 26 pcs                      | $35.67 + $23.81 shipping with 9600 resin   |
+| 3D printed case                                            | 26 pcs                      | \$35.67 + \$23.81 shipping with 9600 resin |
 | Self tapping screw (M2 10mm)                               | 52 pcs                      |                                            |
 | Key switch (Cherry MX or compatible)                       | 208 pcs                     | ~$50                                       |
 | Key caps (For Cherry MX switch)                            | 208 pcs                     |                                            |

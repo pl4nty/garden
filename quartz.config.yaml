@@ -80,12 +80,17 @@ plugins:
       markdownLinkResolution: shortest
       disableBrokenWikilinks: true
       externalLinkIcon: false
+      # native lazy loading for embedded images/iframes below the fold
+      lazyLoad: true
     order: 60
   - source: github:quartz-community/description
     enabled: true
     order: 70
+  # disabled: no notes use maths, and it rendered dollar amounts in tables
+  # ("$35.67 + $23.81") as LaTeX while loading KaTeX CSS/JS from jsDelivr on
+  # every page
   - source: github:quartz-community/latex
-    enabled: true
+    enabled: false
     options:
       renderEngine: katex
     order: 80
@@ -107,7 +112,8 @@ plugins:
       header: Titillium Web
       body: Titillium Web
       code: Fira Code
-      fontOrigin: googleFonts
+      # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
+      fontOrigin: local
   - source: github:quartz-community/remove-draft
     enabled: true
   - source: github:quartz-community/explicit-publish
@@ -143,7 +149,9 @@ plugins:
       position: left
       priority: 50
       display: all
-  - source: github:quartz-community/graph
+  # vendored from quartz-community/graph@46f0ba1: d3/PixiJS load lazily (see
+  # plugins/graph/src/components/scripts/graph.inline.ts)
+  - source: ./plugins/graph
     enabled: true
     layout:
       position: right

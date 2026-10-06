@@ -1,4 +1,5 @@
 @use "./variables.scss" as *;
+@use "./fonts.scss";
 
 // remove the green navigation progress bar shown during SPA navigation
 .navigation-progress {

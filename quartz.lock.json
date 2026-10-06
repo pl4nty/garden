@@ -146,10 +146,10 @@
       "installedAt": "2026-06-13T11:31:19.842Z"
     },
     "graph": {
-      "source": "github:quartz-community/graph",
-      "resolved": "https://github.com/quartz-community/graph.git",
-      "commit": "46f0ba1c3c0cc484697572e7bcf315fa384d80d2",
-      "installedAt": "2026-06-13T11:31:22.228Z"
+      "source": "./plugins/graph",
+      "resolved": "/home/user/garden/plugins/graph",
+      "commit": "local",
+      "installedAt": "2026-10-06T04:40:00.000Z"
     },
     "hard-line-breaks": {
       "source": "github:quartz-community/hard-line-breaks",

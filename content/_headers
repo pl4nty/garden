@@ -1,0 +1,17 @@
+# Cloudflare Pages response headers. Copied verbatim to the build output root.
+# Quartz names these bundles by content hash, so they never change in place.
+/index-*.css
+  Cache-Control: public, max-age=31536000, immutable
+/component-*.css
+  Cache-Control: public, max-age=31536000, immutable
+/prescript-*.js
+  Cache-Control: public, max-age=31536000, immutable
+/postscript-*.js
+  Cache-Control: public, max-age=31536000, immutable
+/static/resource-*
+  Cache-Control: public, max-age=31536000, immutable
+/static/scripts/*
+  Cache-Control: public, max-age=31536000, immutable
+# Font file names carry the upstream Google Fonts version and file hash.
+/static/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

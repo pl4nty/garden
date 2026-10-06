@@ -16,6 +16,10 @@ the **saved** state (the manual open/closed choices the explorer persists to
 `localStorage` under `fileTree`) or open by default. Folders you opened yourself
 stay open; only the active-page auto-expansion is undone.
 
+Clicking a folder's **name** (which navigates to its index page) counts as
+opening it: the folder is saved as open, so it doesn't expand and immediately
+collapse again.
+
 It's deferred to `requestAnimationFrame`, so the re-collapse lands before the
 browser paints — there's no visible open→close flicker.
 
