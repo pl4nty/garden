@@ -40,7 +40,7 @@ Get content information for an Intune Win32 application
 Author: Tom Plant <tom@tplant.com.au>
 
 .LINK
-https://garden.tplant.com.au
+https://tplant.com.au
 
 .EXAMPLE
 Get-IntuneWin32ContentInfo.ps1 -ApplicationId 00000000-0000-0000-0000-000000000000

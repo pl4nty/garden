@@ -80,7 +80,7 @@ Copies a file to or from a virtual machine.
 .DESCRIPTION
 An improvement of the native Copy-VMFile, with relative filepath support and guest-to-host copying. Folders aren't supported, just zip them instead.
 .LINK
-https://garden.tplant.com.au/microsoft/hyper-v/
+https://tplant.com.au/microsoft/hyper-v/
 .EXAMPLE
 Copy-VMFileEx.ps1 -Name VM01 -SourcePath ./install.exe
 .EXAMPLE
