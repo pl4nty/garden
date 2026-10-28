@@ -4,7 +4,7 @@ title: Tom Plant
 modified: 2025-03-30
 ---
 ![[45422.webp|Floral page divider by Macrovector]]
-hey! I'm Tom, a hacker and maker from Melbourne, Australia. check [[About|About]] if you want to know more 😊
+hey! I'm Tom, a hacker and maker from Melbourne, Australia. check [[Whoami|Whoami]] if you want to know more 😊
 
 this website is my [digital garden](https://maggieappleton.com/garden-history). I like to explore, experiment, and (sometimes) write. I hope you enjoy your stay!
 
