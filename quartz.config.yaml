@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: cabin
   locale: en-GB
-  baseUrl: garden.tplant.com.au
+  baseUrl: tplant.com.au
   ignorePatterns:
     - private
     - templates
