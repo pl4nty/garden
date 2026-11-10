@@ -274,7 +274,9 @@ body[data-slug^="tags/"] {
   }
 
   @media all and ($narrow) {
-    position: static;
+    // not sticky: two rows are too tall to pin on a phone. Still positioned,
+    // because the backdrop pseudo-element is absolute.
+    position: relative;
     flex-wrap: wrap;
     row-gap: 0.25rem;
     padding-top: 0.75rem;
