@@ -1,6 +1,9 @@
 /*! MIT License
  * Copyright (c) 2018 GitHub Inc.
  * https://github.com/primer/primitives/blob/main/LICENSE
+ *
+ * Surfaces, borders, text and accent colours follow the site palette in
+ * quartz.config.yaml. Update both files when the palette changes.
  */
 
 main {
@@ -35,8 +38,8 @@ main {
   --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
   --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
   --color-btn-text: #d4d4d4; /* --darkgray */
-  --color-btn-bg: #161618; /* --light */
-  --color-btn-border: rgb(240, 246, 252 / 10%); /* --dark */
+  --color-btn-bg: #161b18;
+  --color-btn-border: #252c28;
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
   --color-btn-hover-bg: #30363d;
@@ -45,11 +48,11 @@ main {
   --color-btn-active-border: #6e7681;
   --color-btn-selected-bg: #161b22;
   --color-btn-primary-text: #fff;
-  --color-btn-primary-bg: #84a59d; /* --tertiary */
+  --color-btn-primary-bg: #2c7a4d;
   --color-btn-primary-border: rgb(240, 246, 252 / 10%); /* --dark */
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
-  --color-btn-primary-hover-bg: #7b97aa; /* --secondary */
+  --color-btn-primary-hover-bg: #358f5b;
   --color-btn-primary-hover-border: rgb(240, 246, 252 / 10%); /* --dark */
   --color-btn-primary-selected-bg: #7b97aa; /* --secondary */
   --color-btn-primary-selected-shadow: 0 0 transparent;
@@ -60,18 +63,18 @@ main {
   --color-segmented-control-bg: rgb(110 118 129 / 10%);
   --color-segmented-control-button-bg: #0d1117;
   --color-segmented-control-button-selected-border: #6e7681;
-  --color-fg-default: #ebebec; /* --dark */
-  --color-fg-muted: #d4d4d4; /* --darkgray */
+  --color-fg-default: #f0f4f1;
+  --color-fg-muted: #8d9891;
   --color-fg-subtle: #d4d4d4; /* --darkgray */
-  --color-canvas-default: #0d1117;
-  --color-canvas-overlay: #161b22;
-  --color-canvas-inset: #010409;
-  --color-canvas-subtle: #161b22;
-  --color-border-default: #30363d;
-  --color-border-muted: #21262d;
-  --color-neutral-muted: rgb(110 118 129 / 40%);
-  --color-accent-fg: #2f81f7;
-  --color-accent-emphasis: #1f6feb;
+  --color-canvas-default: #161b18;
+  --color-canvas-overlay: #161b18;
+  --color-canvas-inset: #101412;
+  --color-canvas-subtle: #101412;
+  --color-border-default: #252c28;
+  --color-border-muted: #252c28;
+  --color-neutral-muted: rgb(141 152 145 / 20%);
+  --color-accent-fg: #7dd694;
+  --color-accent-emphasis: #2c7a4d;
   --color-accent-muted: rgb(56 139 253 / 40%);
   --color-accent-subtle: rgb(56 139 253 / 10%);
   --color-success-fg: #3fb950;

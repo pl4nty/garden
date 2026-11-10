@@ -16,30 +16,34 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: Newsreader
+      body: Geist
+      code: Geist Mono
+    # Warm paper and ink in light mode, a green-tinted near-black in dark mode.
+    # gray is the lightest colour used for text (dates, metadata) and keeps a
+    # 4.5:1 contrast on light; secondary is the link and accent green, tertiary
+    # the terracotta used for hover. quartz/styles/custom.scss adds --surface.
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
-        secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        light: "#FAF8F2"
+        lightgray: "#E9E5D9"
+        gray: "#6E6A5E"
+        darkgray: "#3A382F"
+        dark: "#16150F"
+        secondary: "#1F6B43"
+        tertiary: "#B4491F"
+        highlight: "rgba(31, 107, 67, 0.1)"
+        textHighlight: "rgba(250, 204, 21, 0.4)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#101412"
+        lightgray: "#252C28"
+        gray: "#8D9891"
+        darkgray: "#C5CEC8"
+        dark: "#F0F4F1"
+        secondary: "#7DD694"
+        tertiary: "#F0A070"
+        highlight: "rgba(125, 214, 148, 0.12)"
+        textHighlight: "rgba(250, 204, 21, 0.3)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -109,9 +113,9 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: Newsreader
+      body: Geist
+      code: Geist Mono
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
   - source: github:quartz-community/remove-draft
@@ -143,8 +147,10 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # The file tree is replaced by the top bar links (./plugins/nav) and the
+  # per-folder note index (./plugins/folder-tree).
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -185,25 +191,43 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # The left slot is the top bar (see quartz/styles/custom.scss): site title,
+  # nav links, then the toolbar group pushed to the right.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
       position: left
       priority: 10
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      links:
+        Posts: posts/
+        Notes: notes/
+        Ideas: ideas
+        Now: now
+        About: whoami
+    layout:
+      position: left
+      priority: 20
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
       position: left
       priority: 30
       group: toolbar
+  # disabled: it only hides the sidebars, and the reading column no longer has any
   - source: github:quartz-community/reader-mode
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 35
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      spacerSymbol: /
+      showCurrentPage: false
     layout:
       position: beforeBody
       priority: 5
@@ -226,50 +250,52 @@ plugins:
     enabled: true
     options:
       links:
-        License: /License
-  - source: ./plugins/socials
+        License: /license
+        RSS: /index.xml
+        GitHub: https://github.com/pl4nty
+        LinkedIn: https://linkedin.com/in/tomplant
+        Homelab: https://lab.tplant.com.au/
+  # Homepage: the heading block goes above the page content and the curated
+  # lists below it. Both render on the index page only.
+  - source: ./plugins/home
     enabled: true
     options:
+      section: hero
+      eyebrow: Tom Plant · Melbourne, Australia
+      heading: Exploring, experimenting, and *(sometimes)* writing.
+    layout:
+      position: beforeBody
+      priority: 1
+  - source: ./plugins/home
+    enabled: true
+    options:
+      section: sections
       links:
         GitHub: https://github.com/pl4nty
         LinkedIn: https://linkedin.com/in/tomplant
         Homelab: https://lab.tplant.com.au/
-    layout:
-      position: left
-      priority: 15
-      group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
-    enabled: true
-    options:
-      title: ""
-      folder: posts
-      posts:
+        RSS: /index.xml
+      featured:
         - "posts/building-australia's-largest-highschool-ctf"
         - "posts/finding-an-unreleased-windows-feature"
         - "posts/use-a-custom-outlook.com-email-without-godaddy"
-    layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
-    enabled: true
-    options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      postsFolder: posts
+      notesFolder: notes
+      recentCount: 6
     layout:
       position: afterBody
       priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+  # Every note below a folder, grouped by subfolder, on the folder's own page.
+  - source: ./plugins/folder-tree
     enabled: true
+    options:
+      roots:
+        - notes
+    layout:
+      position: afterBody
+      priority: 1
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +303,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -344,12 +370,14 @@ layout:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     tag:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     canvas: {}

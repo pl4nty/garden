@@ -1,0 +1,97 @@
+.folder-tree {
+  margin-top: 1.5rem;
+}
+
+.folder-tree-count {
+  margin: 0 0 1.5rem;
+  font-family: var(--codeFont);
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+// Groups flow down two columns and never split across them.
+.folder-tree-groups {
+  columns: 2;
+  column-gap: 3rem;
+
+  &.single {
+    columns: 1;
+  }
+
+  @media (max-width: 700px) {
+    columns: 1;
+  }
+}
+
+.folder-tree-group {
+  break-inside: avoid;
+  padding-bottom: 2rem;
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--lightgray);
+    font-family: var(--headerFont);
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--dark);
+
+    a {
+      font-weight: inherit;
+      color: inherit;
+      background-color: transparent;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--secondary);
+      }
+    }
+  }
+
+  .folder-tree-sep {
+    color: var(--gray);
+  }
+
+  .folder-tree-n {
+    font-family: var(--codeFont);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--gray);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    font-size: 0.975rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--darkgray);
+    background-color: transparent;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--secondary);
+    }
+  }
+
+  time {
+    flex-shrink: 0;
+    font-family: var(--codeFont);
+    font-size: 0.75rem;
+    color: var(--gray);
+  }
+}

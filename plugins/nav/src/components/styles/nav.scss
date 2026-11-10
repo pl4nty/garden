@@ -1,0 +1,37 @@
+.site-nav {
+  min-width: 0;
+
+  ul {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-family: var(--bodyFont);
+    font-size: 0.925rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    color: var(--darkgray);
+    background-color: transparent;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+
+    &:hover {
+      color: var(--dark);
+      background-color: var(--lightgray);
+    }
+
+    &.active {
+      color: var(--secondary);
+      background-color: var(--highlight);
+    }
+  }
+}
