@@ -294,6 +294,12 @@ plugins:
     layout:
       position: afterBody
       priority: 1
+  # A plant at the end of each note, drawn from the note's length and links.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
   - source: ./plugins/explorer-tweaks
     enabled: false
     layout:

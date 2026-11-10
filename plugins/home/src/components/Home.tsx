@@ -105,42 +105,60 @@ export default ((opts?: Partial<HomeOptions>) => {
       .sort((a, b) => b.date.getTime() - a.date.getTime())
       .slice(0, options.recentCount)
 
-    // One card for each folder directly below the notes folder.
-    const topics = new Map<string, { name: string; count: number; children: Set<string> }>()
+    // One column for each folder directly below the notes folder. A column
+    // lists the folder's children: subfolders (name -> folder page) and the
+    // notes that sit directly in it (title -> note).
+    type Child = { slug: string; folder: boolean }
+    const topics = new Map<string, { name: string; count: number; children: Map<string, Child> }>()
     for (const f of notes) {
       const segments = f.slug!.split("/")
       const names = folderNames(f)
       if (segments.length < 3 || names.length < 2) continue
       const key = segments[1]!
-      const topic = topics.get(key) ?? { name: names[1]!, count: 0, children: new Set<string>() }
+      const topic = topics.get(key) ?? {
+        name: names[1]!,
+        count: 0,
+        children: new Map<string, Child>(),
+      }
       topic.count++
-      // a subfolder name, or the note itself when it sits directly in the topic
-      topic.children.add(names[2] ?? title(f)!)
+      if (names[2]) {
+        topic.children.set(names[2], {
+          slug: `${segments.slice(0, 3).join("/")}/index`,
+          folder: true,
+        })
+      } else {
+        topic.children.set(title(f)!, { slug: f.slug!, folder: false })
+      }
       topics.set(key, topic)
     }
+
+    // "https://github.com/pl4nty" -> "github.com/pl4nty"
+    const bare = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")
 
     const links = Object.entries(options.links)
 
     return (
       <div class={`home-sections ${displayClass ?? ""}`}>
         {links.length > 0 && (
-          <ul class="home-links">
+          <dl class="home-contact">
             {links.map(([label, url]) => {
               const external = /^https?:\/\//.test(url)
               return (
-                <li>
-                  <a
-                    href={url}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noopener noreferrer" : undefined}
-                  >
-                    {label}
-                    {external && <span aria-hidden="true"> ↗</span>}
-                  </a>
-                </li>
+                <div>
+                  <dt>{label.toLowerCase()}</dt>
+                  <dd>
+                    <a
+                      href={url}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                    >
+                      {bare(url)}
+                    </a>
+                  </dd>
+                </div>
               )
             })}
-          </ul>
+          </dl>
         )}
 
         <div class="home-columns">
@@ -197,21 +215,34 @@ export default ((opts?: Partial<HomeOptions>) => {
             <header>
               <h2>Explore the notes</h2>
             </header>
-            <ul>
+            <div class="home-index">
               {[...topics.entries()]
                 .sort(([, a], [, b]) => b.count - a.count)
                 .map(([key, topic]) => (
-                  <li>
-                    <a href={href(`${notesPrefix}${key}/index`)} class="home-card">
-                      <span class="home-topic-count">
-                        {topic.count} {topic.count === 1 ? "note" : "notes"}
-                      </span>
-                      <h3>{topic.name}</h3>
-                      <p>{[...topic.children].sort().join(" · ")}</p>
-                    </a>
-                  </li>
+                  <div>
+                    <h3>
+                      <a href={href(`${notesPrefix}${key}/index`)}>{topic.name}</a>
+                      <span>{topic.count}</span>
+                    </h3>
+                    <ul>
+                      {[...topic.children.entries()]
+                        // folders first, then notes, each by name
+                        .sort(
+                          ([a, x], [b, y]) =>
+                            Number(y.folder) - Number(x.folder) || a.localeCompare(b),
+                        )
+                        .map(([name, child]) => (
+                          <li>
+                            <a href={href(child.slug)}>
+                              {name}
+                              {child.folder && <span aria-hidden="true">/</span>}
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 ))}
-            </ul>
+            </div>
           </section>
         )}
       </div>

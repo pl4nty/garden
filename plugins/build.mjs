@@ -20,6 +20,7 @@ const plugins = {
   nav: "Nav",
   home: "Home",
   "folder-tree": "FolderTree",
+  "note-plant": "NotePlant",
 }
 
 const scssAsText = {

@@ -559,6 +559,25 @@ hr {
   margin: 3rem auto;
 }
 
+// A rule inside a note is a trace with a via at its midpoint.
+article hr {
+  position: relative;
+  overflow: visible;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid var(--gray);
+    border-radius: 50%;
+    background-color: var(--light);
+    transform: translate(-50%, -50%);
+  }
+}
+
 img {
   border-radius: var(--radius);
 }
@@ -807,8 +826,15 @@ ul.toc-content.overflow {
 // The rule between the content and the after-body slot only makes sense above
 // the comments, and list pages and the homepage have none.
 .center:has(.page-listing) > hr,
+.center:has(.note-plant) > hr,
 body[data-slug="index"] .center > hr {
   display: none;
+}
+
+// the comments start a little below the rule the note's plant stands on
+.note-plant + .giscus,
+.note-plant ~ .giscus {
+  margin-top: 2.5rem;
 }
 
 .page-listing > p {

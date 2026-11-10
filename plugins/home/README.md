@@ -5,9 +5,9 @@ parts that are configured as two plugin entries:
 
 - `section: hero` is the heading block with the illustration. Put it in
   `beforeBody`.
-- `section: sections` is the content below the note: a row of links, the
-  featured posts, the most recently modified notes, and one card for each
-  folder directly below the notes folder. Put it in `afterBody`.
+- `section: sections` is the content below the note: a contact list, the
+  featured posts, the most recently modified notes, and one column of links for
+  each folder directly below the notes folder. Put it in `afterBody`.
 
 ## Options
 
@@ -16,7 +16,7 @@ parts that are configured as two plugin entries:
 | `section`     | `"hero" \| "sections"`   | `"sections"` | The part to render.                                          |
 | `eyebrow`     | `string`                 | `""`         | Hero: the small line above the heading.                      |
 | `heading`     | `string`                 | `""`         | Hero: the heading. Text between asterisks is set in italics. |
-| `links`       | `Record<string, string>` | `{}`         | Sections: label to URL.                                      |
+| `links`       | `Record<string, string>` | `{}`         | Sections: label to URL, shown as a contact list.             |
 | `featured`    | `string[]`               | `[]`         | Sections: ordered post slugs to feature.                     |
 | `postsFolder` | `string`                 | `"posts"`    | Sections: folder slug that holds the posts.                  |
 | `notesFolder` | `string`                 | `"notes"`    | Sections: folder slug that holds the notes.                  |
