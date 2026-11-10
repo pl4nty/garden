@@ -1,29 +1,178 @@
 // src/components/Home.tsx
 import { getDate, resolveRelative } from "@quartz-community/utils";
 
-// src/components/vine.ts
-var vine = '<svg viewBox="0 0 340 500" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect class="p" style="--d:0s" x="103" y="470" width="14" height="26" rx="3"/><rect class="p" style="--d:0.05s" x="133" y="470" width="14" height="26" rx="3"/><rect class="p" style="--d:0.1s" x="163" y="470" width="14" height="26" rx="3"/><rect class="p" style="--d:0.15000000000000002s" x="193" y="470" width="14" height="26" rx="3"/><rect class="p" style="--d:0.2s" x="223" y="470" width="14" height="26" rx="3"/><g stroke-width="2.25"><path class="t" style="--d:0.1s" pathLength="1" d="M170 470L170 410L145 385L145 315L180 280L180 200L160 180L160 120"/><path class="t" style="--d:0.6s" pathLength="1" d="M145 350L121 326L91 326"/><path class="t" style="--d:0.8s" pathLength="1" d="M163 297L207 297"/><path class="t" style="--d:0.95s" pathLength="1" d="M180 262L206 236L246 236"/><path class="t" style="--d:1.05s" pathLength="1" d="M180 240L150 210L116 210"/><path class="t" style="--d:1.2s" pathLength="1" d="M180 200L204 176L204 148L220 132"/><path class="t" style="--d:1.4s" pathLength="1" d="M160 150L136 126L136 108"/><path class="t" style="--d:0.2s" pathLength="1" d="M110 470L110 446L76 412L76 385"/><path class="t" style="--d:0.15s" pathLength="1" d="M140 470L140 430L124 414L124 396"/><path class="t" style="--d:0.15s" pathLength="1" d="M200 470L200 436L218 418L218 388"/><path class="t" style="--d:0.25s" pathLength="1" d="M230 470L230 450L268 412L268 378"/></g><g stroke-width="1.75"><g class="l" style="--d:1.5s"><path class="f" d="M160 120Q179.7 93.9 160 62Q140.3 93.9 160 120Z"/><path class="r" d="M160 120L160 84"/></g><g class="l" style="--d:0.95s"><path class="f" d="M91 326Q77 302.8 46.4 308.2Q64.9 333.1 91 326Z"/><path class="r" d="M91 326L63.4 314.9"/></g><g class="l" style="--d:1.2999999999999998s"><path class="f" d="M246 236Q273.5 246.2 295.8 221.1Q263.3 212.3 246 236Z"/><path class="r" d="M246 236L276.9 226.7"/></g><g class="l" style="--d:1.4s"><path class="f" d="M116 210Q103 186.3 72.2 190.3Q89.6 216 116 210Z"/><path class="r" d="M116 210L88.9 197.8"/></g><g class="l" style="--d:1.5499999999999998s"><path class="f" d="M220 132Q244.1 125.9 247.5 97.6Q220.7 107.2 220 132Z"/><path class="r" d="M220 132L237 110.7"/></g><g class="l" style="--d:1.75s"><path class="f" d="M136 108Q140.1 85.8 118.1 72.2Q115.8 98 136 108Z"/><path class="r" d="M136 108L124.9 85.8"/></g><g class="l" style="--d:0.8s"><path class="f" d="M76 385Q78.4 362.6 55.4 350.7Q55.1 376.6 76 385Z"/><path class="r" d="M76 385L63.2 363.7"/></g><g class="l" style="--d:0.85s"><path class="f" d="M268 378Q290.5 370.7 292.1 343.6Q267.1 354.3 268 378Z"/><path class="r" d="M268 378L282.9 356.7"/></g></g><g stroke-width="2.25"><circle class="v" style="--d:0.7s" cx="145" cy="315" r="4"/><circle class="v" style="--d:0.6s" cx="145" cy="350" r="4"/><circle class="v" style="--d:0.8s" cx="163" cy="297" r="4"/><circle class="v" style="--d:1.1s" cx="207" cy="297" r="5.5"/><circle class="v" style="--d:0.95s" cx="180" cy="262" r="4"/><circle class="v" style="--d:1.05s" cx="180" cy="240" r="4"/><circle class="v" style="--d:1.2s" cx="180" cy="200" r="4"/><circle class="v" style="--d:1.4s" cx="160" cy="150" r="4"/><circle class="v" style="--d:0.65s" cx="124" cy="396" r="5.5"/><circle class="v" style="--d:0.65s" cx="218" cy="388" r="5.5"/></g></svg>';
+// ../note-plant/src/components/plant.ts
+var MAX_LEAVES = 10;
+var MAX_BUDS = 8;
+var LEVEL = 22;
+var WIDTH = 200;
+function random(seed) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  let a = h >>> 0;
+  return () => {
+    a = a + 1831565813 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+var r = (n) => Math.round(n * 10) / 10;
+var pt = (p) => `${r(p[0])} ${r(p[1])}`;
+var minX = Infinity;
+var maxX = -Infinity;
+var seen = (...points) => {
+  for (const [x] of points) {
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x);
+  }
+};
+var path = (points) => {
+  seen(...points);
+  return `<path class="t" d="M${points.map(pt).join("L")}"/>`;
+};
+function leaf(base, dir, len) {
+  const n = Math.hypot(dir[0], dir[1]);
+  const [ux, uy] = [dir[0] / n, dir[1] / n];
+  const [px, py] = [-uy, ux];
+  const w = len * 0.34;
+  const tip = [base[0] + ux * len, base[1] + uy * len];
+  const c1 = [base[0] + ux * len * 0.45 + px * w, base[1] + uy * len * 0.45 + py * w];
+  const c2 = [base[0] + ux * len * 0.45 - px * w, base[1] + uy * len * 0.45 - py * w];
+  const rib = [base[0] + ux * len * 0.62, base[1] + uy * len * 0.62];
+  seen(tip, c1, c2);
+  return `<path class="f" d="M${pt(base)}Q${pt(c1)} ${pt(tip)}Q${pt(c2)} ${pt(base)}Z"/><path class="r" d="M${pt(base)}L${pt(rib)}"/>`;
+}
+function drawPlant({ seed, words, linksOut, linksIn }) {
+  const rand = random(seed);
+  minX = Infinity;
+  maxX = -Infinity;
+  const leaves = Math.min(linksOut, MAX_LEAVES);
+  const buds = Math.min(linksIn, MAX_BUDS);
+  const fromWords = Math.max(1, Math.min(7, Math.round(Math.log2(Math.max(words, 60) / 60))));
+  const levels = Math.max(fromWords, Math.ceil((leaves + buds) / 2));
+  const slots = Array.from({ length: levels }, () => [void 0, void 0]);
+  let side = rand() < 0.5 ? 0 : 1;
+  const spread = Math.max(1, Math.floor(levels * 2 / Math.max(leaves, 1)));
+  for (let i = 0, at = 0; i < leaves; i++, at += spread) {
+    let level = Math.min(Math.floor(at / 2), levels - 1);
+    while (slots[level][side] !== void 0) {
+      side = 1 - side;
+      if (slots[level][side] !== void 0) level = (level + 1) % levels;
+    }
+    slots[level][side] = "leaf";
+    side = 1 - side;
+  }
+  const free = [];
+  slots.forEach((s, level) => s.forEach((v, sd) => v === void 0 && free.push([level, sd])));
+  for (let i = 0; i < buds && free.length > 0; i++) {
+    const [level, sd] = free.splice(Math.floor(rand() * free.length), 1)[0];
+    slots[level][sd] = "bud";
+  }
+  const top = 34;
+  const height = top + levels * LEVEL + 30;
+  const baseY = height - 14;
+  const cx = WIDTH / 2;
+  const traces = [];
+  const leafShapes = [];
+  const vias = [];
+  const budShapes = [];
+  let x = cx;
+  let y = baseY;
+  const stem = [[x, y]];
+  y -= 16;
+  stem.push([x, y]);
+  for (let level = 0; level < levels; level++) {
+    const nodeY = y - LEVEL / 2;
+    const [left2, right] = slots[level];
+    for (const [slot, dir] of [
+      [left2, -1],
+      [right, 1]
+    ]) {
+      if (!slot) continue;
+      const out = 8 + rand() * 4;
+      const elbow = [x + dir * out, nodeY - out];
+      if (slot === "leaf") {
+        const run = (6 + rand() * 16) * (1 - level / levels * 0.5);
+        const end = [elbow[0] + dir * run, elbow[1]];
+        traces.push(path([[x, nodeY], elbow, end]));
+        leafShapes.push(leaf(end, [dir, -0.35 - rand() * 0.6], 17 + rand() * 7));
+      } else {
+        traces.push(path([[x, nodeY], elbow]));
+        seen([elbow[0] - 5, elbow[1]], [elbow[0] + 5, elbow[1]]);
+        budShapes.push(`<circle class="b" cx="${r(elbow[0])}" cy="${r(elbow[1])}" r="3.6"/>`);
+      }
+    }
+    vias.push(`<circle class="v" cx="${r(x)}" cy="${r(nodeY)}" r="2.6"/>`);
+    y -= LEVEL;
+    stem.push([x, y + 6]);
+    const jog = level < levels - 1 && rand() < 0.55 ? rand() < 0.5 ? -6 : 6 : 0;
+    const nx = Math.abs(x + jog - cx) > 12 ? x - jog : x + jog;
+    if (nx !== x) {
+      stem.push([nx, y + 6 - Math.abs(nx - x)]);
+      x = nx;
+    }
+    stem.push([x, y]);
+  }
+  traces.unshift(path(stem));
+  leafShapes.push(leaf([x, y], [0, -1], 20 + Math.min(levels, 5) * 2));
+  if (leaves === 0 && buds === 0) {
+    const at = [cx, baseY - 12];
+    leafShapes.push(leaf(at, [-1, -0.7], 13), leaf(at, [1, -0.7], 13));
+  }
+  seen([cx - 22, baseY], [cx + 22, baseY]);
+  const pads = [-16, 0, 16].map((dx) => `<rect class="p" x="${cx + dx - 4}" y="${baseY}" width="8" height="12" rx="2"/>`).join("");
+  const left = Math.floor(minX) - 2;
+  const width = Math.ceil(maxX) + 2 - left;
+  const svg = `<svg viewBox="${left} 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${pads}<g stroke-width="1.75">${traces.join("")}</g><g stroke-width="1.4">${leafShapes.join("")}</g><g stroke-width="1.75">${vias.join("")}${budShapes.join("")}</g></svg>`;
+  return { svg, width, height, leaves, buds };
+}
+
+// ../note-plant/src/components/stats.ts
+import { simplifySlug } from "@quartz-community/utils";
+function noteStats(file, allFiles) {
+  const here = simplifySlug(file.slug ?? "");
+  const pages = new Set(allFiles.map((f) => simplifySlug(f.slug ?? "")));
+  const linksOut = new Set(
+    (file.links ?? []).filter((link) => link !== here && pages.has(link))
+  ).size;
+  const linksIn = allFiles.filter(
+    (f) => f.slug !== file.slug && (f.links ?? []).includes(here)
+  ).length;
+  const words = (file.text ?? "").split(/\s+/).filter(Boolean).length;
+  return { words, linksOut, linksIn };
+}
+
+// ../shared/smallCaps.tsx
+import { jsx } from "preact/jsx-runtime";
+var ACRONYM = /\b[A-Z]{2,}s?\b/g;
+function smallCaps(text) {
+  const out = [];
+  let last = 0;
+  for (const match of text.matchAll(ACRONYM)) {
+    if (match.index > last) out.push(text.slice(last, match.index));
+    out.push(/* @__PURE__ */ jsx("abbr", { class: "sc", children: match[0] }));
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
 
 // src/components/styles/home.scss
-var home_default = ".home-hero{position:relative;padding-top:clamp(2rem,7vw,5.5rem)}.home-eyebrow{margin:0 0 1.25rem;font-family:var(--codeFont);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}.home-heading{max-width:14em;margin:0;font-family:var(--headerFont);font-size:clamp(2.4rem,1.2rem + 4.6vw,4.25rem);font-weight:500;line-height:1.04;letter-spacing:-0.022em;text-wrap:balance;color:var(--dark)}.home-heading em{font-style:italic;font-weight:400;color:var(--secondary)}.home-art{position:absolute;top:1.5rem;right:-1rem;width:21rem;pointer-events:none;color:var(--secondary)}.home-art svg{display:block;width:100%;height:auto;overflow:visible}@media(max-width: 1100px){.home-art{display:none}}.home-art .t{stroke-dasharray:1;animation:home-vine-draw .7s ease-out both;animation-delay:var(--d)}.home-art .l,.home-art .v,.home-art .p{animation:home-vine-show .5s ease-out both;animation-delay:var(--d)}.home-art .l{transform-box:fill-box;transform-origin:center}.home-art .f{fill:currentColor;fill-opacity:.13}.home-art .r{stroke-width:1.25;opacity:.7}.home-art .v{fill:var(--light)}.home-art .p{fill:currentColor;fill-opacity:.18;stroke-width:1.5}@keyframes home-vine-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}@keyframes home-vine-show{from{opacity:0;transform:scale(0.6)}to{opacity:1;transform:scale(1)}}@media(prefers-reduced-motion: reduce){.home-art .t,.home-art .l,.home-art .v,.home-art .p{animation:none}}.home-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}.home-links a{display:block;padding:.4rem .85rem;border:1px solid var(--lightgray);border-radius:999px;font-family:var(--codeFont);font-size:.8rem;font-weight:500;line-height:1.2rem;color:var(--darkgray);background-color:rgba(0,0,0,0);transition:color .15s ease,border-color .15s ease}.home-links a:hover{color:var(--secondary);border-color:var(--secondary)}.home-columns{display:grid;grid-template-columns:minmax(0, 7fr) minmax(0, 5fr);gap:3.5rem;margin-top:clamp(3rem,7vw,5rem)}@media(max-width: 900px){.home-columns{grid-template-columns:minmax(0, 1fr);gap:3rem}}.home-section>header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--lightgray)}.home-section>header h2{margin:0;font-family:var(--codeFont);font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}.home-section>header a{font-family:var(--codeFont);font-size:.8rem;font-weight:500;white-space:nowrap;color:var(--secondary);background-color:rgba(0,0,0,0)}.home-section>header a:hover{color:var(--tertiary)}.home-section ol,.home-section ul{margin:0;padding:0;list-style:none}.home-writing li+li{border-top:1px solid var(--lightgray)}.home-writing .home-card{display:grid;grid-template-columns:3.25rem minmax(0, 1fr);column-gap:1rem;padding:1.35rem 0;background-color:rgba(0,0,0,0)}.home-writing .home-card time{grid-row:1/span 2;padding-top:.42rem;font-family:var(--codeFont);font-size:.8rem;font-weight:400;color:var(--gray)}.home-writing .home-card h3{margin:0;font-family:var(--headerFont);font-size:1.5rem;font-weight:500;line-height:1.2;letter-spacing:-0.012em;text-wrap:balance;color:var(--dark);transition:color .15s ease}.home-writing .home-card p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;margin:.45rem 0 0;font-size:.95rem;font-weight:400;line-height:1.5;color:var(--darkgray)}.home-writing .home-card:hover h3{color:var(--secondary)}.home-tended li+li{border-top:1px solid var(--lightgray)}.home-tended li>a{display:block;padding:.8rem 0;background-color:rgba(0,0,0,0)}.home-tended li>a:hover .home-note-title{color:var(--secondary)}.home-tended .home-note-title{display:block;font-size:1rem;font-weight:500;line-height:1.35;color:var(--dark);transition:color .15s ease}.home-tended .home-note-meta{display:flex;justify-content:space-between;gap:1rem;margin-top:.2rem;font-family:var(--codeFont);font-size:.75rem;font-weight:400;line-height:1.4;color:var(--gray)}.home-tended .home-note-meta time{white-space:nowrap}.home-topics{margin-top:clamp(3rem,7vw,5rem)}.home-topics ul{display:grid;grid-template-columns:repeat(auto-fit, minmax(13.5rem, 1fr));gap:1rem;margin-top:1.25rem}.home-topics .home-card{display:block;height:100%;box-sizing:border-box;padding:1.1rem 1.2rem 1.25rem;border:1px solid var(--lightgray);border-radius:10px;background-color:var(--surface, transparent);transition:border-color .15s ease,transform .15s ease}.home-topics .home-card:hover{border-color:var(--secondary);transform:translateY(-2px)}.home-topics .home-card h3{margin:.35rem 0 0;font-family:var(--headerFont);font-size:1.5rem;font-weight:500;line-height:1.2;color:var(--dark)}.home-topics .home-card p{margin:.5rem 0 0;font-size:.875rem;font-weight:400;line-height:1.5;color:var(--darkgray)}.home-topics .home-topic-count{font-family:var(--codeFont);font-size:.75rem;font-weight:400;color:var(--gray)}@media(prefers-reduced-motion: reduce){.home-topics .home-card:hover{transform:none}}";
+var home_default = ".home-bed{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;height:8rem;overflow:hidden;border-bottom:1px solid var(--dark);color:var(--dark)}.home-bed a{flex:none;display:block;color:inherit;transition:color .15s ease}.home-bed a:hover{color:var(--secondary)}.home-bed svg{display:block;width:100%;height:100%;overflow:visible}@media(max-width: 800px){.home-bed{height:6rem;justify-content:flex-start;gap:6px}}.home-contents section{margin-top:2.75rem}.home-contents h2{margin:0 0 .5rem;font-size:1rem;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:.06em;color:var(--gray)}.home-contents ol{margin:0;padding:0;list-style:none}.home-contents li{display:flex;align-items:baseline;gap:.5rem;margin:0;padding:.16rem 0}.home-contents a{color:var(--dark);background-color:rgba(0,0,0,0);text-decoration:none}.home-contents a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}.home-contents .home-dots{flex:1;min-width:1rem;border-bottom:1px dotted var(--underline, var(--gray));transform:translateY(-0.28em)}.home-contents time{color:var(--gray);white-space:nowrap}.home-contents p{margin:.8rem 0 0;font-style:italic}.home-contents p a{text-decoration:underline;text-decoration-color:var(--underline, var(--gray));text-decoration-thickness:1px;text-underline-offset:.16em}";
 
 // src/components/Home.tsx
-import { jsx, jsxs } from "preact/jsx-runtime";
+import { jsx as jsx2, jsxs } from "preact/jsx-runtime";
 var defaultOptions = {
-  section: "sections",
-  eyebrow: "",
-  heading: "",
-  links: {},
-  featured: [],
+  section: "contents",
   postsFolder: "posts",
   notesFolder: "notes",
+  plants: 22,
   recentCount: 6
 };
-var isIndex = (slug) => slug === "index" || slug.endsWith("/index");
-var folderNames = (f) => (f.relativePath ?? "").split("/").slice(0, -1);
-function emphasise(text) {
-  return text.split("*").map((part, i) => i % 2 === 1 ? /* @__PURE__ */ jsx("em", { children: part }) : part);
-}
 var Home_default = ((opts) => {
   const options = { ...defaultOptions, ...opts };
   const postsPrefix = `${options.postsFolder.replace(/\/$/, "")}/`;
@@ -35,107 +184,51 @@ var Home_default = ((opts) => {
     displayClass
   }) => {
     if (fileData.slug !== "index") return null;
-    if (options.section === "hero") {
-      return /* @__PURE__ */ jsxs("header", { class: `home-hero ${displayClass ?? ""}`, children: [
-        /* @__PURE__ */ jsx("div", { class: "home-art", "aria-hidden": "true", dangerouslySetInnerHTML: { __html: vine } }),
-        options.eyebrow && /* @__PURE__ */ jsx("p", { class: "home-eyebrow", children: options.eyebrow }),
-        /* @__PURE__ */ jsx("h1", { class: "home-heading", children: emphasise(options.heading || fileData.frontmatter?.title || "") })
-      ] });
-    }
     const locale = cfg.locale || "en-US";
     const cfgDateType = cfg.defaultDateType;
     const dateOf = (f) => {
-      const data = {
-        ...f,
-        defaultDateType: f.defaultDateType ?? cfgDateType
-      };
+      const data = { ...f, defaultDateType: f.defaultDateType ?? cfgDateType };
       return data.defaultDateType ? getDate(data) : void 0;
     };
     const href = (slug) => resolveRelative(fileData.slug, slug);
-    const title = (f) => f.frontmatter?.title ?? f.slug;
-    const shortDate = (d) => d.toLocaleDateString(locale, { month: "short", year: "numeric" });
-    const pages = allFiles.filter((f) => f.slug && !isIndex(f.slug));
-    const posts = pages.filter((f) => f.slug.startsWith(postsPrefix));
-    const notes = pages.filter((f) => f.slug.startsWith(notesPrefix));
-    const bySlug = new Map(allFiles.map((f) => [f.slug, f]));
-    const featured = options.featured.map((slug) => bySlug.get(slug)).filter((f) => Boolean(f));
-    const recent = notes.map((f) => ({ f, date: dateOf(f) })).filter((n) => Boolean(n.date)).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, options.recentCount);
-    const topics = /* @__PURE__ */ new Map();
-    for (const f of notes) {
-      const segments = f.slug.split("/");
-      const names = folderNames(f);
-      if (segments.length < 3 || names.length < 2) continue;
-      const key = segments[1];
-      const topic = topics.get(key) ?? { name: names[1], count: 0, children: /* @__PURE__ */ new Set() };
-      topic.count++;
-      topic.children.add(names[2] ?? title(f));
-      topics.set(key, topic);
-    }
-    const links = Object.entries(options.links);
-    return /* @__PURE__ */ jsxs("div", { class: `home-sections ${displayClass ?? ""}`, children: [
-      links.length > 0 && /* @__PURE__ */ jsx("ul", { class: "home-links", children: links.map(([label, url]) => {
-        const external = /^https?:\/\//.test(url);
-        return /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(
+    const title = (f) => f.frontmatter?.title ?? f.slug ?? "";
+    const month = (d) => d.toLocaleDateString(locale, { month: "short", year: "numeric" });
+    const newestFirst = (prefix) => allFiles.filter((f) => f.slug?.startsWith(prefix) && !f.slug.endsWith("/index")).map((f) => ({ f, date: dateOf(f) })).filter((n) => Boolean(n.date)).sort((a, b) => b.date.getTime() - a.date.getTime());
+    const notes = newestFirst(notesPrefix);
+    if (options.section === "bed") {
+      return /* @__PURE__ */ jsx2("nav", { class: `home-bed ${displayClass ?? ""}`, "aria-label": "Recently tended notes", children: notes.slice(0, options.plants).map(({ f, date }) => {
+        const plant = drawPlant({ seed: f.slug, ...noteStats(f, allFiles) });
+        return /* @__PURE__ */ jsx2(
           "a",
           {
-            href: url,
-            target: external ? "_blank" : void 0,
-            rel: external ? "noopener noreferrer" : void 0,
-            children: [
-              label,
-              external && /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: " \u2197" })
-            ]
+            href: href(f.slug),
+            title: `${title(f)} \xB7 ${month(date)}`,
+            "aria-label": title(f),
+            style: `aspect-ratio:${plant.width}/${plant.height};height:${Math.round(plant.height / 280 * 100)}%`,
+            dangerouslySetInnerHTML: { __html: plant.svg }
           }
-        ) });
-      }) }),
-      /* @__PURE__ */ jsxs("div", { class: "home-columns", children: [
-        featured.length > 0 && /* @__PURE__ */ jsxs("section", { class: "home-section home-writing", children: [
-          /* @__PURE__ */ jsxs("header", { children: [
-            /* @__PURE__ */ jsx("h2", { children: "Writing" }),
-            /* @__PURE__ */ jsxs("a", { href: href(`${postsPrefix}index`), children: [
-              "All ",
-              posts.length,
-              " posts \u2192"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsx("ol", { children: featured.map((f) => {
-            const date = dateOf(f);
-            return /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: href(f.slug), class: "home-card", children: [
-              date && /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: String(date.getFullYear()) }),
-              /* @__PURE__ */ jsx("h3", { children: title(f) }),
-              f.description && /* @__PURE__ */ jsx("p", { children: f.description })
-            ] }) });
-          }) })
-        ] }),
-        recent.length > 0 && /* @__PURE__ */ jsxs("section", { class: "home-section home-tended", children: [
-          /* @__PURE__ */ jsxs("header", { children: [
-            /* @__PURE__ */ jsx("h2", { children: "Recently tended" }),
-            /* @__PURE__ */ jsxs("a", { href: href(`${notesPrefix}index`), children: [
-              "All ",
-              notes.length,
-              " notes \u2192"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsx("ul", { children: recent.map(({ f, date }) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: href(f.slug), children: [
-            /* @__PURE__ */ jsx("span", { class: "home-note-title", children: title(f) }),
-            /* @__PURE__ */ jsxs("span", { class: "home-note-meta", children: [
-              /* @__PURE__ */ jsx("span", { children: folderNames(f).slice(1).join(" / ") }),
-              /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: shortDate(date) })
-            ] })
-          ] }) })) })
-        ] })
+        );
+      }) });
+    }
+    const posts = newestFirst(postsPrefix);
+    const list = (items) => /* @__PURE__ */ jsx2("ol", { children: items.map(({ f, date }) => /* @__PURE__ */ jsxs("li", { children: [
+      /* @__PURE__ */ jsx2("a", { href: href(f.slug), children: smallCaps(title(f)) }),
+      /* @__PURE__ */ jsx2("span", { class: "home-dots" }),
+      /* @__PURE__ */ jsx2("time", { datetime: date.toISOString(), children: month(date) })
+    ] })) });
+    return /* @__PURE__ */ jsxs("div", { class: `home-contents ${displayClass ?? ""}`, children: [
+      posts.length > 0 && /* @__PURE__ */ jsxs("section", { children: [
+        /* @__PURE__ */ jsx2("h2", { children: "Writing" }),
+        list(posts)
       ] }),
-      topics.size > 0 && /* @__PURE__ */ jsxs("section", { class: "home-section home-topics", children: [
-        /* @__PURE__ */ jsx("header", { children: /* @__PURE__ */ jsx("h2", { children: "Explore the notes" }) }),
-        /* @__PURE__ */ jsx("ul", { children: [...topics.entries()].sort(([, a], [, b]) => b.count - a.count).map(([key, topic]) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: href(`${notesPrefix}${key}/index`), class: "home-card", children: [
-          /* @__PURE__ */ jsxs("span", { class: "home-topic-count", children: [
-            topic.count,
-            " ",
-            topic.count === 1 ? "note" : "notes"
-          ] }),
-          /* @__PURE__ */ jsx("h3", { children: topic.name }),
-          /* @__PURE__ */ jsx("p", { children: [...topic.children].sort().join(" \xB7 ") })
-        ] }) })) })
+      notes.length > 0 && /* @__PURE__ */ jsxs("section", { children: [
+        /* @__PURE__ */ jsx2("h2", { children: "Lately tended" }),
+        list(notes.slice(0, options.recentCount)),
+        /* @__PURE__ */ jsx2("p", { children: /* @__PURE__ */ jsxs("a", { href: href(`${notesPrefix}index`), children: [
+          "The index of all ",
+          notes.length,
+          " notes"
+        ] }) })
       ] })
     ] });
   };

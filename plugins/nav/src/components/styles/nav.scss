@@ -1,37 +1,31 @@
 .site-nav {
-  min-width: 0;
-
   ul {
     display: flex;
-    gap: 0.25rem;
+    flex-direction: column;
+    gap: 0.2rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   a {
-    display: block;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    font-family: var(--bodyFont);
-    font-size: 0.925rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    white-space: nowrap;
-    color: var(--darkgray);
+    color: var(--gray);
     background-color: transparent;
-    transition:
-      color 0.15s ease,
-      background-color 0.15s ease;
+    text-decoration: none;
+    transition: color 0.15s ease;
 
-    &:hover {
-      color: var(--dark);
-      background-color: var(--lightgray);
-    }
-
+    &:hover,
     &.active {
-      color: var(--secondary);
-      background-color: var(--highlight);
+      color: var(--dark);
     }
+  }
+
+  // the title of the page that is open, under its section
+  .here {
+    display: block;
+    margin: 0.1rem 0 0.3rem 1rem;
+    font-size: 0.9em;
+    line-height: 1.35;
+    color: var(--dark);
   }
 }

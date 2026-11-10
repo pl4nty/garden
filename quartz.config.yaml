@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,34 +16,40 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Newsreader
-      body: Geist
-      code: Geist Mono
-    # Warm paper and ink in light mode, a green-tinted near-black in dark mode.
-    # gray is the lightest colour used for text (dates, metadata) and keeps a
-    # 4.5:1 contrast on light; secondary is the link and accent green, tertiary
-    # the terracotta used for hover. quartz/styles/custom.scss adds --surface.
+      header: Vollkorn
+      body: Vollkorn
+      code: Fira Code
+    # Green ink on greenbar paper: the green this site has always used, as the
+    # colour of the text itself and not as an accent on grey. There is no second
+    # hue. Dark mode is the same ink reversed out of a forest green, not black.
+    #   light      the paper
+    #   lightgray  rules and borders
+    #   gray       the lightest text: dates and captions (5.4:1 on light)
+    #   darkgray   body text
+    #   dark       headings, links, and the plants
+    #   secondary  the brand green: the site title and hover
+    # quartz/styles/custom.scss adds --bar (the greenbar stripe) and --underline.
     colors:
       lightMode:
-        light: "#FAF8F2"
-        lightgray: "#E9E5D9"
-        gray: "#6E6A5E"
-        darkgray: "#3A382F"
-        dark: "#16150F"
-        secondary: "#1F6B43"
-        tertiary: "#B4491F"
-        highlight: "rgba(31, 107, 67, 0.1)"
-        textHighlight: "rgba(250, 204, 21, 0.4)"
+        light: "#F5F9F3"
+        lightgray: "#CFE0CC"
+        gray: "#566A5D"
+        darkgray: "#2B4233"
+        dark: "#12351F"
+        secondary: "#2E7D32"
+        tertiary: "#1B5E20"
+        highlight: "rgba(46, 125, 50, 0.12)"
+        textHighlight: "rgba(46, 125, 50, 0.22)"
       darkMode:
-        light: "#101412"
-        lightgray: "#252C28"
-        gray: "#8D9891"
-        darkgray: "#C5CEC8"
-        dark: "#F0F4F1"
-        secondary: "#7DD694"
-        tertiary: "#F0A070"
-        highlight: "rgba(125, 214, 148, 0.12)"
-        textHighlight: "rgba(250, 204, 21, 0.3)"
+        light: "#0F2A1D"
+        lightgray: "#2A4A37"
+        gray: "#8FAE9B"
+        darkgray: "#CFE3D6"
+        dark: "#F1FAF4"
+        secondary: "#81C784"
+        tertiary: "#A5D6A7"
+        highlight: "rgba(129, 199, 132, 0.14)"
+        textHighlight: "rgba(129, 199, 132, 0.28)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -104,6 +110,10 @@ plugins:
   - source: github:quartz-community/hard-line-breaks
     enabled: true
     order: 90
+  # acronyms in note bodies are set in small caps
+  - source: ./plugins/small-caps
+    enabled: true
+    order: 95
   - source: github:quartz-community/ox-hugo
     enabled: false
     order: 91
@@ -113,9 +123,9 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Newsreader
-      body: Geist
-      code: Geist Mono
+      header: Vollkorn
+      body: Vollkorn
+      code: Fira Code
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
   - source: github:quartz-community/remove-draft
@@ -147,8 +157,8 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
-  # The file tree is replaced by the top bar links (./plugins/nav) and the
-  # per-folder note index (./plugins/folder-tree).
+  # The file tree is replaced by the sidebar links (./plugins/nav) and the
+  # index of notes on each folder page (./plugins/folder-tree).
   - source: github:quartz-community/explorer
     enabled: false
     layout:
@@ -191,8 +201,8 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # The left slot is the top bar (see quartz/styles/custom.scss): site title,
-  # nav links, then the toolbar group pushed to the right.
+  # Left sidebar, top to bottom: the site title, the nav, then the toolbar
+  # group (socials, search, theme, reader mode) at the foot.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
@@ -206,19 +216,18 @@ plugins:
         Notes: notes/
         Ideas: ideas
         Now: now
-        About: whoami
+        Whoami: whoami
     layout:
       position: left
-      priority: 20
+      priority: 12
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
       position: left
       priority: 30
       group: toolbar
-  # disabled: it only hides the sidebars, and the reading column no longer has any
   - source: github:quartz-community/reader-mode
-    enabled: false
+    enabled: true
     layout:
       position: left
       priority: 35
@@ -250,35 +259,32 @@ plugins:
     enabled: true
     options:
       links:
-        License: /license
-        RSS: /index.xml
+        License: /License
+  - source: ./plugins/socials
+    enabled: true
+    options:
+      links:
         GitHub: https://github.com/pl4nty
         LinkedIn: https://linkedin.com/in/tomplant
         Homelab: https://lab.tplant.com.au/
-  # Homepage: the heading block goes above the page content and the curated
-  # lists below it. Both render on the index page only.
+    layout:
+      position: left
+      priority: 15
+      group: toolbar
+  # Homepage: a row of plants above the note, one for each of the most
+  # recently tended notes, and contents lists below it. Index page only.
   - source: ./plugins/home
     enabled: true
     options:
-      section: hero
-      eyebrow: Tom Plant · Melbourne, Australia
-      heading: Exploring, experimenting, and *(sometimes)* writing.
+      section: bed
+      plants: 22
     layout:
       position: beforeBody
       priority: 1
   - source: ./plugins/home
     enabled: true
     options:
-      section: sections
-      links:
-        GitHub: https://github.com/pl4nty
-        LinkedIn: https://linkedin.com/in/tomplant
-        Homelab: https://lab.tplant.com.au/
-        RSS: /index.xml
-      featured:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: contents
       postsFolder: posts
       notesFolder: notes
       recentCount: 6
@@ -294,6 +300,13 @@ plugins:
     layout:
       position: afterBody
       priority: 1
+  # The colophon: a plant at the end of each note, drawn from its length and
+  # its links, with the date it was last tended.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
   - source: ./plugins/explorer-tweaks
     enabled: false
     layout:

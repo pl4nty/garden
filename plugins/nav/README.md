@@ -1,7 +1,8 @@
 # @tplant/nav
 
-The site navigation: a row of links for the top bar. The link for the section
-that holds the current page is marked as active.
+The site navigation: a list of links for the left sidebar. The link for the
+section that holds the current page is marked as active, and the title of the
+current page is listed under it.
 
 ## Options
 

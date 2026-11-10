@@ -6,7 +6,7 @@
 //   node plugins/build.mjs home nav   # only the named ones
 //
 // Quartz loads dist/ at runtime and skips the build step when it is present,
-// so dist/ is committed. Run this after an edit to src/.
+// so dist/ is committed. Run this after an edit to src/ or to plugins/shared.
 import { build } from "esbuild"
 import * as sass from "sass"
 import { mkdir, writeFile } from "node:fs/promises"
@@ -15,11 +15,13 @@ import { fileURLToPath } from "node:url"
 
 const root = path.dirname(fileURLToPath(import.meta.url))
 
-// plugin directory -> exported component name
+// plugin directory -> its export, and whether that export is a layout component
 const plugins = {
-  nav: "Nav",
-  home: "Home",
-  "folder-tree": "FolderTree",
+  nav: { name: "Nav", component: true },
+  home: { name: "Home", component: true },
+  "folder-tree": { name: "FolderTree", component: true },
+  "note-plant": { name: "NotePlant", component: true },
+  "small-caps": { name: "SmallCaps", component: false },
 }
 
 const scssAsText = {
@@ -33,7 +35,7 @@ const scssAsText = {
 }
 
 const wanted = process.argv.slice(2)
-for (const [dir, component] of Object.entries(plugins)) {
+for (const [dir, { name, component }] of Object.entries(plugins)) {
   if (wanted.length > 0 && !wanted.includes(dir)) continue
   const pluginDir = path.join(root, dir)
   await build({
@@ -52,18 +54,19 @@ for (const [dir, component] of Object.entries(plugins)) {
     plugins: [scssAsText],
     logLevel: "warning",
   })
-  await mkdir(path.join(pluginDir, "dist/components"), { recursive: true })
-  await writeFile(
-    path.join(pluginDir, "dist/components/index.js"),
-    `export { ${component} } from "../index.js"\n`,
-  )
-  await writeFile(
-    path.join(pluginDir, "dist/components/index.d.ts"),
-    `export { ${component} } from "../index.js"\n`,
-  )
+  const type = component ? "QuartzComponentConstructor" : "QuartzTransformerPlugin"
   await writeFile(
     path.join(pluginDir, "dist/index.d.ts"),
-    `import { QuartzComponentConstructor } from "@quartz-community/types"\n\ndeclare const ${component}: QuartzComponentConstructor\n\nexport { ${component} }\n`,
+    `import { ${type} } from "@quartz-community/types"\n\ndeclare const ${name}: ${type}\n\nexport { ${name} }\n`,
   )
+  if (component) {
+    await mkdir(path.join(pluginDir, "dist/components"), { recursive: true })
+    for (const file of ["index.js", "index.d.ts"]) {
+      await writeFile(
+        path.join(pluginDir, "dist/components", file),
+        `export { ${name} } from "../index.js"\n`,
+      )
+    }
+  }
   console.log(`built ${dir}`)
 }
