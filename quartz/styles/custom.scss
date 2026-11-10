@@ -228,7 +228,8 @@ article a {
 // Pages that are lists, not prose, get a wider column: the homepage, and a
 // folder page whose note index has more than one group.
 body[data-slug="index"],
-body:has(.folder-tree-groups:not(.single)) {
+body:has(.folder-tree-groups:not(.single)),
+body:has(.weeks) {
   --measure: var(--wide-measure);
 }
 
@@ -807,6 +808,7 @@ ul.toc-content.overflow {
 // The rule between the content and the after-body slot only makes sense above
 // the comments, and list pages and the homepage have none.
 .center:has(.page-listing) > hr,
+.center:has(.weeks) > hr,
 body[data-slug="index"] .center > hr {
   display: none;
 }
@@ -900,6 +902,11 @@ body[data-slug="index"] {
   .page-footer {
     margin-top: 2rem;
   }
+}
+
+// The weeks grid takes the full wide column, so there is no room for a rail.
+body:has(.weeks) .page > #quartz-body > .sidebar.right {
+  display: none;
 }
 
 // The 404 page uses the minimal frame, which has no top bar.
