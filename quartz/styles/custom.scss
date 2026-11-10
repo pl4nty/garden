@@ -6,7 +6,7 @@
 //
 // Quartz wraps its own styles and every component's styles in
 // `@layer quartz-base`, and this file is unlayered, so a rule here wins over
-// them whatever its specificity. No `!important` is needed. The other side of
+// them whatever its specificity, without `!important`. The other side of
 // that: a bare element selector here (`a`, `h2`) also beats the styles of the
 // local plugins, so type rules are scoped to `article` and to named components.
 //
@@ -708,6 +708,13 @@ td {
   // nothing to show: take no space under the article
   &:not(:has(.toc, .backlinks, .graph)) {
     display: none;
+  }
+
+  // The full-screen graph is a fixed child of the rail, and the graph script
+  // sets an inline `z-index: 1` on the rail while it is open. Lift the rail
+  // above the top bar for that time, or the bar covers the top of the dialog.
+  &:has(.global-graph-outer.active) {
+    z-index: 60 !important;
   }
 }
 
