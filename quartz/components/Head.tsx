@@ -61,8 +61,32 @@ export default (() => {
             )}
           </>
         )}
+        {/* Fonts are discovered late, in the stylesheet. A preload starts them with the HTML.
+            Font requests are anonymous-mode CORS, so the preload needs `crossorigin` to match.
+            `data-persist` keeps the SPA router from adding the links again on each navigation. */}
+        {(cfg.theme.preload ?? []).map((font) => (
+          <link
+            rel="preload"
+            href={joinSegments(baseDir, font)}
+            as="font"
+            type={`font/${font.split(".").pop()}`}
+            crossOrigin="anonymous"
+            data-persist
+          />
+        ))}
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* tint the browser chrome with the page colour */}
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: light)"
+          content={cfg.theme.colors.lightMode.light}
+        />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: dark)"
+          content={cfg.theme.colors.darkMode.light}
+        />
 
         <meta name="og:site_name" content={cfg.pageTitle}></meta>
         <meta property="og:title" content={title} />

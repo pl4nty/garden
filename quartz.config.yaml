@@ -15,6 +15,10 @@ configuration:
   theme:
     fontOrigin: local
     cdnCaching: true
+    # the two faces above the fold on every page: body text and headings
+    preload:
+      - static/fonts/geist-v5.3.0-latin-normal.woff2
+      - static/fonts/newsreader-v5.3.0-opsz40-latin-normal.woff2
     typography:
       header: Newsreader
       body: Geist
@@ -191,8 +195,9 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # The left slot is the top bar (see quartz/styles/custom.scss): site title,
-  # nav links, then the toolbar group pushed to the right.
+  # The garden frame (quartz/components/frames/GardenFrame.tsx) renders the
+  # left slot as the site header: site title, nav links, then the toolbar group
+  # pushed to the right.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
@@ -365,8 +370,10 @@ layout:
         beforeBody: []
         left: []
         right: []
-    content: {}
+    content:
+      template: garden
     folder:
+      template: garden
       exclude:
         - reader-mode
         - tag-list
@@ -374,6 +381,7 @@ layout:
       positions:
         right: []
     tag:
+      template: garden
       exclude:
         - reader-mode
         - tag-list
@@ -381,4 +389,5 @@ layout:
       positions:
         right: []
     canvas: {}
-    bases: {}
+    bases:
+      template: garden

@@ -6,14 +6,14 @@
 //
 // Quartz wraps its own styles and every component's styles in
 // `@layer quartz-base`, and this file is unlayered, so a rule here wins over
-// them whatever its specificity, without `!important`. The other side of
+// them whatever its specificity. No `!important` is needed. The other side of
 // that: a bare element selector here (`a`, `h2`) also beats the styles of the
 // local plugins, so type rules are scoped to `article` and to named components.
 //
 // The page is one top bar, one reading column and (on wide screens) a rail for
-// the table of contents, backlinks and graph. The markup is still the default
-// Quartz frame: `.sidebar.left` is the top bar, `.center` the column and
-// `.sidebar.right` the rail.
+// the table of contents, backlinks and graph. The markup comes from the garden
+// frame (quartz/components/frames/GardenFrame.tsx): `.site-header` is the top
+// bar, `main.center` the column and `.rail` the rail.
 //
 // Colours and font families come from `theme` in quartz.config.yaml.
 // ============================================================================
@@ -191,7 +191,7 @@ article a {
     min-height: 100vh;
     padding: 0;
 
-    > .sidebar.left {
+    > .site-header {
       grid-area: top;
     }
 
@@ -202,7 +202,7 @@ article a {
       margin: 0;
     }
 
-    > .sidebar.right {
+    > .rail {
       grid-area: rail;
     }
 
@@ -237,11 +237,37 @@ body[data-slug^="tags/"] {
   --measure: 52rem;
 }
 
+// First tab stop on every page. Off screen until it has focus.
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--light);
+  background-color: var(--secondary);
+  text-decoration: none;
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
+// the skip link moves focus to <main>; no ring round the whole column
+main:focus {
+  outline: none;
+}
+
 // ----------------------------------------------------------------------------
 // Top bar
 // ----------------------------------------------------------------------------
-.page > #quartz-body > .sidebar.left {
+.page > #quartz-body > .site-header {
   position: sticky;
+  margin: 0;
   top: 0;
   z-index: 50;
   display: flex;
@@ -662,7 +688,7 @@ td {
 // ----------------------------------------------------------------------------
 // Rail: table of contents, backlinks, graph
 // ----------------------------------------------------------------------------
-.page > #quartz-body > .sidebar.right {
+.page > #quartz-body > .rail {
   @media all and ($wide) {
     position: sticky;
     top: var(--header-h);
@@ -712,11 +738,10 @@ td {
     display: none;
   }
 
-  // The full-screen graph is a fixed child of the rail, and the graph script
-  // sets an inline `z-index: 1` on the rail while it is open. Lift the rail
-  // above the top bar for that time, or the bar covers the top of the dialog.
+  // The full-screen graph is a fixed child of the rail. Lift the rail above
+  // the top bar while it is open, or the bar covers the top of the dialog.
   &:has(.global-graph-outer.active) {
-    z-index: 60 !important;
+    z-index: 60;
   }
 }
 
@@ -1019,6 +1044,18 @@ body[data-slug="index"] {
 
 *::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+// Page-to-page cross-fade, started by the SPA router. The top bar is its own
+// group: it is the same on both pages, so it holds still while the rest fades.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.16s;
+  animation-timing-function: ease-out;
+}
+
+.page > #quartz-body > .site-header {
+  view-transition-name: site-header;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,6 +33,12 @@ export interface Theme {
   cdnCaching: boolean
   colors: Colors
   fontOrigin: "googleFonts" | "local"
+  /**
+   * Font files to preload, as paths from the site root (for example
+   * "static/fonts/body.woff2"). Only for self-hosted fonts that the first
+   * screen of every page uses: a preload that goes unused costs bandwidth.
+   */
+  preload?: string[]
 }
 
 export type ThemeKey = keyof Colors
