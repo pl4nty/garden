@@ -1,6 +1,7 @@
 @use "./variables.scss" as *;
 @use "./fonts.scss";
 @use "./plain.scss" as *;
+@use "./lab.scss" as *;
 
 // ============================================================================
 // Garden theme: a book set in one typeface, in green ink on greenbar paper.
@@ -1075,3 +1076,6 @@ body[data-slug="index"] {
 
 // Scripting off: the plain document. Last, so that it overrides the theme.
 @include plain;
+
+// PREVIEW ONLY: the design lab's variants. See lab.scss.
+@include lab;

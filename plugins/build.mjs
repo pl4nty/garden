@@ -22,6 +22,7 @@ const plugins = {
   "folder-tree": { name: "FolderTree", component: true },
   "note-plant": { name: "NotePlant", component: true },
   "small-caps": { name: "SmallCaps", component: false },
+  "design-lab": { name: "DesignLab", component: true },
 }
 
 const scssAsText = {
