@@ -23,14 +23,14 @@ plugins:
 For advanced use cases, you can override in TypeScript:
 
 ```ts title="quartz.ts (override)"
-import * as ExternalPlugin from "./.quartz/plugins";
+import * as ExternalPlugin from "./.quartz/plugins"
 
 ExternalPlugin.Footer({
   links: {
     GitHub: "https://github.com/jackyzha0/quartz",
     "Discord Community": "https://discord.gg/cRFFHYye7t",
   },
-});
+})
 ```
 
 ## Configuration

@@ -1,8 +1,9 @@
 @use "./variables.scss" as *;
 @use "./fonts.scss";
+@use "./plain.scss" as *;
 
 // ============================================================================
-// Garden theme
+// Garden theme: a book set in one typeface, in green ink on greenbar paper.
 //
 // Quartz wraps its own styles and every component's styles in
 // `@layer quartz-base`, and this file is unlayered, so a rule here wins over
@@ -10,121 +11,71 @@
 // that: a bare element selector here (`a`, `h2`) also beats the styles of the
 // local plugins, so type rules are scoped to `article` and to named components.
 //
-// The page is one top bar, one reading column and (on wide screens) a rail for
-// the table of contents, backlinks and graph. The markup comes from the garden
-// frame (quartz/components/frames/GardenFrame.tsx): `.site-header` is the top
-// bar, `main.center` the column and `.rail` the rail.
+// The page is the default Quartz frame. `.sidebar.left` holds the site title,
+// the nav and the toolbar; `.center` is the text; `.sidebar.right` is the
+// margin, for the table of contents, backlinks and graph.
 //
 // Colours and font families come from `theme` in quartz.config.yaml.
 // ============================================================================
 
-$wide: "(min-width: 1200px)";
-$narrow: "(max-width: 700px)";
-
 :root {
-  // card and code-block background, one step off the page colour
-  --surface: #ffffff;
-  // width of the reading column
-  --measure: 43rem;
-  // width of the widest pages (home) and of the top bar's content
-  --wide-measure: 68rem;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
-  --header-h: 3.75rem;
-  --radius: 8px;
-  --meta-size: 0.8rem;
+  // the stripe of greenbar paper: every other table row and every other three
+  // lines of a code listing
+  --bar: #e3efdf;
+  // the rule under a link
+  --underline: #569460;
+  --measure: 38rem;
+  --side: 11rem;
+  --margin: 15rem;
+  --gap: 4.5rem;
+  --top: 3.25rem;
 }
 
 :root[saved-theme="dark"] {
-  --surface: #161b18;
+  --bar: #173a28;
+  --underline: #6fa982;
 }
 
 // ----------------------------------------------------------------------------
-// Base type
+// Type
 // ----------------------------------------------------------------------------
-html {
-  scroll-padding-top: calc(var(--header-h) + 1rem);
-}
-
 body {
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
+  font-size: 1.09rem;
+  line-height: 1.6;
+  // old-style figures sit in running text like lower-case letters
+  font-variant-numeric: oldstyle-nums;
   text-rendering: optimizeLegibility;
 }
 
 tbody,
 li,
 p {
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--secondary) 28%, transparent);
+  background: var(--textHighlight);
   color: var(--dark);
 }
 
-// The serif is cut for display sizes, so it carries the page title and the
-// section headings. Smaller headings stay in the body face.
-article {
-  h1,
-  h2 {
-    font-family: var(--headerFont);
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
-  }
-
-  h3,
-  h4,
-  h5,
-  h6,
-  thead {
-    font-family: var(--bodyFont);
-    font-weight: 600;
-    letter-spacing: -0.005em;
-  }
-
-  h1 {
-    font-size: 2rem;
-    line-height: 1.2;
-    margin-top: 3rem;
-  }
-
-  h2 {
-    font-size: 1.7rem;
-    line-height: 1.25;
-    margin-top: 2.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  h3 {
-    font-size: 1.2rem;
-    line-height: 1.35;
-    margin-top: 2.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  h4,
-  h5,
-  h6 {
-    font-size: 1.0625rem;
-    margin-top: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  // a heading that opens the note sits tight under the page header
-  > div > :first-child {
-    margin-top: 0;
-  }
+// An acronym, wrapped by ./plugins/small-caps. `all-small-caps` uses the
+// font's c2sc feature, so the text in the page stays "CTF".
+.sc {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.03em;
+  text-decoration: inherit;
 }
 
-strong {
-  font-weight: 600;
-  color: var(--dark);
+// A label: the head of a list or of a margin block.
+@mixin label {
+  font-family: var(--bodyFont);
+  font-size: 1rem;
+  font-weight: 400;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  color: var(--gray);
 }
 
-// Links in prose read as text with a quiet underline, not as bold coloured
-// chips. Links in components (nav, cards, lists) set their own look.
 a {
   font-weight: inherit;
 
@@ -136,38 +87,14 @@ a {
   }
 }
 
-article a {
-  color: var(--secondary);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  transition:
-    color 0.15s ease,
-    text-decoration-color 0.15s ease;
-
-  &:hover {
-    color: var(--tertiary);
-    text-decoration-color: currentColor;
-  }
-
-  &.internal.broken {
-    color: var(--gray);
-    opacity: 1;
-    text-decoration-style: dashed;
-  }
-
-  // heading anchors
-  &[role="anchor"] {
-    text-decoration: none;
-    color: var(--gray);
-  }
+strong {
+  font-weight: 600;
+  color: var(--dark);
 }
 
 :focus-visible {
-  outline: 2px solid var(--secondary);
+  outline: 1px solid var(--dark);
   outline-offset: 2px;
-  border-radius: 3px;
 }
 
 // ----------------------------------------------------------------------------
@@ -179,20 +106,18 @@ article a {
 
   > #quartz-body {
     display: grid;
-    grid-template-columns:
-      minmax(var(--gutter), 1fr) minmax(0, var(--measure))
-      minmax(var(--gutter), 1fr);
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: var(--side) minmax(0, var(--measure)) var(--margin);
+    grid-template-rows: auto 1fr;
     grid-template-areas:
-      "top top top"
-      ". center rail"
-      ". foot .";
-    gap: 0;
+      "side center margin"
+      "side foot margin";
+    justify-content: center;
+    gap: 0 var(--gap);
     min-height: 100vh;
-    padding: 0;
+    padding: 0 2rem;
 
-    > .site-header {
-      grid-area: top;
+    > .sidebar.left {
+      grid-area: side;
     }
 
     > .center {
@@ -200,10 +125,15 @@ article a {
       min-width: 0;
       max-width: none;
       margin: 0;
+      padding-top: var(--top);
+
+      @media all and ($mobile) {
+        padding-top: 1.75rem;
+      }
     }
 
-    > .rail {
-      grid-area: rail;
+    > .sidebar.right {
+      grid-area: margin;
     }
 
     > footer {
@@ -213,271 +143,218 @@ article a {
       margin: 0;
     }
 
-    // Below the wide breakpoint the rail drops under the article.
-    @media all and not ($wide) {
-      grid-template-rows: auto auto auto auto;
+    // No room for a margin: its blocks go below the text.
+    @media all and not ($desktop) {
+      grid-template-columns: var(--side) minmax(0, var(--measure));
+      grid-template-rows: auto auto auto;
       grid-template-areas:
-        "top top top"
-        ". center ."
-        ". rail ."
-        ". foot .";
+        "side center"
+        "side margin"
+        "side foot";
+      gap: 0 3rem;
+    }
+
+    @media all and ($mobile) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas:
+        "side"
+        "center"
+        "margin"
+        "foot";
+      padding: 0 1.15rem;
     }
   }
 }
 
-// Pages that are lists, not prose, get a wider column: the homepage, and a
-// folder page whose note index has more than one group.
-body[data-slug="index"],
-body:has(.folder-tree-groups:not(.single)) {
-  --measure: var(--wide-measure);
-}
-
-body[data-slug="posts/index"],
-body[data-slug^="tags/"] {
-  --measure: 52rem;
-}
-
-// First tab stop on every page. Off screen until it has focus.
-.skip-link {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  z-index: 100;
-  padding: 0.5rem 0.9rem;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--light);
-  background-color: var(--secondary);
-  text-decoration: none;
-  transform: translateY(-200%);
-
-  &:focus {
-    transform: none;
+// A page that is an index, not prose, takes the margin's width too.
+@media all and ($desktop) {
+  body:has(.folder-tree-groups:not(.single)) .page > #quartz-body > .center {
+    grid-column: 2 / 4;
   }
 }
 
-// the skip link moves focus to <main>; no ring round the whole column
-main:focus {
-  outline: none;
-}
-
 // ----------------------------------------------------------------------------
-// Top bar
+// Left sidebar: site title, nav, and the toolbar at the foot
 // ----------------------------------------------------------------------------
-.page > #quartz-body > .site-header {
+.page > #quartz-body > .sidebar.left {
   position: sticky;
-  margin: 0;
   top: 0;
-  z-index: 50;
+  z-index: 1;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem 1.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
   box-sizing: border-box;
-  height: auto;
-  min-height: var(--header-h);
-  padding: 0.5rem max(var(--gutter), calc((100% - var(--wide-measure)) / 2));
-  border-bottom: 1px solid var(--lightgray);
+  height: 100vh;
+  padding: var(--top) 0 2rem;
 
-  // The frosted backdrop is a pseudo-element: `backdrop-filter` on the bar
-  // itself would make it the containing block of the fixed search dialog.
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-color: color-mix(in srgb, var(--light) 86%, transparent);
-    backdrop-filter: saturate(1.4) blur(12px);
-    -webkit-backdrop-filter: saturate(1.4) blur(12px);
-  }
-
-  // the toolbar group (search, theme) sits at the far right
+  // the toolbar group
   > .flex-component {
     align-items: center;
-    gap: 0.25rem;
-    margin-left: auto;
+    gap: 0.75rem;
+    margin-top: auto;
   }
 
-  @media all and ($narrow) {
-    // not sticky: two rows are too tall to pin on a phone. Still positioned,
-    // because the backdrop pseudo-element is absolute.
-    position: relative;
+  @media all and ($mobile) {
+    position: static;
+    flex-direction: row;
     flex-wrap: wrap;
-    row-gap: 0.25rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.5rem;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    height: auto;
+    padding: 1.25rem 0 0;
 
-    // second row: the nav, full width, scrolls sideways when it has to
+    > .flex-component {
+      margin: 0 0 0 auto;
+    }
+
+    // the nav takes a row of its own, below the title and the toolbar
     > .site-nav {
       order: 3;
       flex: 0 0 100%;
-      margin: 0 -0.7rem;
-      overflow-x: auto;
-      scrollbar-width: none;
+
+      ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.1rem 1.1rem;
+      }
+
+      .here {
+        display: none;
+      }
     }
   }
 }
 
-// Site title: a sprout drawn as two leaves on a trace, then the name.
+// Site title: the sprout, then the name.
 .page-title {
-  flex-shrink: 0;
   margin: 0;
-  font-family: var(--headerFont);
-  font-size: 1.3rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.3;
 
   a {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--dark);
+    gap: 0.45rem;
+    color: var(--secondary);
     text-decoration: none;
     white-space: nowrap;
 
     &::before {
       content: "";
       flex-shrink: 0;
-      width: 1.35rem;
-      height: 1.35rem;
-      background-color: var(--secondary);
+      width: 1.1rem;
+      height: 1.1rem;
+      background-color: currentColor;
       mask: url("/static/sprout.svg") center / contain no-repeat;
       -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      color: var(--dark);
-
-      &::before {
-        transform: rotate(-8deg) scale(1.08);
-      }
     }
   }
 }
 
-.site-nav a {
-  text-decoration: none;
-}
+// Toolbar: bare icons in the colour of the quiet text. Each control is an
+// inline-level <button>, which rides on a text baseline inside its flex
+// wrapper; `display: flex` puts them all on one centre line.
+.sidebar.left {
+  .socials {
+    gap: 0.75rem;
+  }
 
-// Search: a labelled pill on wide screens, a bare icon below that.
-.search {
-  max-width: none;
-  min-width: 0;
-
-  > .search-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: auto;
-    height: 2.1rem;
-    margin: 0;
-    padding: 0 0.85rem 0 0.7rem;
-    border: 1px solid var(--lightgray);
-    border-radius: 999px;
-    box-shadow: none;
-    background-color: transparent;
+  .socials .social-link,
+  .search > .search-button,
+  .darkmode,
+  .readermode {
     color: var(--gray);
-    font-family: var(--bodyFont);
-    cursor: pointer;
-    transition:
-      color 0.15s ease,
-      border-color 0.15s ease;
-
-    > p {
-      display: block;
-      margin: 0;
-      padding: 0;
-      font-size: 0.875rem;
-      line-height: 1;
-      color: inherit;
-    }
-
-    svg {
-      display: block;
-      width: 0.95rem;
-      height: 0.95rem;
-      min-width: 0;
-      margin: 0;
-      order: -1;
-
-      .search-path {
-        stroke: currentColor;
-      }
-    }
+    transition: color 0.15s ease;
 
     &:hover {
       color: var(--dark);
-      border-color: var(--gray);
     }
+  }
 
-    @media all and ($narrow) {
-      width: 2.1rem;
-      padding: 0;
+  .socials .social-icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .search {
+    min-width: 0;
+    max-width: none;
+    // a wider gap between the links out and the controls
+    margin-left: 0.75rem;
+
+    > .search-button {
+      display: flex;
+      align-items: center;
       justify-content: center;
-      border-color: transparent;
+      width: auto;
+      min-width: 0;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      background-color: transparent;
+      cursor: pointer;
 
-      > p {
+      p {
         display: none;
       }
 
       svg {
-        width: 1.15rem;
-        height: 1.15rem;
+        display: block;
+        width: 1.1rem;
+        height: 1.1rem;
+        min-width: 0;
+        margin: 0;
+
+        .search-path {
+          stroke: currentColor;
+        }
       }
     }
   }
-}
 
-.darkmode {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
-  border-radius: 999px;
-  transition: background-color 0.15s ease;
-
-  svg {
-    position: static;
+  .darkmode,
+  .readermode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 1.1rem;
     height: 1.1rem;
-    fill: var(--gray);
-    transition: fill 0.15s ease;
-  }
-
-  &:hover {
-    background-color: var(--lightgray);
 
     svg {
-      fill: var(--dark);
+      position: static;
+      width: 1.1rem;
+      height: 1.1rem;
+      fill: currentColor;
+      stroke: currentColor;
     }
   }
 }
 
 // ----------------------------------------------------------------------------
-// Page header: breadcrumbs, title, metadata, tags
+// Page header: breadcrumbs, title, date, tags
 // ----------------------------------------------------------------------------
 .page > #quartz-body .page-header {
-  margin: clamp(2rem, 6vw, 4rem) 0 0;
+  margin: 0;
   padding: 0;
 }
 
 .breadcrumb-container {
-  gap: 0.35rem;
-  margin: 0 0 1.25rem;
-  font-family: var(--codeFont);
-  font-size: var(--meta-size);
-  letter-spacing: 0.02em;
+  gap: 0.3rem;
+  margin: 0 0 0.35rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
 
   .breadcrumb-element {
     color: var(--gray);
 
     p {
-      margin-left: 0.35rem;
-      color: color-mix(in srgb, var(--gray) 60%, transparent);
+      margin-left: 0.3rem;
     }
 
     a {
@@ -485,7 +362,7 @@ main:focus {
       text-decoration: none;
 
       &:hover {
-        color: var(--secondary);
+        color: var(--dark);
       }
     }
   }
@@ -493,17 +370,16 @@ main:focus {
 
 .article-title {
   margin: 0;
-  font-size: clamp(2.1rem, 1.5rem + 2.4vw, 3.1rem);
-  font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: -0.022em;
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.18;
+  text-wrap: balance;
+  color: var(--dark);
 }
 
 .content-meta {
-  margin: 1.1rem 0 0;
-  font-family: var(--codeFont);
-  font-size: var(--meta-size);
-  line-height: 1.5;
+  margin: 0.35rem 0 0;
+  font-size: 0.95em;
   color: var(--gray);
 
   &[show-comma="true"] > *:not(:last-child) {
@@ -511,45 +387,37 @@ main:focus {
 
     &::after {
       content: "·";
-      margin: 0 0.6em;
-      color: color-mix(in srgb, var(--gray) 60%, transparent);
+      margin: 0 0.4em;
     }
   }
 
   a {
     color: var(--gray);
-
-    &:hover {
-      color: var(--secondary);
-    }
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
   }
 }
 
 .tags {
-  gap: 0.4rem;
-  margin: 1rem 0 0;
+  gap: 0.2rem 0.9rem;
+  margin: 0.35rem 0 0;
 
   a.internal.tag-link {
-    padding: 0.15rem 0.6rem;
-    border: 1px solid var(--lightgray);
-    border-radius: 999px;
-    font-family: var(--codeFont);
-    font-size: 0.75rem;
-    color: var(--darkgray);
-    background-color: transparent;
+    font-style: italic;
+    color: var(--gray);
     text-decoration: none;
 
     &:hover {
-      color: var(--secondary);
-      border-color: var(--secondary);
+      color: var(--dark);
     }
   }
 }
 
 .note-properties {
-  margin-top: 1.25rem;
-  border-radius: var(--radius);
-  background-color: var(--surface);
+  margin-top: 1rem;
+  border-radius: 0;
 }
 
 // ----------------------------------------------------------------------------
@@ -557,75 +425,206 @@ main:focus {
 // ----------------------------------------------------------------------------
 .page > #quartz-body .center > article,
 .page > #quartz-body .center > .popover-hint > article {
-  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  margin-top: 1.9rem;
 }
 
 article {
+  // Identifiers (M365, RK3588, AADSTS50011) must read as digits, so the body
+  // of a note uses lining figures. Dates and counts around it stay old-style.
+  font-variant-numeric: lining-nums;
+
+  p {
+    margin: 0 0 1rem;
+    text-align: justify;
+    hyphens: auto;
+    text-wrap: pretty;
+
+    @media all and ($mobile) {
+      text-align: left;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 400;
+    text-wrap: balance;
+    color: var(--dark);
+  }
+
+  h1 {
+    margin: 2.5rem 0 0.6rem;
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  h2 {
+    margin: 2.3rem 0 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+
+  h3 {
+    margin: 1.8rem 0 0.4rem;
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  h4,
+  h5,
+  h6 {
+    margin: 1.5rem 0 0.3rem;
+    font-size: 1rem;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+  }
+
+  // a heading that opens the note sits tight under the page header
+  > div > :first-child {
+    margin-top: 0;
+  }
+
+  a {
+    color: var(--dark);
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    transition:
+      color 0.15s ease,
+      text-decoration-color 0.15s ease;
+
+    &:hover {
+      color: var(--secondary);
+      text-decoration-color: currentColor;
+    }
+
+    &.internal.broken {
+      color: var(--gray);
+      opacity: 1;
+      text-decoration-style: dashed;
+    }
+
+    // heading anchors
+    &[role="anchor"] {
+      text-decoration: none;
+      color: var(--gray);
+    }
+  }
+
   ul,
   ol {
-    padding-left: 1.4rem;
+    padding-left: 1.25rem;
   }
 
   li {
-    margin: 0.3rem 0;
+    margin: 0.25rem 0;
 
     &::marker {
       color: var(--gray);
     }
   }
+
+  img {
+    margin: 0.75rem 0;
+    border: 1px solid var(--lightgray);
+    border-radius: 0;
+  }
+
+  // A rule inside a note is a sprout between two lines.
+  hr {
+    position: relative;
+    height: 1px;
+    margin: 2.5rem auto;
+    background-color: var(--lightgray);
+    overflow: visible;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2.4rem;
+      height: 1rem;
+      background: var(--light);
+      transform: translate(-50%, -50%);
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      width: 1rem;
+      height: 1rem;
+      background-color: var(--gray);
+      mask: url("/static/sprout.svg") center / contain no-repeat;
+      -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
+      transform: translate(-50%, -50%);
+    }
+  }
 }
 
 blockquote {
-  margin: 1.5rem 0;
-  padding: 0.1rem 0 0.1rem 1.25rem;
-  border-left: 2px solid var(--secondary);
-}
-
-hr {
-  margin: 3rem auto;
-}
-
-img {
-  border-radius: var(--radius);
-}
-
-article img {
-  margin: 1.5rem 0;
-}
-
-p > img + em {
-  font-size: 0.875rem;
+  margin: 1.3rem 0 1.3rem 1.5rem;
+  padding: 0;
+  border: 0;
+  font-size: 0.95em;
   color: var(--gray);
+
+  p {
+    text-align: left;
+    color: inherit;
+  }
 }
 
-// Inline code and code blocks. Ligatures stay off: a writeup must show the
+.callout {
+  border-radius: 0;
+}
+
+// Inline code and listings. Ligatures stay off: a writeup must show the
 // characters that were typed.
 code {
-  padding: 0.12em 0.35em;
-  border-radius: 5px;
-  font-size: 0.86em;
+  padding: 0.08em 0.3em;
+  border-radius: 0;
+  font-size: 0.8em;
   font-variant-ligatures: none;
-  background: color-mix(in srgb, var(--lightgray) 70%, transparent);
+  font-variant-numeric: normal;
+  color: var(--dark);
+  background: var(--bar);
 }
 
+// A listing is printed on greenbar: three lines striped, three lines plain.
 pre {
-  margin: 1.5rem 0;
+  margin: 1.3rem 0;
   padding: 0;
-  border-color: var(--lightgray);
-  border-radius: var(--radius);
-  background-color: var(--surface);
+  border: 1px solid var(--lightgray);
+  border-radius: 0;
 
   > code {
-    padding: 0.9rem 0;
-    font-size: 0.84rem;
-    line-height: 1.65;
-    background: none;
+    padding: 0.85rem 0;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    background-color: transparent;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--bar) 0 4.65em,
+      transparent 4.65em 9.3em
+    );
+    background-origin: content-box;
+    background-clip: content-box;
 
     > [data-line] {
       padding: 0 1rem 0 0.75rem;
 
       &::before {
-        color: color-mix(in srgb, var(--gray) 55%, transparent);
+        color: var(--gray);
+        opacity: 0.6;
       }
     }
   }
@@ -633,75 +632,133 @@ pre {
 
 figure[data-rehype-pretty-code-figure] {
   line-height: inherit;
+
+  > [data-rehype-pretty-code-title] {
+    margin-bottom: -1.3rem;
+    padding: 0.15rem 0.75rem;
+    border-radius: 0;
+    border-bottom: 0;
+    font-size: 0.78rem;
+    color: var(--gray);
+  }
 }
 
 .clipboard-button {
   border-color: var(--lightgray);
-  border-radius: 6px;
-  background-color: var(--surface);
+  border-radius: 0;
+  background-color: var(--light);
 }
 
-// Tables
+// Tables are greenbar too.
 .table-container > table {
-  width: 100%;
-  margin: 1.5rem 0;
+  margin: 1.3rem 0;
   padding: 0;
-  font-size: 0.95rem;
+  font-size: 0.9em;
+  font-variant-numeric: lining-nums tabular-nums;
 
   > * {
-    line-height: 1.5;
+    line-height: 1.45;
+  }
+
+  tbody tr {
+    border: 0;
+
+    &:nth-child(odd) {
+      background-color: var(--bar);
+    }
   }
 }
 
 th {
-  padding: 0.6rem 0.9rem 0.6rem 0;
-  border-bottom: 1px solid var(--gray);
-  font-size: var(--meta-size);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+  border-bottom: 1px solid var(--dark);
+  font-size: 1.05em;
+  font-weight: 400;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.05em;
   color: var(--gray);
 }
 
 td {
-  padding: 0.6rem 0.9rem 0.6rem 0;
+  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
   vertical-align: top;
 }
 
-.callout {
-  border-radius: var(--radius);
-}
-
 .footnotes {
-  margin-top: 3rem;
-  font-size: 0.95rem;
+  margin-top: 2.5rem;
+  font-size: 0.92em;
 }
 
 // ----------------------------------------------------------------------------
-// After the article: comments
+// Plants (shapes from plugins/note-plant/src/components/plant.ts):
+// t = trace, f = leaf fill, r = leaf rib, v = via, b = bud, p = pad
+// ----------------------------------------------------------------------------
+.home-bed svg,
+.note-plant svg {
+  .f {
+    fill: currentColor;
+    fill-opacity: 0.13;
+  }
+
+  .r {
+    stroke-width: 1;
+    opacity: 0.7;
+  }
+
+  .v {
+    fill: var(--light);
+  }
+
+  .b {
+    fill: currentColor;
+  }
+
+  .p {
+    fill: currentColor;
+    fill-opacity: 0.18;
+    stroke-width: 1.25;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// After the article: the colophon, then the comments
 // ----------------------------------------------------------------------------
 .page > #quartz-body .page-footer {
   margin-top: 0;
   opacity: 1;
 }
 
+// The frame's rule between the text and what follows it. The colophon's ground
+// line, an index, and the homepage's contents each replace it.
+.center:has(.note-plant) > hr,
+.center:has(.page-listing) > hr,
+body[data-slug="index"] .center > hr {
+  display: none;
+}
+
+.note-plant ~ .giscus {
+  margin-top: 2.5rem;
+}
+
 // ----------------------------------------------------------------------------
-// Rail: table of contents, backlinks, graph
+// The margin: table of contents, backlinks, graph
 // ----------------------------------------------------------------------------
-.page > #quartz-body > .rail {
-  @media all and ($wide) {
+.page > #quartz-body > .sidebar.right {
+  font-size: 0.9rem;
+  line-height: 1.45;
+
+  @media all and ($desktop) {
     position: sticky;
-    top: var(--header-h);
+    top: 0;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.75rem;
     box-sizing: border-box;
-    width: min(100%, 19rem);
-    height: calc(100vh - var(--header-h));
-    padding: clamp(2rem, 6vw, 4rem) 0 2rem 3.5rem;
+    height: 100vh;
+    padding: calc(var(--top) + 0.3rem) 0 2rem;
 
-    // With a table of contents to anchor the top, the backlinks and graph
-    // move to the bottom of the rail. Without one they start at the top.
+    // With a table of contents to anchor the top, the backlinks and graph go
+    // to the foot of the margin. Without one they start at the top.
     &:has(.toc) > .backlinks,
     &:has(.toc) > .graph {
       margin-top: auto;
@@ -712,7 +769,7 @@ td {
     }
   }
 
-  @media all and not ($wide) {
+  @media all and not ($desktop) {
     position: static;
     display: flex;
     flex-direction: row;
@@ -721,7 +778,7 @@ td {
     width: auto;
     height: auto;
     margin: 0;
-    padding: 0 0 2rem;
+    padding: 2.5rem 0 0;
 
     > * {
       flex: 1 1 14rem;
@@ -733,79 +790,38 @@ td {
     }
   }
 
-  // nothing to show: take no space under the article
   &:not(:has(.toc, .backlinks, .graph)) {
     display: none;
-  }
-
-  // The full-screen graph is a fixed child of the rail. Lift the rail above
-  // the top bar while it is open, or the bar covers the top of the dialog.
-  &:has(.global-graph-outer.active) {
-    z-index: 60;
   }
 }
 
 .toc button.toc-header h3,
 .backlinks > h3,
 .graph > h3 {
-  font-family: var(--codeFont);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gray);
+  @include label;
 }
 
-ul.toc-content.overflow {
-  margin: 0.75rem 0 0;
-  border-left: 1px solid var(--lightgray);
+ul.toc-content.overflow,
+.backlinks > ul.overflow {
+  margin: 0.3rem 0 0;
 
   > li {
     margin: 0;
 
     > a {
       display: block;
-      margin-left: -1px;
-      padding: 0.22rem 0 0.22rem 0.9rem;
-      border-left: 1px solid transparent;
-      font-size: 0.875rem;
+      padding: 0.15rem 0;
       line-height: 1.4;
       color: var(--gray);
+      background-color: transparent;
       opacity: 1;
       text-decoration: none;
-      transition:
-        color 0.2s ease,
-        border-color 0.2s ease;
+      transition: color 0.2s ease;
 
-      &:hover {
-        color: var(--dark);
-      }
-
+      &:hover,
       &.in-view {
         color: var(--dark);
-        border-left-color: var(--secondary);
         opacity: 1;
-      }
-    }
-  }
-}
-
-.backlinks > ul.overflow {
-  margin: 0.75rem 0 0;
-
-  > li {
-    margin: 0;
-
-    > a {
-      display: block;
-      padding: 0.22rem 0;
-      font-size: 0.875rem;
-      line-height: 1.4;
-      color: var(--darkgray);
-      text-decoration: none;
-
-      &:hover {
-        color: var(--secondary);
       }
     }
   }
@@ -815,9 +831,9 @@ ul.toc-content.overflow {
 // so the graph does not flash white while the PIXI canvas starts again on SPA
 // navigation in dark mode.
 .graph > .graph-outer {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   border-color: var(--lightgray);
-  border-radius: var(--radius);
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -826,66 +842,77 @@ ul.toc-content.overflow {
   background-color: var(--light);
 }
 
-// ----------------------------------------------------------------------------
-// Folder and tag pages
-// ----------------------------------------------------------------------------
-// The rule between the content and the after-body slot only makes sense above
-// the comments, and list pages and the homepage have none.
-.center:has(.page-listing) > hr,
-body[data-slug="index"] .center > hr {
-  display: none;
+.graph > .global-graph-outer > .global-graph-container {
+  border-radius: 0;
 }
 
+// ----------------------------------------------------------------------------
+// Folder and tag pages: a contents list
+// ----------------------------------------------------------------------------
 .page-listing > p {
   margin: 0;
-  font-family: var(--codeFont);
-  font-size: var(--meta-size);
   color: var(--gray);
 }
 
 ul.section-ul {
-  margin-top: 1.5rem;
-  border-top: 1px solid var(--lightgray);
+  margin-top: 1.25rem;
 }
 
 li.section-li {
   margin: 0;
-  border-bottom: 1px solid var(--lightgray);
 
   > .section {
-    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+    display: flex;
     align-items: baseline;
-    padding: 0.95rem 0;
+    gap: 0.5rem;
+    padding: 0.16rem 0;
 
     .meta {
+      order: 3;
       margin: 0;
-      font-family: var(--codeFont);
-      font-size: var(--meta-size);
       color: var(--gray);
       opacity: 1;
+      white-space: nowrap;
     }
 
-    > .desc > h3 {
-      margin: 0;
-      font-family: var(--headerFont);
-      font-size: 1.4rem;
-      font-weight: 500;
-      line-height: 1.25;
-      letter-spacing: -0.01em;
+    // the title, then leader dots up to the date
+    > .desc {
+      flex: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: 0;
 
-      > a {
-        color: var(--dark);
-        text-decoration: none;
+      &::after {
+        content: "";
+        flex: 1;
+        min-width: 1rem;
+        border-bottom: 1px dotted var(--underline);
+        transform: translateY(-0.28em);
+      }
 
-        &:hover {
-          color: var(--secondary);
+      > h3 {
+        margin: 0;
+        font-family: var(--bodyFont);
+        font-size: 1em;
+        font-weight: 400;
+        line-height: 1.6;
+
+        > a {
+          color: var(--dark);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.16em;
+          }
         }
       }
     }
 
-    @media all and ($narrow) {
-      grid-template-columns: minmax(0, 1fr);
-      row-gap: 0.2rem;
+    > .tags {
+      display: none;
     }
   }
 }
@@ -900,48 +927,43 @@ body[data-slug^="notes/"] .page-listing {
 // Homepage
 // ----------------------------------------------------------------------------
 body[data-slug="index"] {
-  .page > #quartz-body .page-header {
-    margin-top: 0;
-  }
-
-  // The intro shares the hero's left-hand column; the vine has the right.
   .center > article {
-    max-width: 38rem;
-    margin-top: 2rem;
-    font-size: 1.15rem;
+    margin-top: 1.6rem;
 
-    p,
-    li {
-      line-height: 1.65;
+    p {
+      text-align: left;
     }
   }
 
-  // The stock floral divider embedded at the top of the note. The hero replaces
-  // it; delete the embed from the note in the vault, then delete this rule.
+  // The stock floral divider embedded at the top of the note. The row of
+  // plants replaces it; delete the embed from the note in the vault, then
+  // delete this rule.
   .center > article img[src*="45422"] {
     display: none;
   }
 
-  .page-footer {
-    margin-top: 2rem;
+  // The site footer is a structural slot, so `condition: not-index` in the
+  // config does not reach it.
+  footer {
+    display: none;
   }
 }
 
-// The 404 page uses the minimal frame, which has no top bar.
-.page[data-frame="minimal"] > #quartz-body > .center {
-  margin-top: clamp(3rem, 10vw, 6rem);
+// The 404 page uses the minimal frame, which has no sidebar.
+.page[data-frame="minimal"] > #quartz-body {
+  display: block;
+  max-width: var(--measure);
+  margin: 0 auto;
 }
 
 // ----------------------------------------------------------------------------
 // Footer
 // ----------------------------------------------------------------------------
 .page > #quartz-body > footer {
-  margin: clamp(4rem, 10vw, 7rem) 0 0;
-  padding: 1.5rem 0 2.5rem;
-  border-top: 1px solid var(--lightgray);
+  margin: 4rem 0 0;
+  padding: 0 0 2rem;
   opacity: 1;
-  font-family: var(--codeFont);
-  font-size: var(--meta-size);
+  font-size: 0.9rem;
   color: var(--gray);
 
   hr {
@@ -950,27 +972,25 @@ body[data-slug="index"] {
 
   ul {
     flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    gap: 0.3rem 1.5rem;
     width: auto;
     margin: 0;
   }
 
   li {
     color: var(--gray);
-    line-height: 1.5;
-
-    // the attribution goes to the far right
-    &:last-child {
-      margin-left: auto;
-    }
   }
 
   a {
     color: var(--gray);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
 
     &:hover {
-      color: var(--secondary);
+      color: var(--dark);
     }
   }
 }
@@ -980,32 +1000,34 @@ body[data-slug="index"] {
 // ----------------------------------------------------------------------------
 .search > .search-container > .search-space {
   > input {
-    border-radius: var(--radius);
+    border-radius: 0;
     font-family: var(--bodyFont);
-    background-color: var(--surface);
+    background-color: var(--light);
   }
 
   > .search-layout {
-    border-radius: var(--radius);
+    border-radius: 0;
 
-    // matched terms: highlighter yellow, not the hover colour
     .highlight {
-      border-radius: 3px;
+      border-radius: 0;
       background: var(--textHighlight);
     }
 
-    .result-card h3 {
+    .result-card {
       font-family: var(--bodyFont);
-      font-weight: 600;
+
+      h3 {
+        font-weight: 400;
+      }
     }
   }
 }
 
 .popover > .popover-inner {
   border-color: var(--lightgray);
-  border-radius: var(--radius);
-  background-color: var(--surface);
-  box-shadow: 0 12px 32px -12px rgb(0 0 0 / 25%);
+  border-radius: 0;
+  background-color: var(--light);
+  box-shadow: 0 10px 28px -14px rgb(0 0 0 / 35%);
 }
 
 // ----------------------------------------------------------------------------
@@ -1016,10 +1038,10 @@ body[data-slug="index"] {
   display: none;
 }
 
-// Theme every scrollbar (code blocks, tables, the rail, the page).
+// Theme every scrollbar (listings, tables, the margin, the page).
 * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--gray) 50%, transparent) transparent;
+  scrollbar-color: var(--lightgray) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -1032,13 +1054,12 @@ body[data-slug="index"] {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--gray) 50%, transparent);
-  border-radius: 5px;
+  background-color: var(--lightgray);
   border: 2px solid transparent;
   background-clip: padding-box;
 
   &:hover {
-    background-color: var(--secondary);
+    background-color: var(--gray);
   }
 }
 
@@ -1046,16 +1067,16 @@ body[data-slug="index"] {
   background: transparent;
 }
 
-// Page-to-page cross-fade, started by the SPA router. The top bar is its own
-// group: it is the same on both pages, so it holds still while the rest fades.
+// Page-to-page cross-fade, started by the SPA router. The sidebar is its own
+// group: it is the same on both pages, so it holds still while the text fades.
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.16s;
   animation-timing-function: ease-out;
 }
 
-.page > #quartz-body > .site-header {
-  view-transition-name: site-header;
+.page > #quartz-body > .sidebar.left {
+  view-transition-name: sidebar;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1063,3 +1084,6 @@ body[data-slug="index"] {
     scroll-behavior: auto;
   }
 }
+
+// Scripting off: the plain document. Last, so that it overrides the theme.
+@include plain;

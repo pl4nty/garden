@@ -63,7 +63,9 @@ export default (() => {
         )}
         {/* Fonts are discovered late, in the stylesheet. A preload starts them with the HTML.
             Font requests are anonymous-mode CORS, so the preload needs `crossorigin` to match.
-            `data-persist` keeps the SPA router from adding the links again on each navigation. */}
+            `data-persist` keeps the SPA router from adding the links again on each navigation.
+            The media query skips the preload when scripting is off, where plain.scss uses
+            no web font. */}
         {(cfg.theme.preload ?? []).map((font) => (
           <link
             rel="preload"
@@ -71,6 +73,7 @@ export default (() => {
             as="font"
             type={`font/${font.split(".").pop()}`}
             crossOrigin="anonymous"
+            media="(scripting: enabled)"
             data-persist
           />
         ))}

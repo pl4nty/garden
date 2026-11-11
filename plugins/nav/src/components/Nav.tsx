@@ -4,6 +4,7 @@ import type {
   QuartzComponentProps,
 } from "@quartz-community/types"
 import { resolveRelative } from "@quartz-community/utils"
+import { smallCaps } from "../../../shared/smallCaps"
 import style from "./styles/nav.scss"
 
 export interface NavOptions {
@@ -27,7 +28,11 @@ export default ((opts?: Partial<NavOptions>) => {
       <nav class={`site-nav ${displayClass ?? ""}`} aria-label="Site">
         <ul>
           {links.map(({ label, slug, prefix }) => {
-            const active = current === slug || (prefix !== undefined && current.startsWith(prefix))
+            const inside = prefix !== undefined && current.startsWith(prefix)
+            const active = current === slug || inside
+            // a page below a folder is listed under the folder's link, as the
+            // running head of a book names the chapter
+            const here = inside && !current.endsWith("/index") ? fileData.frontmatter?.title : null
             return (
               <li>
                 <a
@@ -37,6 +42,7 @@ export default ((opts?: Partial<NavOptions>) => {
                 >
                   {label}
                 </a>
+                {here && <span class="here">{smallCaps(here)}</span>}
               </li>
             )
           })}

@@ -1,0 +1,305 @@
+// ============================================================================
+// Plain: the site with scripting off.
+//
+// Without JavaScript there is no search, no theme switch, no graph and no
+// comments, so the page drops to what a plain document needs: the system font,
+// one column, rules and lists. It loads no web font, and it follows the
+// system's colour scheme, because the theme switch cannot run.
+//
+// `scripting: none` is true when the browser has scripting turned off:
+// Chrome 120, Firefox 113, Safari 17. An older browser with scripting off
+// gets the main theme with controls that do nothing.
+//
+// A mixin, so that custom.scss can emit these rules after its own: both files
+// are unlayered, and the later rule wins.
+// ============================================================================
+@mixin plain {
+  @media (scripting: none) {
+    :root {
+      --light: #fbfbf8;
+      --lightgray: #d9d9d2;
+      --gray: #666660;
+      --darkgray: #111111;
+      --dark: #111111;
+      --secondary: #19692b;
+      --tertiary: #19692b;
+      --bar: #f0f0ea;
+      --underline: #19692b;
+      --bodyFont: Helvetica, Arial, sans-serif;
+      --headerFont: Helvetica, Arial, sans-serif;
+      --titleFont: Helvetica, Arial, sans-serif;
+      --codeFont: ui-monospace, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+      --measure: 50rem;
+
+      @media (prefers-color-scheme: dark) {
+        --light: #121212;
+        --lightgray: #33332f;
+        --gray: #9a9a94;
+        --darkgray: #e9e9e4;
+        --dark: #e9e9e4;
+        --secondary: #7fd08a;
+        --tertiary: #7fd08a;
+        --bar: #1c1c1a;
+        --underline: #7fd08a;
+        color-scheme: dark;
+      }
+    }
+
+    body {
+      font-size: 1rem;
+      line-height: 1.45;
+      font-variant-numeric: normal;
+    }
+
+    tbody,
+    li,
+    p {
+      line-height: 1.45;
+    }
+
+    // The fonts plugin sets the family on headings in an inline stylesheet that
+    // comes after this one, so these selectors carry `body` to outrank it.
+    body :is(h1, h2, h3, h4, h5, h6, thead, .page-title, .article-title) {
+      font-family: var(--headerFont);
+    }
+
+    .sc {
+      font-variant-caps: normal;
+      letter-spacing: 0;
+    }
+
+    // what cannot work, and the drawings
+    .search,
+    .darkmode,
+    .readermode,
+    .graph,
+    .giscus,
+    .toc,
+    .home-bed,
+    .note-plant,
+    .page-title a::before {
+      display: none !important;
+    }
+
+    // one column
+    .page > #quartz-body {
+      display: block;
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 4rem;
+
+      > .center {
+        padding-top: 0;
+      }
+
+      // the sidebar becomes a masthead: title and links out on one line, the
+      // nav on the next, a heavy rule below
+      > .sidebar.left {
+        position: static;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1rem;
+        height: auto;
+        margin-bottom: 1.5rem;
+        padding: 0 0 0.6rem;
+        border-bottom: 2px solid var(--dark);
+
+        > .flex-component {
+          margin: 0 0 0 auto;
+        }
+
+        > .site-nav {
+          order: 3;
+          flex: 0 0 100%;
+        }
+      }
+
+      > .sidebar.right {
+        position: static;
+        display: block;
+        height: auto;
+        padding: 0;
+        font-size: 1rem;
+      }
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+
+      a {
+        color: var(--dark);
+      }
+    }
+
+    .site-nav {
+      ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.2rem 1.4rem;
+      }
+
+      a {
+        color: var(--secondary);
+
+        &.active {
+          font-weight: 700;
+          color: var(--dark);
+        }
+
+        &:hover {
+          color: var(--secondary);
+          text-decoration: underline;
+        }
+      }
+
+      .here {
+        display: none;
+      }
+    }
+
+    .article-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .breadcrumb-container {
+      font-variant-caps: normal;
+      letter-spacing: 0;
+      font-size: 0.9rem;
+    }
+
+    .content-meta {
+      padding-bottom: 1.1rem;
+      border-bottom: 2px solid var(--dark);
+      font-style: italic;
+    }
+
+    article {
+      p {
+        text-align: left;
+        hyphens: manual;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: 700;
+        font-style: normal;
+        font-variant-caps: normal;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      h3 {
+        font-size: 1.05rem;
+      }
+
+      a {
+        color: var(--secondary);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      hr {
+        height: 2px;
+        background-color: var(--dark);
+
+        &::before,
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    blockquote {
+      margin-left: 1.25rem;
+      padding-left: 0.9rem;
+      border-left: 2px solid var(--dark);
+      font-size: 1em;
+      color: var(--dark);
+    }
+
+    code {
+      font-size: 0.88em;
+    }
+
+    pre {
+      border: 1px dotted var(--dark);
+      background-color: var(--bar);
+
+      > code {
+        background-image: none;
+      }
+    }
+
+    .table-container > table tbody tr:nth-child(odd) {
+      background-color: transparent;
+    }
+
+    th {
+      border-bottom-width: 2px;
+      font-variant-caps: normal;
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--dark);
+    }
+
+    // headings of lists
+    .home-contents h2,
+    .folder-tree-group h2,
+    .backlinks > h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-variant-caps: normal;
+      letter-spacing: 0;
+      color: var(--dark);
+    }
+
+    .home-contents,
+    .folder-tree,
+    li.section-li {
+      a,
+      > .section > .desc > h3 > a {
+        color: var(--secondary);
+      }
+    }
+
+    .home-contents .home-dots,
+    li.section-li > .section > .desc::after {
+      border: 0;
+    }
+
+    .home-contents section:first-child {
+      padding-top: 1.1rem;
+      border-top: 2px solid var(--dark);
+    }
+
+    .folder-tree-groups {
+      columns: 2;
+    }
+
+    .folder-tree-group h2 {
+      border-bottom: 0;
+    }
+
+    .center > hr {
+      display: block;
+      height: 2px;
+      margin: 1.5rem 0 1rem;
+      background-color: var(--dark);
+    }
+  }
+}
