@@ -8,17 +8,17 @@ intended for the top-left sidebar (under the page title).
 In `quartz.config.yaml`:
 
 ```yaml
-  - source: ./plugins/socials
-    enabled: true
-    options:
-      links:
-        GitHub: https://github.com/pl4nty
-        LinkedIn: https://www.linkedin.com/in/your-handle
-        Homelab: https://lab.tplant.com.au/
-        Status: https://status.tplant.com.au/
-    layout:
-      position: left
-      priority: 15
+- source: ./plugins/socials
+  enabled: true
+  options:
+    links:
+      GitHub: https://github.com/pl4nty
+      LinkedIn: https://www.linkedin.com/in/your-handle
+      Homelab: https://lab.tplant.com.au/
+      Status: https://status.tplant.com.au/
+  layout:
+    position: left
+    priority: 15
 ```
 
 Each entry is `Label: URL`. The label (lowercased) selects a built-in icon —

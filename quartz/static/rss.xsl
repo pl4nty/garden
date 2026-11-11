@@ -10,12 +10,15 @@
         <title>Atom - <xsl:value-of select="/atom:feed/atom:title" /></title>
         <link rel="icon" href="/static/icon.png" />
         <style type="text/css">
-          :root{--light:#fff;--lightgray:#f8f8f8;--gray:#b0b0b0;--darkgray:#666;--dark:#303030;--secondary:#2e7d32;--tertiary:#388e3c;--highlight:#2e7d3226;--bodyFont:"Titillium Web",system-ui,sans-serif;--headerFont:"Raleway",system-ui,sans-serif;--codeFont:"Fira Code",monospace}
-          @media(prefers-color-scheme:dark){:root{--light:#101010;--lightgray:#181818;--gray:#7a8882;--darkgray:darkgray;--dark:#e0f0e9;--secondary:#66bb6a;--tertiary:#81c784}}
-          body{max-width:768px;margin:0 auto;background:var(--light);color:var(--darkgray);font-family:var(--bodyFont)}
+          @font-face{font-family:"Atkinson Hyperlegible Next";font-weight:200 800;font-display:swap;src:url("/static/fonts/atkinson-hyperlegible-next-v5.3.0-latin-normal.woff2") format("woff2")}
+          @font-face{font-family:"Rubik";font-weight:300 900;font-display:swap;src:url("/static/fonts/rubik-v5.3.0-latin-normal.woff2") format("woff2")}
+          :root{--light:#f0f1ed;--lightgray:#c8cec6;--gray:#56635a;--darkgray:#1b2b22;--dark:#1b2b22;--secondary:#1f9140;--tertiary:#ff48b0;--tint:#e1eae1;--bodyFont:"Atkinson Hyperlegible Next",system-ui,sans-serif;--headerFont:"Rubik",system-ui,sans-serif;--codeFont:"Fira Code",monospace}
+          @media(prefers-color-scheme:dark){:root{--light:#151515;--lightgray:#343834;--gray:#9ba19b;--darkgray:#e6e7e1;--dark:#f2f2ec;--secondary:#4ccb7a;--tertiary:#ff6ec4;--tint:#19221c}}
+          body{max-width:768px;margin:0 auto;background:var(--light);color:var(--darkgray);font-family:var(--bodyFont);line-height:1.6}
           h1,h2,h3{font-family:var(--headerFont);color:var(--dark)}
-          a{color:var(--secondary);text-decoration:none}
-          code{font-family:var(--codeFont);background:var(--lightgray);border-radius:4px;padding:.1em .3em}
+          a{color:var(--dark);text-decoration:underline;text-decoration-color:var(--tertiary);text-decoration-thickness:2px;text-underline-offset:.2em}
+          hr{height:2px;border:0;background:var(--secondary)}
+          code{font-family:var(--codeFont);background:var(--tint);padding:.1em .3em}
           section{margin:30px 15px}hgroup{margin-bottom:2rem}
         </style>
       </head>

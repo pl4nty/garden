@@ -1,0 +1,44 @@
+// The colophon: the stamp at the left, its caption beside it, on the rule
+// that closes the note. The frame and canvas rules common to every garden
+// picture are in plugins/home/src/components/styles/home.scss.
+.garden-stamp {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  margin: 3.5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink1);
+
+  .garden-plate {
+    flex: none;
+    // 44 by 62 cells of two screen pixels
+    width: 88px;
+    height: 124px;
+  }
+
+  figcaption {
+    max-width: 26rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--gray);
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  // The date is struck with a rubber stamp in the second ink: a little
+  // askew, in a box.
+  .garden-tended {
+    display: inline-block;
+    margin: 0 0 0.6rem;
+    padding: 0.1rem 0.5rem;
+    border: 2px solid currentColor;
+    font-family: var(--headerFont);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink2-text);
+    transform: rotate(-2.5deg);
+  }
+}

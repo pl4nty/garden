@@ -1,0 +1,77 @@
+{
+  "name": "@tplant/home",
+  "version": "0.1.0",
+  "description": "Homepage banner: a dithered garden bed drawn in the browser, with a plant for each recently tended note and each post",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs home"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "home",
+    "displayName": "Home",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "notesFolder": "notes",
+      "postsFolder": "posts",
+      "plants": 36,
+      "height": 64
+    },
+    "components": {
+      "Home": {
+        "displayName": "Home",
+        "defaultPosition": "beforeBody",
+        "defaultPriority": 1
+      }
+    },
+    "optionSchema": {
+      "notesFolder": {
+        "type": "string"
+      },
+      "postsFolder": {
+        "type": "string"
+      },
+      "plants": {
+        "type": "number"
+      },
+      "height": {
+        "type": "number"
+      }
+    }
+  }
+}

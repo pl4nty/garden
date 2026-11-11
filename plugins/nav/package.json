@@ -1,0 +1,92 @@
+{
+  "name": "@tplant/nav",
+  "version": "0.1.0",
+  "description": "The index of the site for the sidebar: selected writing, recent notes and the section links",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs nav"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "nav",
+    "displayName": "Nav",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "part": "sidebar",
+      "links": {},
+      "featured": [],
+      "postsFolder": "posts",
+      "notesFolder": "notes",
+      "recentCount": 5
+    },
+    "components": {
+      "Nav": {
+        "displayName": "Nav",
+        "defaultPosition": "left",
+        "defaultPriority": 20
+      }
+    },
+    "optionSchema": {
+      "part": {
+        "type": "string",
+        "enum": [
+          "sidebar",
+          "home"
+        ]
+      },
+      "links": {
+        "type": "object"
+      },
+      "featured": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "postsFolder": {
+        "type": "string"
+      },
+      "notesFolder": {
+        "type": "string"
+      },
+      "recentCount": {
+        "type": "number"
+      }
+    }
+  }
+}

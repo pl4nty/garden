@@ -1,0 +1,99 @@
+// The index of the site: two short lists (selected writing, recent notes),
+// each a title over its date, then the links to the sections.
+.site-index {
+  section {
+    margin: 0 0 1.75rem;
+  }
+
+  h2 {
+    margin: 0 0 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--dark);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  section li {
+    margin: 0 0 0.7rem;
+    line-height: 1.3;
+  }
+
+  section li a {
+    display: block;
+    font-family: var(--headerFont);
+    font-size: 1.02rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--dark);
+    background-color: transparent;
+    text-decoration: none;
+    text-wrap: balance;
+
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--ink2);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
+    }
+  }
+
+  time {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  .site-index-more {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--gray);
+    background-color: transparent;
+    text-decoration: underline;
+    text-decoration-color: var(--ink2);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+
+    &:hover {
+      color: var(--dark);
+    }
+  }
+}
+
+// The section links, in a row. The section that is open has a stroke of
+// ink 2 printed over it.
+.site-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0;
+  margin: 0 -0.3rem;
+
+  a {
+    display: block;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--darkgray);
+    background-color: transparent;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--ink2);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
+    }
+
+    &.active {
+      font-weight: 700;
+      color: #1b2b22;
+      background-color: var(--ink2);
+    }
+  }
+}

@@ -1,0 +1,61 @@
+// ============================================================================
+// The site with scripting off.
+//
+// The layout and the type need no JavaScript, so the page stays as it is.
+// What changes:
+//
+//   - The theme switch cannot run, so the page follows the system's colour
+//     scheme. The dark palette is repeated here from quartz.config.yaml
+//     (`theme.colors.darkMode`) and custom.scss (`dark-inks`); keep the three
+//     in step.
+//   - Controls that do nothing without a script are taken away: search, the
+//     theme switch, reader mode, the graph and the comments.
+//   - The garden pictures are drawn by a script. The banner keeps its frame,
+//     which shows a halftone pattern from the stylesheet; the stamp at the
+//     foot of a note is left out and its caption stands alone.
+//
+// `scripting: none` is true when the browser has scripting turned off:
+// Chrome 120, Firefox 113, Safari 17. An older browser with scripting off
+// gets the light theme with controls that do nothing.
+//
+// A mixin, so that custom.scss can emit these rules after its own: both files
+// are unlayered, and the later rule wins.
+// ============================================================================
+@mixin plain {
+  @media (scripting: none) {
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --light: #151515;
+        --lightgray: #343834;
+        --gray: #9ba19b;
+        --darkgray: #e6e7e1;
+        --dark: #f2f2ec;
+        --secondary: #4ccb7a;
+        --tertiary: #ff6ec4;
+        --highlight: rgba(76, 203, 122, 0.14);
+        --textHighlight: rgba(255, 110, 196, 0.4);
+        --over: #f4f1e6;
+        --ink1-text: #6ad791;
+        --ink2-text: #ff86ce;
+        color-scheme: dark;
+      }
+    }
+
+    .search,
+    .darkmode,
+    .readermode,
+    .graph,
+    .giscus,
+    .garden-stamp .garden-plate,
+    .garden-bed figcaption {
+      display: none !important;
+    }
+
+    // Shiki's dark colours are switched on by the theme attribute. Every
+    // token is mapped to an ink in custom.scss, but plain text in a listing
+    // takes the theme's own foreground, so set it here.
+    pre > code[data-theme] {
+      color: var(--darkgray);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,30 +16,44 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
+      header: Rubik
+      body: Atkinson Hyperlegible Next
       code: Fira Code
+    # A two-ink risograph print. Every colour on the site is the paper, one of
+    # two inks, the two printed on top of each other, or a tint or shade of
+    # those. Ink 1 is the green this site has always used, a step brighter;
+    # ink 2 is fluorescent pink. In dark mode the stock is black and the inks
+    # are their luminous versions.
+    #   light      the paper
+    #   lightgray  rules and borders
+    #   gray       the faintest text: dates and captions
+    #   darkgray   body text: the overprint of both inks
+    #   dark       headings
+    #   secondary  ink 1 (green)
+    #   tertiary   ink 2 (pink)
+    # quartz/styles/custom.scss names these --paper, --ink1, --ink2 and --over,
+    # and adds the shades of each ink that are dark enough for small text.
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
-        secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        light: "#F0F1ED"
+        lightgray: "#C8CEC6"
+        gray: "#56635A"
+        darkgray: "#1B2B22"
+        dark: "#1B2B22"
+        secondary: "#1F9140"
+        tertiary: "#FF48B0"
+        highlight: "rgba(31, 145, 64, 0.12)"
+        textHighlight: "rgba(255, 72, 176, 0.4)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#151515"
+        lightgray: "#343834"
+        gray: "#9BA19B"
+        darkgray: "#E6E7E1"
+        dark: "#F2F2EC"
+        secondary: "#4CCB7A"
+        tertiary: "#FF6EC4"
+        highlight: "rgba(76, 203, 122, 0.14)"
+        textHighlight: "rgba(255, 110, 196, 0.4)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -109,8 +123,8 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
+      header: Rubik
+      body: Atkinson Hyperlegible Next
       code: Fira Code
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
@@ -143,8 +157,10 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # The file tree is replaced by the sidebar links (./plugins/nav) and the
+  # index of notes on each folder page (./plugins/folder-tree).
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -185,11 +201,46 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # Left sidebar, top to bottom: the site title with the toolbar group
+  # (search, theme, reader mode) beside it, the index of the site, and the
+  # links out at the foot.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
       position: left
       priority: 10
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      part: sidebar
+      featured:
+        - posts/building-australia's-largest-highschool-ctf
+        - posts/finding-an-unreleased-windows-feature
+        - posts/use-a-custom-outlook.com-email-without-godaddy
+      recentCount: 4
+      links:
+        Posts: posts/
+        Notes: notes/
+        Ideas: ideas
+        Now: now
+        Whoami: whoami
+    layout:
+      position: left
+      priority: 40
+  # The same two lists at the foot of the homepage, for a phone, where the
+  # sidebar is a header with no room for them.
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      part: home
+      featured:
+        - posts/building-australia's-largest-highschool-ctf
+        - posts/finding-an-unreleased-windows-feature
+        - posts/use-a-custom-outlook.com-email-without-godaddy
+      recentCount: 4
+    layout:
+      position: afterBody
+      priority: 5
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
@@ -204,6 +255,9 @@ plugins:
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      spacerSymbol: /
+      showCurrentPage: false
     layout:
       position: beforeBody
       priority: 5
@@ -236,40 +290,37 @@ plugins:
         Homelab: https://lab.tplant.com.au/
     layout:
       position: left
-      priority: 15
-      group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
+      priority: 50
+  # Homepage banner: a dithered garden bed, drawn in the browser, with a
+  # plant for each of the most recently tended notes and a daisy for each post.
+  - source: ./plugins/home
     enabled: true
     options:
-      title: ""
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      notesFolder: notes
+      postsFolder: posts
+      plants: 36
+      height: 64
     layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
+      position: beforeBody
+      priority: 1
+  # Every note below a folder, grouped by subfolder, on the folder's own page.
+  - source: ./plugins/folder-tree
     enabled: true
     options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      roots:
+        - notes
     layout:
       position: afterBody
-      priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+      priority: 1
+  # The colophon: the note's own plant as a two-ink stamp at the end of each
+  # note, grown from its length and its links, with the date it was last tended.
+  - source: ./plugins/note-plant
     enabled: true
+    layout:
+      position: afterBody
+      priority: 3
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +328,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -330,7 +381,7 @@ plugins:
 layout:
   groups:
     toolbar:
-      priority: 35
+      priority: 20
       direction: row
       gap: 0.5rem
   byPageType:
@@ -344,12 +395,14 @@ layout:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     tag:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     canvas: {}
