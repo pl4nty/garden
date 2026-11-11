@@ -1,0 +1,65 @@
+{
+  "name": "@tplant/note-plant",
+  "version": "0.1.0",
+  "description": "An ASCII plant at the end of each note, grown from its word count and its links",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs note-plant"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "note-plant",
+    "displayName": "Note Plant",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "roots": []
+    },
+    "components": {
+      "NotePlant": {
+        "displayName": "Note Plant",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 3
+      }
+    },
+    "optionSchema": {
+      "roots": {
+        "type": "array"
+      }
+    }
+  }
+}

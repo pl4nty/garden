@@ -1,3 +1,5 @@
-export { ContentMeta, ContentMetaOptions } from './components/index.js';
-export { QuartzComponent, QuartzComponentProps, StringResource } from '@quartz-community/types';
-import 'preact';
+import { QuartzComponentConstructor } from "@quartz-community/types"
+
+declare const ContentMeta: QuartzComponentConstructor
+
+export { ContentMeta }

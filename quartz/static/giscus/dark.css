@@ -1,6 +1,9 @@
 /*! MIT License
  * Copyright (c) 2018 GitHub Inc.
  * https://github.com/primer/primitives/blob/main/LICENSE
+ *
+ * Surfaces, borders, text and accent colours follow the site palette in
+ * quartz.config.yaml. Update both files when the palette changes.
  */
 
 main {
@@ -34,24 +37,24 @@ main {
   --color-prettylights-syntax-brackethighlighter-angle: #8b949e;
   --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
   --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
-  --color-btn-text: #d4d4d4; /* --darkgray */
-  --color-btn-bg: #161618; /* --light */
-  --color-btn-border: rgb(240, 246, 252 / 10%); /* --dark */
+  --color-btn-text: #c8ccc8;
+  --color-btn-bg: #141514;
+  --color-btn-border: #8e948e;
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #30363d;
-  --color-btn-hover-border: #8b949e;
+  --color-btn-hover-bg: #242624;
+  --color-btn-hover-border: #c8ccc8;
   --color-btn-active-bg: hsl(212deg 12% 18% / 100%);
   --color-btn-active-border: #6e7681;
   --color-btn-selected-bg: #161b22;
-  --color-btn-primary-text: #fff;
-  --color-btn-primary-bg: #84a59d; /* --tertiary */
-  --color-btn-primary-border: rgb(240, 246, 252 / 10%); /* --dark */
+  --color-btn-primary-text: #141514;
+  --color-btn-primary-bg: #81c784;
+  --color-btn-primary-border: #81c784;
   --color-btn-primary-shadow: 0 0 transparent;
   --color-btn-primary-inset-shadow: 0 0 transparent;
-  --color-btn-primary-hover-bg: #7b97aa; /* --secondary */
-  --color-btn-primary-hover-border: rgb(240, 246, 252 / 10%); /* --dark */
-  --color-btn-primary-selected-bg: #7b97aa; /* --secondary */
+  --color-btn-primary-hover-bg: #a5d6a7;
+  --color-btn-primary-hover-border: #a5d6a7;
+  --color-btn-primary-selected-bg: #a5d6a7;
   --color-btn-primary-selected-shadow: 0 0 transparent;
   --color-btn-primary-disabled-text: rgba(33, 32, 32, 0.5);
   --color-btn-primary-disabled-bg: rgb(35 134 54 / 60%);
@@ -60,20 +63,20 @@ main {
   --color-segmented-control-bg: rgb(110 118 129 / 10%);
   --color-segmented-control-button-bg: #0d1117;
   --color-segmented-control-button-selected-border: #6e7681;
-  --color-fg-default: #ebebec; /* --dark */
-  --color-fg-muted: #d4d4d4; /* --darkgray */
-  --color-fg-subtle: #d4d4d4; /* --darkgray */
-  --color-canvas-default: #0d1117;
-  --color-canvas-overlay: #161b22;
-  --color-canvas-inset: #010409;
-  --color-canvas-subtle: #161b22;
-  --color-border-default: #30363d;
-  --color-border-muted: #21262d;
-  --color-neutral-muted: rgb(110 118 129 / 40%);
-  --color-accent-fg: #2f81f7;
-  --color-accent-emphasis: #1f6feb;
-  --color-accent-muted: rgb(56 139 253 / 40%);
-  --color-accent-subtle: rgb(56 139 253 / 10%);
+  --color-fg-default: #c8ccc8;
+  --color-fg-muted: #8e948e;
+  --color-fg-subtle: #8e948e;
+  --color-canvas-default: #141514;
+  --color-canvas-overlay: #141514;
+  --color-canvas-inset: #242624;
+  --color-canvas-subtle: #242624;
+  --color-border-default: #8e948e;
+  --color-border-muted: #343734;
+  --color-neutral-muted: rgb(140 150 141 / 20%);
+  --color-accent-fg: #81c784;
+  --color-accent-emphasis: #81c784;
+  --color-accent-muted: rgb(129 199 132 / 40%);
+  --color-accent-subtle: rgb(129 199 132 / 10%);
   --color-success-fg: #3fb950;
   --color-attention-fg: #d29922;
   --color-attention-muted: rgb(187 128 9 / 40%);
@@ -96,4 +99,20 @@ main .pagination-loader-container {
 
 main .gsc-loading-image {
   background-image: url("https://github.githubassets.com/images/mona-loading-dark.gif");
+}
+
+/* Square corners and the site's monospace face. The face loads only if the
+ * reader has Fira Code installed; otherwise the system's monospace stands in. */
+main,
+main input,
+main textarea,
+main button {
+  font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+main .gsc-comment-box,
+main .gsc-comment,
+main .btn,
+main .form-control {
+  border-radius: 0;
 }

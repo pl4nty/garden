@@ -1,0 +1,23 @@
+// Structure only. Colour and type are in quartz/styles/custom.scss.
+//
+// The caption sits on the soil line, to the right of the plant. On a narrow
+// screen it wraps below.
+.note-plant {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 2ch;
+  margin: 0;
+
+  pre {
+    flex: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+  }
+
+  figcaption {
+    flex: 1 1 30ch;
+  }
+}

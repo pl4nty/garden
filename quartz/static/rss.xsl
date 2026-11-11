@@ -10,12 +10,12 @@
         <title>Atom - <xsl:value-of select="/atom:feed/atom:title" /></title>
         <link rel="icon" href="/static/icon.png" />
         <style type="text/css">
-          :root{--light:#fff;--lightgray:#f8f8f8;--gray:#b0b0b0;--darkgray:#666;--dark:#303030;--secondary:#2e7d32;--tertiary:#388e3c;--highlight:#2e7d3226;--bodyFont:"Titillium Web",system-ui,sans-serif;--headerFont:"Raleway",system-ui,sans-serif;--codeFont:"Fira Code",monospace}
-          @media(prefers-color-scheme:dark){:root{--light:#101010;--lightgray:#181818;--gray:#7a8882;--darkgray:darkgray;--dark:#e0f0e9;--secondary:#66bb6a;--tertiary:#81c784}}
-          body{max-width:768px;margin:0 auto;background:var(--light);color:var(--darkgray);font-family:var(--bodyFont)}
-          h1,h2,h3{font-family:var(--headerFont);color:var(--dark)}
-          a{color:var(--secondary);text-decoration:none}
-          code{font-family:var(--codeFont);background:var(--lightgray);border-radius:4px;padding:.1em .3em}
+          :root{--light:#fafaf8;--lightgray:#eceee9;--gray:#646a64;--darkgray:#1e211e;--dark:#0b0d0b;--secondary:#2e7d32;--tertiary:#1b5e20;--bodyFont:"Fira Code",ui-monospace,Menlo,Consolas,monospace;--headerFont:var(--bodyFont);--codeFont:var(--bodyFont)}
+          @media(prefers-color-scheme:dark){:root{--light:#141514;--lightgray:#242624;--gray:#8e948e;--darkgray:#c8ccc8;--dark:#f0f2ef;--secondary:#81c784;--tertiary:#a5d6a7}}
+          body{max-width:48rem;margin:0 auto;background:var(--light);color:var(--darkgray);font-family:var(--bodyFont);line-height:1.625}
+          h1,h2,h3{font-family:var(--headerFont);font-size:1em;color:var(--dark)}
+          a{color:var(--secondary);text-underline-offset:.22em}
+          code{font-family:var(--codeFont);background:var(--lightgray)}
           section{margin:30px 15px}hgroup{margin-bottom:2rem}
         </style>
       </head>

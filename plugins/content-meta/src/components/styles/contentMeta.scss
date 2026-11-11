@@ -1,14 +1,7 @@
+// Structure only. Colour and type are in quartz/styles/custom.scss.
 .content-meta {
-  margin-top: 0;
-  color: var(--darkgray);
-
-  &[show-comma="true"] {
-    > *:not(:last-child) {
-      margin-right: 8px;
-
-      &::after {
-        content: ",";
-      }
-    }
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2ch;
+  margin: 0;
 }

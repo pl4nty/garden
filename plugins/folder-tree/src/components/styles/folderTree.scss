@@ -1,0 +1,61 @@
+// Structure only. Colour and type are in quartz/styles/custom.scss.
+//
+// `tree` output from a nested list. Each item is indented four columns and
+// draws its own connector in them:
+//
+//   ├── a          ::before of an item is "├── " ("└── " on the last one)
+//   │   └── b      ::after is a column of "│" down the item's left edge, for
+//   └── c          the lines below its first; the last item has none
+//
+// The column is one long string of "│" on lines of its own height, clipped to
+// the item, so the rule is unbroken whatever the line height of the text.
+$bar: "│\a";
+$bars: "";
+@for $i from 1 through 160 {
+  $bars: $bars + $bar;
+}
+
+.tree {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+    margin: 0;
+    padding-left: 4ch;
+
+    &::before,
+    &::after {
+      position: absolute;
+      left: 0;
+      white-space: pre;
+      pointer-events: none;
+    }
+
+    &::before {
+      content: "├── ";
+      top: 0;
+    }
+
+    &:last-child::before {
+      content: "└── ";
+    }
+
+    &::after {
+      content: $bars;
+      top: 0;
+      bottom: 0;
+      overflow: hidden;
+      line-height: 1.2;
+    }
+
+    // above the corner of the last item: only the stub that reaches it
+    &:last-child::after {
+      bottom: auto;
+      height: calc(var(--row, 1.6em) / 2 - 0.3em);
+    }
+  }
+}

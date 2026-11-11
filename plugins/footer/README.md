@@ -1,48 +1,27 @@
-# @quartz-community/footer
+# @tplant/footer
 
-Renders a footer with a "Created with Quartz" message and configurable links.
+The foot of every page: the footer line of a manual page, then the site's links
+out.
 
-## Installation
-
-```bash
-npx quartz plugin add github:quartz-community/footer
+```
+tplant.com.au              2023-01-31              posts/tenant-restrictions(7)
+github  linkedin  homelab  rss  license      cultivated with Obsidian and Quartz
 ```
 
-## Usage
+The line gives the site, the date the page was last modified, and the page's
+slug with a manual section number. `sections` maps a slug prefix to a section,
+and the longest prefix that matches wins, so `whoami` can be `whoami(1)` and
+the notes on hardware `(4)`.
 
-```yaml title="quartz.config.yaml"
-plugins:
-  - source: github:quartz-community/footer
-    enabled: true
-    options:
-      links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
-```
+## Options
 
-For advanced use cases, you can override in TypeScript:
+| Option           | Type                     | Default | Description                                   |
+| ---------------- | ------------------------ | ------- | --------------------------------------------- |
+| `site`           | `string`                 | baseUrl | The left field of the line.                   |
+| `sections`       | `Record<string, number>` | `{}`    | Slug prefix to manual section.                |
+| `defaultSection` | `number`                 | `7`     | The section of a page that no prefix matches. |
+| `links`          | `Record<string, string>` | `{}`    | Label to URL, listed under the line.          |
 
-```ts title="quartz.ts (override)"
-import * as ExternalPlugin from "./.quartz/plugins";
+## Build
 
-ExternalPlugin.Footer({
-  links: {
-    GitHub: "https://github.com/jackyzha0/quartz",
-    "Discord Community": "https://discord.gg/cRFFHYye7t",
-  },
-});
-```
-
-## Configuration
-
-| Option  | Type                     | Default | Description                                                  |
-| ------- | ------------------------ | ------- | ------------------------------------------------------------ |
-| `links` | `Record<string, string>` | `{}`    | A map of link labels to their URLs to display in the footer. |
-
-## Documentation
-
-See the [Quartz documentation](https://quartz.jzhao.xyz/plugins/Footer) for more information.
-
-## License
-
-MIT
+`node plugins/build.mjs footer` from the repository root. `dist/` is committed.

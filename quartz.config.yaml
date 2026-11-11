@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,30 +16,40 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
+      header: Fira Code
+      body: Fira Code
       code: Fira Code
+    # Plain text on a plain page: two greys per mode, and the green this site
+    # has always used as the only accent (links, prompts, markers).
+    #   light      the page
+    #   lightgray  rules and borders
+    #   gray       quiet text: dates, sizes, captions, markers (5.5:1 on light)
+    #   darkgray   body text
+    #   dark       headings and bold
+    #   secondary  the brand green: links, the "$" of a prompt
+    #   tertiary   a link under the pointer
+    # quartz/styles/custom.scss adds --tint (inline code, the selected row).
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
+        light: "#FAFAF8"
+        lightgray: "#D3D6D0"
+        gray: "#646A64"
+        darkgray: "#1E211E"
+        dark: "#0B0D0B"
         secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        tertiary: "#1B5E20"
+        highlight: "rgba(30, 33, 30, 0.07)"
+        textHighlight: "rgba(46, 125, 50, 0.25)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#141514"
+        lightgray: "#343734"
+        gray: "#8E948E"
+        darkgray: "#C8CCC8"
+        dark: "#F0F2EF"
+        secondary: "#81C784"
+        tertiary: "#A5D6A7"
+        highlight: "rgba(200, 204, 200, 0.09)"
+        textHighlight: "rgba(129, 199, 132, 0.28)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -67,13 +77,17 @@ plugins:
   - source: github:quartz-community/github-flavored-markdown
     enabled: true
     order: 40
+  # The table of contents is a folded block under the page header: there are
+  # no side rails in an 80-column page.
   - source: github:quartz-community/table-of-contents
     enabled: true
+    options:
+      collapseByDefault: true
+      minEntries: 3
     order: 50
     layout:
-      position: right
-      priority: 10
-      display: desktop-only
+      position: beforeBody
+      priority: 40
   - source: github:quartz-community/crawl-links
     enabled: true
     options:
@@ -109,8 +123,8 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
+      header: Fira Code
+      body: Fira Code
       code: Fira Code
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
@@ -143,8 +157,10 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # The file tree is replaced by the nav paths (./plugins/nav) and the `tree`
+  # of notes on each folder page (./plugins/folder-tree).
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -154,8 +170,8 @@ plugins:
   - source: ./plugins/graph
     enabled: true
     layout:
-      position: right
-      priority: 30
+      position: afterBody
+      priority: 8
       condition: not-index
   - source: github:quartz-community/search
     enabled: true
@@ -166,8 +182,9 @@ plugins:
   - source: github:quartz-community/backlinks
     enabled: true
     layout:
-      position: right
-      priority: 20
+      position: afterBody
+      priority: 7
+      condition: not-index
   - source: github:quartz-community/article-title
     enabled: true
     layout:
@@ -185,25 +202,46 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # The `left` slot is the head of the page, not a sidebar: the header line of
+  # a manual page and the nav paths (./plugins/nav), then the toolbar group
+  # (search, theme).
   - source: github:quartz-community/page-title
+    enabled: false
+  - source: ./plugins/nav
     enabled: true
+    options:
+      name: TPLANT
+      section: 7
+      links:
+        ~/posts: posts/
+        ~/notes: notes/
+        ~/ideas: ideas
+        ~/now: now
+        ~/whoami: whoami
     layout:
       position: left
-      priority: 10
+      priority: 12
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
       position: left
       priority: 30
       group: toolbar
+  # disabled: the page is one column of text already
   - source: github:quartz-community/reader-mode
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 35
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      # the folders above a page read as a path: ~/notes/microsoft/intune
+      rootName: "~"
+      spacerSymbol: /
+      showCurrentPage: false
+      resolveFrontmatterTitle: false
     layout:
       position: beforeBody
       priority: 5
@@ -222,54 +260,68 @@ plugins:
       position: afterBody
       priority: 10
       condition: not-index
+  # The footer line of a manual page: site, the date the page was last
+  # modified, and its slug with a manual section, e.g. whoami(1). `sections`
+  # maps a slug prefix to a section number; the longest prefix wins.
   - source: ./plugins/footer
     enabled: true
     options:
+      site: tplant.com.au
+      defaultSection: 7
+      sections:
+        whoami: 1
+        notes: 5
+        notes/hardware: 4
+        notes/cloud: 8
+        notes/microsoft: 8
+        ideas: 6
       links:
-        License: /License
-  - source: ./plugins/socials
+        github: https://github.com/pl4nty
+        linkedin: https://linkedin.com/in/tomplant
+        homelab: https://lab.tplant.com.au/
+        rss: /index.xml
+        license: /License
+  # Homepage, as a shell session: the command that prints the note above it,
+  # then `ls -lt` listings of the posts and of the notes tended most recently.
+  # Index page only.
+  - source: ./plugins/home
     enabled: true
     options:
-      links:
-        GitHub: https://github.com/pl4nty
-        LinkedIn: https://linkedin.com/in/tomplant
-        Homelab: https://lab.tplant.com.au/
+      section: head
     layout:
-      position: left
-      priority: 15
-      group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
+      position: beforeBody
+      priority: 1
+  - source: ./plugins/home
     enabled: true
     options:
-      title: ""
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
-    layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
-    enabled: true
-    options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: listing
+      postsFolder: posts
+      notesFolder: notes
+      recentCount: 8
     layout:
       position: afterBody
       priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+  # A folder's own page lists what is below it: `tree` output for the notes,
+  # `ls -lt` output for the posts.
+  - source: ./plugins/folder-tree
     enabled: true
+    options:
+      trees:
+        - notes
+      lists:
+        - posts
+    layout:
+      position: afterBody
+      priority: 1
+  # The colophon: an ASCII plant at the end of each note, grown from its length
+  # and its links, with the date it was last tended.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +329,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -334,23 +386,30 @@ layout:
       direction: row
       gap: 0.5rem
   byPageType:
+    # the default frame, so that the 404 page keeps the head and the nav
     "404":
+      template: default
+      exclude:
+        - graph
+        - comments
+        - backlinks
       positions:
         beforeBody: []
-        left: []
         right: []
     content: {}
     folder:
       exclude:
-        - reader-mode
         - tag-list
-      positions:
-        right: []
+        - comments
+        - backlinks
+        - graph
+        - table-of-contents
     tag:
       exclude:
-        - reader-mode
         - tag-list
-      positions:
-        right: []
+        - comments
+        - backlinks
+        - graph
+        - table-of-contents
     canvas: {}
     bases: {}
