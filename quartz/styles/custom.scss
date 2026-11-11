@@ -1067,6 +1067,18 @@ body[data-slug="index"] {
   background: transparent;
 }
 
+// Page-to-page cross-fade, started by the SPA router. The sidebar is its own
+// group: it is the same on both pages, so it holds still while the text fades.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.16s;
+  animation-timing-function: ease-out;
+}
+
+.page > #quartz-body > .sidebar.left {
+  view-transition-name: sidebar;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

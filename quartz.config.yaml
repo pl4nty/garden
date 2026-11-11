@@ -15,6 +15,9 @@ configuration:
   theme:
     fontOrigin: local
     cdnCaching: true
+    # the face that sets every page: Vollkorn roman, Latin subset
+    preload:
+      - static/fonts/vollkorn-v5.001-latin-normal.woff2
     typography:
       header: Vollkorn
       body: Vollkorn

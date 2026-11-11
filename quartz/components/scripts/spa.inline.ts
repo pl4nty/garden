@@ -108,16 +108,32 @@ async function _navigate(url: URL, isBack: boolean = false) {
   html.body.appendChild(announcer)
 
   document.querySelector(".navigation-progress")?.remove()
-  micromorph(document.body, html.body)
 
-  // scroll into place and add history
-  if (!isBack) {
-    if (url.hash) {
-      const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
-      el?.scrollIntoView()
-    } else {
-      window.scrollTo({ top: 0 })
+  // micromorph patches the whole tree before it returns its promise, so the
+  // swap is synchronous and the new page is in place when a transition
+  // captures it
+  const swap = () => {
+    micromorph(document.body, html.body)
+
+    // scroll into place
+    if (!isBack) {
+      if (url.hash) {
+        const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
+        el?.scrollIntoView()
+      } else {
+        window.scrollTo({ top: 0 })
+      }
     }
+  }
+
+  // Cross-fade between pages where the browser can (the animation itself is
+  // in custom.scss). Everything after this point waits for the new DOM, as it
+  // did before.
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  if (document.startViewTransition && !reduceMotion) {
+    await document.startViewTransition(swap).updateCallbackDone
+  } else {
+    swap()
   }
 
   // now, patch head, re-executing scripts
@@ -126,7 +142,7 @@ async function _navigate(url: URL, isBack: boolean = false) {
   const elementsToAdd = html.head.querySelectorAll(":not([data-persist])")
   elementsToAdd.forEach((el) => document.head.appendChild(el))
 
-  // delay setting the url until now
+  // add history: delay setting the url until now
   // at this point everything is loaded so changing the url should resolve to the correct addresses
   if (!isBack) {
     history.pushState({}, "", url)

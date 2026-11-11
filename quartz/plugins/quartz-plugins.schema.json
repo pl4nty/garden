@@ -53,6 +53,11 @@
               "type": "boolean",
               "description": "Enable CDN caching"
             },
+            "preload": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Font files to preload, as paths from the site root"
+            },
             "typography": {
               "type": "object",
               "additionalProperties": false,
