@@ -24,7 +24,7 @@ Some words of introduction. Paragraphs stay as they are.
   `YYYY-MM` or `YYYY-MM-DD`.
 - A link in the item makes the box a link.
 - A `##` heading starts a chapter at the date of its first event. Each chapter
-  has a colour, from a cycle of five.
+  has its own strength of the ink colour, from a cycle of five.
 - The component hides the note's headings and lists, and shows them again as a
   list below the grid, so the page reads the same without CSS.
 

@@ -1,7 +1,7 @@
 {
   "name": "@tplant/home",
   "version": "0.1.0",
-  "description": "Homepage hero and curated sections: featured writing, recently tended notes, and topics",
+  "description": "Homepage: a row of plants, one for each recently tended note, and contents lists of posts and notes",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,13 +47,10 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "section": "sections",
-      "eyebrow": "",
-      "heading": "",
-      "links": {},
-      "featured": [],
+      "section": "contents",
       "postsFolder": "posts",
       "notesFolder": "notes",
+      "plants": 22,
       "recentCount": 6
     },
     "components": {
@@ -67,27 +64,18 @@
       "section": {
         "type": "string",
         "enum": [
-          "hero",
-          "sections"
+          "bed",
+          "contents"
         ]
-      },
-      "eyebrow": {
-        "type": "string"
-      },
-      "heading": {
-        "type": "string"
-      },
-      "links": {
-        "type": "object"
-      },
-      "featured": {
-        "type": "array"
       },
       "postsFolder": {
         "type": "string"
       },
       "notesFolder": {
         "type": "string"
+      },
+      "plants": {
+        "type": "number"
       },
       "recentCount": {
         "type": "number"
