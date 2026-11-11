@@ -169,8 +169,14 @@ strong {
 
 // A page that is an index, not prose, takes the margin's width too.
 @media all and ($desktop) {
-  body:has(.folder-tree-groups:not(.single)) .page > #quartz-body > .center {
+  body:has(.folder-tree-groups:not(.single)) .page > #quartz-body > .center,
+  body:has(.weeks) .page > #quartz-body > .center {
     grid-column: 2 / 4;
+  }
+
+  // the weeks grid takes the margin's width, so the margin's blocks are not shown
+  body:has(.weeks) .page > #quartz-body > .sidebar.right {
+    display: none;
   }
 }
 
@@ -731,6 +737,7 @@ td {
 // The frame's rule between the text and what follows it. The colophon's ground
 // line, an index, and the homepage's contents each replace it.
 .center:has(.note-plant) > hr,
+.center:has(.weeks) > hr,
 .center:has(.page-listing) > hr,
 body[data-slug="index"] .center > hr {
   display: none;

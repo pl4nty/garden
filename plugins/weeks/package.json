@@ -1,0 +1,73 @@
+{
+  "name": "@tplant/weeks",
+  "version": "0.1.0",
+  "description": "A life-in-weeks page: one box for each week, with events and eras read from a list in the note",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs weeks"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "weeks",
+    "displayName": "Weeks",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "slug": "weeks",
+      "born": "",
+      "postsFolder": "posts"
+    },
+    "components": {
+      "Weeks": {
+        "displayName": "Weeks",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 2
+      }
+    },
+    "optionSchema": {
+      "slug": {
+        "type": "string"
+      },
+      "born": {
+        "type": "string"
+      },
+      "postsFolder": {
+        "type": "string"
+      }
+    }
+  }
+}

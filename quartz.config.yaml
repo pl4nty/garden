@@ -308,6 +308,18 @@ plugins:
     layout:
       position: afterBody
       priority: 3
+  # The life-in-weeks page. It reads its events and chapters from the list in
+  # content/Weeks.md and adds each post at its own date. Set `born` to start
+  # the grid at a birth date and show an age on each birthday week.
+  - source: ./plugins/weeks
+    enabled: true
+    options:
+      slug: weeks
+      born: ""
+      postsFolder: posts
+    layout:
+      position: afterBody
+      priority: 2
   - source: ./plugins/explorer-tweaks
     enabled: false
     layout:
