@@ -21,7 +21,8 @@ configuration:
       code: Fira Code
     # Green ink on greenbar paper: the green this site has always used, as the
     # colour of the text itself and not as an accent on grey. There is no second
-    # hue. Dark mode is the same ink reversed out of a forest green, not black.
+    # hue. Dark mode is a near-black page with pale ink; green stays in the site
+    # title, the rules under links and the stripes.
     #   light      the paper
     #   lightgray  rules and borders
     #   gray       the lightest text: dates and captions (5.4:1 on light)
@@ -41,15 +42,15 @@ configuration:
         highlight: "rgba(46, 125, 50, 0.12)"
         textHighlight: "rgba(46, 125, 50, 0.22)"
       darkMode:
-        light: "#0F2A1D"
-        lightgray: "#2A4A37"
-        gray: "#8FAE9B"
-        darkgray: "#CFE3D6"
-        dark: "#F1FAF4"
+        light: "#131413"
+        lightgray: "#2F342F"
+        gray: "#8C968D"
+        darkgray: "#CDD5CE"
+        dark: "#EEF2EE"
         secondary: "#81C784"
         tertiary: "#A5D6A7"
-        highlight: "rgba(129, 199, 132, 0.14)"
-        textHighlight: "rgba(129, 199, 132, 0.28)"
+        highlight: "rgba(129, 199, 132, 0.12)"
+        textHighlight: "rgba(129, 199, 132, 0.25)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
