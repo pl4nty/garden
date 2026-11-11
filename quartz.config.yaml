@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,30 +16,41 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
+      header: Vollkorn
+      body: Vollkorn
       code: Fira Code
+    # Green ink on greenbar paper: the green this site has always used, as the
+    # colour of the text itself and not as an accent on grey. There is no second
+    # hue. Dark mode is a near-black page with pale ink; green stays in the site
+    # title, the rules under links and the stripes.
+    #   light      the paper
+    #   lightgray  rules and borders
+    #   gray       the lightest text: dates and captions (5.4:1 on light)
+    #   darkgray   body text
+    #   dark       headings, links, and the plants
+    #   secondary  the brand green: the site title and hover
+    # quartz/styles/custom.scss adds --bar (the greenbar stripe) and --underline.
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
+        light: "#F5F9F3"
+        lightgray: "#CFE0CC"
+        gray: "#566A5D"
+        darkgray: "#2B4233"
+        dark: "#12351F"
         secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        tertiary: "#1B5E20"
+        highlight: "rgba(46, 125, 50, 0.12)"
+        textHighlight: "rgba(46, 125, 50, 0.22)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#131413"
+        lightgray: "#2F342F"
+        gray: "#8C968D"
+        darkgray: "#CDD5CE"
+        dark: "#EEF2EE"
+        secondary: "#81C784"
+        tertiary: "#A5D6A7"
+        highlight: "rgba(129, 199, 132, 0.12)"
+        textHighlight: "rgba(129, 199, 132, 0.25)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -100,6 +111,10 @@ plugins:
   - source: github:quartz-community/hard-line-breaks
     enabled: true
     order: 90
+  # acronyms in note bodies are set in small caps
+  - source: ./plugins/small-caps
+    enabled: true
+    order: 95
   - source: github:quartz-community/ox-hugo
     enabled: false
     order: 91
@@ -109,8 +124,8 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
+      header: Vollkorn
+      body: Vollkorn
       code: Fira Code
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
@@ -143,8 +158,10 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # The file tree is replaced by the sidebar links (./plugins/nav) and the
+  # index of notes on each folder page (./plugins/folder-tree).
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -185,11 +202,25 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # Left sidebar, top to bottom: the site title, the nav, then the toolbar
+  # group (socials, search, theme, reader mode) at the foot.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
       position: left
       priority: 10
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      links:
+        Posts: posts/
+        Notes: notes/
+        Ideas: ideas
+        Now: now
+        Whoami: whoami
+    layout:
+      position: left
+      priority: 12
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
@@ -204,6 +235,9 @@ plugins:
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      spacerSymbol: /
+      showCurrentPage: false
     layout:
       position: beforeBody
       priority: 5
@@ -238,38 +272,44 @@ plugins:
       position: left
       priority: 15
       group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
+  # Homepage: a row of plants above the note, one for each of the most
+  # recently tended notes, and contents lists below it. Index page only.
+  - source: ./plugins/home
     enabled: true
     options:
-      title: ""
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: bed
+      plants: 22
     layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
+      position: beforeBody
+      priority: 1
+  - source: ./plugins/home
     enabled: true
     options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: contents
+      postsFolder: posts
+      notesFolder: notes
+      recentCount: 6
     layout:
       position: afterBody
       priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+  # Every note below a folder, grouped by subfolder, on the folder's own page.
+  - source: ./plugins/folder-tree
     enabled: true
+    options:
+      roots:
+        - notes
+    layout:
+      position: afterBody
+      priority: 1
+  # The colophon: a plant at the end of each note, drawn from its length and
+  # its links, with the date it was last tended.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +317,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -344,12 +384,14 @@ layout:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     tag:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     canvas: {}

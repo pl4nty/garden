@@ -1,0 +1,31 @@
+.site-nav {
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    color: var(--gray);
+    background-color: transparent;
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    &:hover,
+    &.active {
+      color: var(--dark);
+    }
+  }
+
+  // the title of the page that is open, under its section
+  .here {
+    display: block;
+    margin: 0.1rem 0 0.3rem 1rem;
+    font-size: 0.9em;
+    line-height: 1.35;
+    color: var(--dark);
+  }
+}

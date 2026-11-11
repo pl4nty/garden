@@ -1,0 +1,67 @@
+{
+  "name": "@tplant/folder-tree",
+  "version": "0.1.0",
+  "description": "Renders every note below a folder page, grouped by subfolder",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs folder-tree"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "folder-tree",
+    "displayName": "Folder Tree",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "roots": [
+        "notes"
+      ]
+    },
+    "components": {
+      "FolderTree": {
+        "displayName": "Folder Tree",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 1
+      }
+    },
+    "optionSchema": {
+      "roots": {
+        "type": "array"
+      }
+    }
+  }
+}
