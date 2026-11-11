@@ -1,0 +1,48 @@
+// The light switch: a small icon and one word. The icon shows the mode that
+// light.inline.ts writes to `data-mode`.
+.light-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .light-day,
+  .light-night {
+    display: none;
+  }
+
+  &[data-mode="light"] {
+    .light-auto {
+      display: none;
+    }
+
+    .light-day {
+      display: inline;
+    }
+  }
+
+  &[data-mode="dark"] {
+    .light-auto {
+      display: none;
+    }
+
+    .light-night {
+      display: inline;
+    }
+  }
+}

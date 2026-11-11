@@ -1,0 +1,75 @@
+// Every note below a folder, one group for each subfolder: the folder's name
+// over a thin rule, then a row for each note with the date it was tended.
+.folder-tree-count {
+  margin: 0 0 2.5rem;
+  color: var(--gray);
+}
+
+.folder-tree-group {
+  padding-bottom: 2.25rem;
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 0.45rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--lightgray);
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--dark);
+
+    a {
+      color: inherit;
+      background-color: transparent;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+      }
+    }
+  }
+
+  .folder-tree-n {
+    font-weight: 400;
+    color: var(--gray);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  li a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.2rem 0;
+    line-height: 1.5;
+    color: var(--darkgray);
+    background-color: transparent;
+    text-decoration: none;
+
+    &:hover span {
+      color: var(--dark);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  time {
+    flex-shrink: 0;
+    color: var(--gray);
+  }
+}

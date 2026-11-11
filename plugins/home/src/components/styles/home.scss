@@ -1,0 +1,552 @@
+// ----------------------------------------------------------------------------
+// The scene: the garden that fills the first screen of the homepage.
+//
+// Back to front: the sky with the glow of the sun, the stars, the ground with
+// a pool of light, the plants (each with its cast shadow), fireflies, film
+// grain, and the foot, where the ground dissolves into the page. Every colour
+// is a variable that plugins/light sets for the time of day.
+// ----------------------------------------------------------------------------
+.scene {
+  position: relative;
+  isolation: isolate;
+  height: 100vh;
+  height: 100svh;
+  min-height: 30rem;
+  overflow: hidden;
+  background: var(--l-sky2);
+  // The length of one drawing unit: the scene is composed at 1440 by 900 and
+  // every plant scales with the smaller side of the window.
+  --u: min(calc(100vw / 1440), calc(100svh / 900));
+}
+
+.scene-sky,
+.scene-ground,
+.scene-plants,
+.scene-fireflies,
+.scene-grain,
+.scene-foot {
+  position: absolute;
+  inset: 0;
+}
+
+.scene-sky {
+  background:
+    radial-gradient(
+      ellipse 50% 46% at var(--l-sun-x) var(--l-sun-y),
+      var(--l-sun),
+      transparent 72%
+    ),
+    linear-gradient(var(--l-sky1), var(--l-sky2) 30%);
+}
+
+.scene-stars {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 21%;
+  fill: #fff;
+  opacity: var(--l-stars);
+}
+
+// A far hedge marks the horizon: a low, uneven band of the ground's colour
+// with a little of the deepest green in it.
+.scene-far {
+  position: absolute;
+  top: 21.5%;
+  left: 0;
+  width: 100%;
+  height: 7%;
+  fill: var(--l-far);
+  opacity: 0.55;
+  filter: blur(1.5px);
+  mask-image: linear-gradient(#000 45%, transparent 95%);
+  -webkit-mask-image: linear-gradient(#000 45%, transparent 95%);
+}
+
+// The horizon is soft: the ground fades in over its first few percent, as if
+// through haze. Light lies on it in pools, the largest under the sun.
+.scene-ground {
+  top: 26%;
+  background:
+    radial-gradient(ellipse 36% 30% at var(--l-pool-x) 44%, var(--l-pool), transparent 72%),
+    radial-gradient(
+      ellipse 20% 13% at calc(var(--l-pool-x) + 27%) 17%,
+      var(--l-pool),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 24% 17% at calc(var(--l-pool-x) - 31%) 74%,
+      var(--l-pool),
+      transparent 72%
+    ),
+    linear-gradient(var(--l-ground1), var(--l-ground2) 55%);
+  mask-image: linear-gradient(transparent, #000 8%);
+  -webkit-mask-image: linear-gradient(transparent, #000 8%);
+}
+
+// ----------------------------------------------------------------------------
+// Plants. A plant is a link at a point on the ground (--x and --y in percent
+// of the scene); its drawing stands on that point. Wide screens use the first
+// planting (--x1 ...), upright phones the second (--x2 ...).
+// ----------------------------------------------------------------------------
+.plant,
+.bed-label {
+  --x: var(--x1);
+  --y: var(--y1);
+  --s: var(--s1);
+  --d: var(--d1);
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  // nearer plants stand in front
+  z-index: calc(var(--y) * 10);
+}
+
+.plant {
+  width: 0;
+  height: 0;
+
+  &:hover,
+  &:focus-visible {
+    z-index: 2000;
+    outline: none;
+  }
+}
+
+// (.plant > .plant-art, to outrank .plant-box, which is positioned in flow)
+.plant > .plant-art {
+  position: absolute;
+  left: calc(var(--w) * var(--s) * var(--u) / -2);
+  bottom: calc(-8 * var(--s) * var(--u));
+  // far plants are paler, as through haze
+  opacity: calc(0.5 + 0.5 * min(1, var(--d) * 1.6));
+}
+
+.plant:hover > .plant-art,
+.plant:focus-visible > .plant-art {
+  opacity: 1;
+}
+
+// the focus ring goes around the drawing: the link itself has no size
+.plant:focus-visible > .plant-art {
+  outline: 1px solid var(--l-hud);
+  outline-offset: 3px;
+}
+
+// The label of a plant: its note's title and when the note was tended.
+.plant-tag {
+  position: absolute;
+  left: 0;
+  bottom: calc((var(--h) - 6) * var(--s) * var(--u));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem 0.6rem 0.35rem;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--gray);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  b {
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  .plant:hover > &,
+  .plant:focus-visible > & {
+    opacity: 1;
+  }
+
+  // near an edge of the scene the label grows inward
+  .plant-left > & {
+    transform: translateX(-1.5rem);
+  }
+
+  .plant-right > & {
+    transform: translateX(calc(-100% + 1.5rem));
+  }
+}
+
+// The name of a bed, on the ground in front of it. The names stay out of the
+// picture until the pointer or the keyboard is in the garden; a touch screen
+// has neither, so there they always show.
+.bed-label {
+  transform: translate(-50%, 0.2rem);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--l-hud);
+  text-shadow: 0 0 0.5rem var(--l-halo);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  .scene-plants:hover > &,
+  .scene-plants:focus-within > & {
+    opacity: 0.8;
+  }
+
+  @media (hover: none) {
+    opacity: 0.6;
+  }
+
+  .scene-plants > &:hover,
+  .scene-plants > &:focus-visible {
+    z-index: 2000;
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+}
+
+.scene-skip {
+  position: absolute;
+  top: -4rem;
+  left: 2rem;
+  z-index: 3000;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+
+  &:focus {
+    top: 4.5rem;
+  }
+}
+
+// A slow sway for one plant in five, and a rustle for the plant under the
+// pointer. The base stays put: the drawing skews about it.
+@media (prefers-reduced-motion: no-preference) {
+  .plant .plant-body {
+    transform-origin: 50% calc(100% - 8 * var(--s) * var(--u));
+  }
+
+  .plant:nth-of-type(5n + 2) .plant-body {
+    animation: scene-sway 9s ease-in-out infinite alternate;
+  }
+
+  .plant:nth-of-type(10n + 7) .plant-body {
+    animation-duration: 13s;
+    animation-delay: -5s;
+  }
+
+  .plant:hover .plant-body {
+    animation: scene-sway 1.6s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes scene-sway {
+  from {
+    transform: skewX(-1.3deg);
+  }
+
+  to {
+    transform: skewX(1.6deg);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Night: fireflies over the beds. Their strength follows the stars.
+// ----------------------------------------------------------------------------
+.scene-fireflies {
+  z-index: 1200;
+  opacity: var(--l-stars);
+  pointer-events: none;
+
+  i {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #f3eaa5;
+    box-shadow: 0 0 7px 2px rgb(243 234 165 / 45%);
+
+    &:nth-child(1) {
+      left: 24%;
+      top: 55%;
+    }
+
+    &:nth-child(2) {
+      left: 38%;
+      top: 71%;
+    }
+
+    &:nth-child(3) {
+      left: 63%;
+      top: 62%;
+    }
+
+    &:nth-child(4) {
+      left: 79%;
+      top: 50%;
+    }
+
+    &:nth-child(5) {
+      left: 86%;
+      top: 70%;
+    }
+
+    &:nth-child(6) {
+      left: 12%;
+      top: 68%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene-fireflies i {
+    animation:
+      scene-drift 19s ease-in-out infinite alternate,
+      scene-glow 5s ease-in-out infinite alternate;
+
+    &:nth-child(2n) {
+      animation-duration: 27s, 7s;
+      animation-delay:
+        -8s,
+        -3s;
+    }
+
+    &:nth-child(3n) {
+      animation-duration: 23s, 6s;
+      animation-delay:
+        -15s,
+        -1s;
+      animation-direction: alternate-reverse, alternate;
+    }
+  }
+}
+
+@keyframes scene-drift {
+  from {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(2.2rem, -1.4rem);
+  }
+
+  to {
+    transform: translate(-1.2rem, -2.6rem);
+  }
+}
+
+@keyframes scene-glow {
+  from {
+    opacity: 0.15;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Grain, and the foot of the scene
+// ----------------------------------------------------------------------------
+// Film grain: a small tile of noise, drawn once by the browser and repeated.
+.scene-grain {
+  z-index: 1300;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.6 .6 .6 0 -.4 .6 .6 .6 0 -.4 .6 .6 .6 0 -.4 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+// The corners darken a little, and the near ground dissolves into the page.
+// This lies under the plants: the nearest of them stand at the page's edge.
+.scene-foot {
+  z-index: 1;
+  background:
+    linear-gradient(transparent 85%, var(--page) 99%),
+    radial-gradient(ellipse 85% 75% at 50% 45%, transparent 60%, var(--l-shade));
+  pointer-events: none;
+}
+
+// The labels in the lower corners sit where the ground has become the page.
+.scene-count,
+.scene-time {
+  position: absolute;
+  bottom: 1.5rem;
+  z-index: 1500;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--gray);
+}
+
+.scene-count {
+  left: 2rem;
+}
+
+.scene-time {
+  right: 2rem;
+  text-align: right;
+}
+
+// With scripting off there is no clock to read.
+@media (scripting: none) {
+  .scene-time {
+    display: none;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// An upright phone: the second planting, with fewer and larger plants.
+// ----------------------------------------------------------------------------
+@media (max-width: 800px) and (orientation: portrait) {
+  .scene {
+    --u: calc(min(100vw / 390, 100svh / 844) * 0.92);
+  }
+
+  .plant,
+  .bed-label {
+    --x: var(--x2);
+    --y: var(--y2);
+    --s: var(--s2);
+    --d: var(--d2);
+  }
+
+  .plant-wide {
+    display: none;
+  }
+
+  // the two labels stack in the lower left corner
+  .scene-count,
+  .scene-time {
+    left: 1.15rem;
+    right: 1.15rem;
+    font-size: 0.72rem;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .scene-count {
+    bottom: 1rem;
+  }
+
+  .scene-time {
+    bottom: 2.2rem;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// The index below the scene: posts by year, notes by folder.
+// ----------------------------------------------------------------------------
+.home-index {
+  section {
+    margin-top: 3.5rem;
+  }
+
+  h2 {
+    margin: 0 0 0.55rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--lightgray);
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.5;
+
+    a {
+      color: var(--dark);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+      }
+    }
+  }
+
+  ol,
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li a {
+    color: var(--darkgray);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--dark);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  ol li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  time {
+    flex: none;
+    color: var(--gray);
+  }
+
+  // a folder's notes run on as one line of names
+  ul li {
+    display: inline;
+
+    &:not(:last-child)::after {
+      content: ", ";
+      color: var(--gray);
+    }
+  }
+}
+
+// One row: the year or the folder in a narrow column, its pages beside it.
+.home-row {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: 0.3rem 0;
+
+  h3 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: inherit;
+    color: var(--gray);
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--dark);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+      }
+    }
+  }
+
+  // a year needs less room than a folder's path
+  &.home-year {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    &:not(.home-year) {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0.45rem 0;
+    }
+  }
+}
+
+.home-legend {
+  margin: 3.5rem 0 0;
+  font-size: 0.857rem;
+  color: var(--gray);
+}

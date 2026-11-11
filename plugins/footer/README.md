@@ -1,48 +1,22 @@
-# @quartz-community/footer
+# @tplant/footer
 
-Renders a footer with a "Created with Quartz" message and configurable links.
+The foot of every page, in two lines: the site's pages (with RSS), which is
+the whole of the site's navigation apart from the way back at the head of a
+page (`../nav`), and a fainter line with the links out. A local fork of
+`@quartz-community/footer`.
 
-## Installation
+## Options
+
+| Option  | Type                     | Default | Description                                                               |
+| ------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
+| `pages` | `Record<string, string>` | `{}`    | Label to slug. `""` is the homepage; a slug that ends in `/` is a folder. |
+| `links` | `Record<string, string>` | `{}`    | Label to URL, for the second line.                                        |
+
+## Building
+
+`dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
+edit to `src/`:
 
 ```bash
-npx quartz plugin add github:quartz-community/footer
+node plugins/build.mjs footer
 ```
-
-## Usage
-
-```yaml title="quartz.config.yaml"
-plugins:
-  - source: github:quartz-community/footer
-    enabled: true
-    options:
-      links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
-```
-
-For advanced use cases, you can override in TypeScript:
-
-```ts title="quartz.ts (override)"
-import * as ExternalPlugin from "./.quartz/plugins";
-
-ExternalPlugin.Footer({
-  links: {
-    GitHub: "https://github.com/jackyzha0/quartz",
-    "Discord Community": "https://discord.gg/cRFFHYye7t",
-  },
-});
-```
-
-## Configuration
-
-| Option  | Type                     | Default | Description                                                  |
-| ------- | ------------------------ | ------- | ------------------------------------------------------------ |
-| `links` | `Record<string, string>` | `{}`    | A map of link labels to their URLs to display in the footer. |
-
-## Documentation
-
-See the [Quartz documentation](https://quartz.jzhao.xyz/plugins/Footer) for more information.
-
-## License
-
-MIT

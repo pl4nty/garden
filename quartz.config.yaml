@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,30 +16,42 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: Atkinson Hyperlegible Mono
+      body: Atkinson Hyperlegible Mono
+      code: Atkinson Hyperlegible Mono
+    # The page takes its colours from the garden scene on the homepage: light
+    # mode from the scene at midday, dark mode from the scene at night (the
+    # scene's own palettes are in plugins/light/src/palettes.ts, and `light`
+    # here must match PAGE there). Green is for links and plants only.
+    #   light      the page: the scene's haze by day, its sky by night
+    #   lightgray  rules and borders
+    #   gray       the quiet text: dates, captions, the way back
+    #   darkgray   body text
+    #   dark       headings and titles
+    #   secondary  links: the green this site has always used
+    #   tertiary   links under the pointer
+    #   highlight  the wash behind code
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
+        light: "#F2F3EA"
+        lightgray: "#D5D9C9"
+        gray: "#566158"
+        darkgray: "#27332B"
+        dark: "#17211A"
         secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        tertiary: "#1B5E20"
+        highlight: "rgba(86, 110, 80, 0.08)"
+        textHighlight: "rgba(223, 174, 54, 0.35)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#0C1219"
+        lightgray: "#26303B"
+        gray: "#8997A1"
+        darkgray: "#C7D0D1"
+        dark: "#E9EEEA"
+        secondary: "#81C784"
+        tertiary: "#A5D6A7"
+        highlight: "rgba(140, 170, 190, 0.1)"
+        textHighlight: "rgba(220, 205, 140, 0.28)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -67,13 +79,15 @@ plugins:
   - source: github:quartz-community/github-flavored-markdown
     enabled: true
     order: 40
+  # The table of contents is one line under the title, closed until asked for.
   - source: github:quartz-community/table-of-contents
     enabled: true
+    options:
+      collapseByDefault: true
     order: 50
     layout:
-      position: right
-      priority: 10
-      display: desktop-only
+      position: beforeBody
+      priority: 40
   - source: github:quartz-community/crawl-links
     enabled: true
     options:
@@ -109,9 +123,9 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: Atkinson Hyperlegible Mono
+      body: Atkinson Hyperlegible Mono
+      code: Atkinson Hyperlegible Mono
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
   - source: github:quartz-community/remove-draft
@@ -143,19 +157,23 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # No file tree: the homepage and ./plugins/folder-tree on /notes/ list
+  # every note.
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
       display: all
   # vendored from quartz-community/graph@46f0ba1: d3/PixiJS load lazily (see
-  # plugins/graph/src/components/scripts/graph.inline.ts)
+  # plugins/graph/src/components/scripts/graph.inline.ts). Backlinks and the
+  # graph share one quiet row after the note's plant.
   - source: ./plugins/graph
     enabled: true
     layout:
-      position: right
-      priority: 30
+      position: afterBody
+      priority: 7
+      group: links
       condition: not-index
   - source: github:quartz-community/search
     enabled: true
@@ -166,8 +184,10 @@ plugins:
   - source: github:quartz-community/backlinks
     enabled: true
     layout:
-      position: right
-      priority: 20
+      position: afterBody
+      priority: 6
+      group: links
+      condition: not-index
   - source: github:quartz-community/article-title
     enabled: true
     layout:
@@ -185,25 +205,48 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # The head of every page is one line (the left slot, laid out as a bar by
+  # quartz/styles/custom.scss): the way back on the left, or on the homepage
+  # the site's name; search and the light switch on the right.
   - source: github:quartz-community/page-title
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 10
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      descriptor: notes and posts by Tom Plant, hacker and maker in Melbourne
+    layout:
+      position: left
+      priority: 10
+  # ./plugins/light replaces the two-state theme toggle: it follows the
+  # visitor's clock unless they choose day or night.
   - source: github:quartz-community/darkmode
+    enabled: false
+    layout:
+      position: left
+      priority: 30
+      group: toolbar
+  - source: ./plugins/light
     enabled: true
     layout:
       position: left
       priority: 30
       group: toolbar
+  # every page is already the reading view
   - source: github:quartz-community/reader-mode
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 35
       group: toolbar
+  # the way back (./plugins/nav) stands in for breadcrumbs
   - source: github:quartz-community/breadcrumbs
-    enabled: true
+    enabled: false
+    options:
+      spacerSymbol: /
+      showCurrentPage: false
     layout:
       position: beforeBody
       priority: 5
@@ -225,10 +268,21 @@ plugins:
   - source: ./plugins/footer
     enabled: true
     options:
+      pages:
+        home: ""
+        posts: posts/
+        notes: notes/
+        ideas: ideas
+        now: now
+        whoami: whoami
       links:
+        GitHub: https://github.com/pl4nty
+        LinkedIn: https://linkedin.com/in/tomplant
+        Homelab: https://lab.tplant.com.au/
         License: /License
+  # the links out are in the footer
   - source: ./plugins/socials
-    enabled: true
+    enabled: false
     options:
       links:
         GitHub: https://github.com/pl4nty
@@ -238,38 +292,43 @@ plugins:
       position: left
       priority: 15
       group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
+  # Homepage: the garden scene fills the first screen, with a plant for every
+  # note and post; the note's own text follows, then the lists of posts by
+  # year and notes by folder. Index page only.
+  - source: ./plugins/home
     enabled: true
     options:
-      title: ""
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: scene
     layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
+      position: beforeBody
+      priority: 1
+  - source: ./plugins/home
     enabled: true
     options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: index
+      postsFolder: posts
+      notesFolder: notes
     layout:
       position: afterBody
       priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+  # Every note below a folder, grouped by subfolder, on the folder's own page.
+  - source: ./plugins/folder-tree
     enabled: true
+    options:
+      roots:
+        - notes
+    layout:
+      position: afterBody
+      priority: 1
+  # At the foot of each note: its plant, the same drawing that stands in the
+  # garden, with the dates it was planted and tended.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +336,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -332,7 +391,11 @@ layout:
     toolbar:
       priority: 35
       direction: row
-      gap: 0.5rem
+      gap: 1.5rem
+    links:
+      priority: 6
+      direction: row
+      gap: 3rem
   byPageType:
     "404":
       positions:
@@ -342,15 +405,17 @@ layout:
     content: {}
     folder:
       exclude:
-        - reader-mode
         - tag-list
-      positions:
-        right: []
+        - comments
+        - table-of-contents
+        - backlinks
+        - graph
     tag:
       exclude:
-        - reader-mode
         - tag-list
-      positions:
-        right: []
+        - comments
+        - table-of-contents
+        - backlinks
+        - graph
     canvas: {}
     bases: {}

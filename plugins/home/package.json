@@ -1,0 +1,77 @@
+{
+  "name": "@tplant/home",
+  "version": "0.1.0",
+  "description": "Homepage: a garden scene with a plant for every note and post, and lists of posts by year and notes by folder",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tom Plant",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../build.mjs home"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "quartz": {
+    "name": "home",
+    "displayName": "Home",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "section": "index",
+      "postsFolder": "posts",
+      "notesFolder": "notes"
+    },
+    "components": {
+      "Home": {
+        "displayName": "Home",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 5
+      }
+    },
+    "optionSchema": {
+      "section": {
+        "type": "string",
+        "enum": [
+          "scene",
+          "index"
+        ]
+      },
+      "postsFolder": {
+        "type": "string"
+      },
+      "notesFolder": {
+        "type": "string"
+      }
+    }
+  }
+}

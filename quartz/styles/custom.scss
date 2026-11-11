@@ -1,53 +1,931 @@
 @use "./variables.scss" as *;
 @use "./fonts.scss";
 
-// remove the green navigation progress bar shown during SPA navigation
-.navigation-progress {
-  display: none !important;
+// ============================================================================
+// Garden theme: the homepage is a place, and every other page is a quiet
+// column of small type in the same light.
+//
+// Quartz wraps its own styles and every component's styles in
+// `@layer quartz-base`, and this file is unlayered, so a rule here wins over
+// them whatever its specificity. No `!important` is needed. The other side of
+// that: a bare element selector here (`a`, `h2`) also beats the styles of the
+// local plugins, so type rules are scoped to `article` and to named components.
+//
+// The frame is Quartz's default one, laid out differently: the left slot is a
+// single line across the head of the page (the way back, search, the light
+// switch), the centre is one narrow column, and there is nothing on the right.
+//
+// The page colours and the font come from `theme` in quartz.config.yaml. The
+// colours of the scene (`--l-*`, `--g1` and so on) come from ./plugins/light,
+// which sets them for the visitor's time of day.
+// ============================================================================
+
+:root {
+  // the reading column: 66 characters of the body type. In rem, because the
+  // footer and the header use the same column at other type sizes.
+  --measure: 36.5rem;
+  --gutter: 2rem;
+  // the rule under a link
+  --underline: color-mix(in srgb, var(--secondary) 45%, transparent);
+
+  @media all and ($mobile) {
+    --gutter: 1.15rem;
+  }
 }
 
-// giscus opacity
-.page-footer {
-  opacity: 0.7;
+// ----------------------------------------------------------------------------
+// Type: one family, small. Code is the same face on a faint wash.
+// ----------------------------------------------------------------------------
+body {
+  margin: 0;
+  // A trace of the scene's sky lies over the head of every page, so the inner
+  // pages stand in the same light as the garden.
+  background-color: var(--light);
+  background-image: linear-gradient(var(--l-tint), transparent 24rem);
+  background-repeat: no-repeat;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  // ligatures off everywhere: a writeup must show the characters as typed
+  font-variant-ligatures: none;
+  text-rendering: optimizeLegibility;
 }
 
-// footer: single row, links pushed to the edges
-footer ul {
+tbody,
+li,
+p {
+  line-height: 1.7;
+}
+
+::selection {
+  background: var(--textHighlight);
+  color: var(--dark);
+}
+
+a {
+  font-weight: inherit;
+
+  &.internal {
+    padding: 0;
+    border-radius: 0;
+    line-height: inherit;
+    background-color: transparent;
+  }
+}
+
+strong {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+:focus-visible {
+  outline: 1px solid var(--secondary);
+  outline-offset: 3px;
+}
+
+// a plant in the garden draws its own focus ring, around its drawing
+.plant:focus-visible {
+  outline: none;
+}
+
+// ----------------------------------------------------------------------------
+// Frame
+// ----------------------------------------------------------------------------
+.page {
+  max-width: none;
+  margin: 0;
+
+  > #quartz-body {
+    position: relative;
+    display: block;
+    min-height: 100vh;
+    padding: 0;
+
+    > .center {
+      box-sizing: content-box;
+      min-width: 0;
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 8.5rem var(--gutter) 0;
+
+      @media all and ($mobile) {
+        padding-top: 6rem;
+      }
+    }
+
+    > .sidebar.right {
+      display: none;
+    }
+
+    > footer {
+      box-sizing: content-box;
+      min-width: 0;
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 6rem var(--gutter) 2.5rem;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// The head of the page: the left slot as one line. On the left the way back
+// (or the site's name, on the homepage); on the right search and the light.
+// ----------------------------------------------------------------------------
+.page > #quartz-body > .sidebar.left {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
-  width: 95%;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  height: auto;
+  padding: 1.6rem var(--gutter) 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--gray);
+
+  @media all and ($mobile) {
+    padding-top: 1.15rem;
+  }
+
+  // the toolbar group
+  > .flex-component {
+    flex: none;
+    align-items: center;
+  }
+
+  .site-back a:hover,
+  .light-switch:hover,
+  .search > .search-button:hover {
+    color: var(--dark);
+  }
+
+  // Search is a word and a small glass, like the light switch beside it.
+  .search {
+    min-width: 0;
+    max-width: none;
+
+    > .search-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      width: auto;
+      min-width: 0;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+
+      p {
+        display: inline;
+        margin: 0;
+        line-height: inherit;
+        color: inherit;
+      }
+
+      svg {
+        flex: none;
+        width: 0.72rem;
+        height: 0.72rem;
+        min-width: 0;
+        margin: 0;
+        opacity: 1;
+
+        .search-path {
+          stroke: currentColor;
+          stroke-width: 1.8;
+        }
+      }
+    }
+  }
 }
 
-// tighten the gap below the footer text (default was 4rem) so it roughly
-// matches the small gap between the footer line and its text
-footer {
-  margin-bottom: 1rem;
+// ----------------------------------------------------------------------------
+// Page header: title, date, tags, and the table of contents as one line
+// ----------------------------------------------------------------------------
+.page > #quartz-body .page-header {
+  margin: 0;
+  padding: 0;
 }
 
-// Hide the site footer on the homepage. The footer is a structural layout slot
-// (not a right/left/beforeBody component), so the `condition: not-index` config
-// option doesn't reach it — hide it via CSS instead. The graph is hidden through
-// that condition in quartz.config.yaml.
-body[data-slug="index"] footer {
+.article-title {
+  margin: 0;
+  font-size: 1.07rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
+  color: var(--dark);
+}
+
+.content-meta {
+  margin: 0.3rem 0 0;
+  color: var(--gray);
+
+  &[show-comma="true"] > *:not(:last-child) {
+    margin-right: 0;
+
+    &::after {
+      content: ",";
+      margin-right: 0.6em;
+    }
+  }
+
+  a {
+    color: var(--gray);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+
+    &:hover {
+      color: var(--dark);
+    }
+  }
+}
+
+.tags {
+  gap: 0 1rem;
+  margin: 0.3rem 0 0;
+
+  a.internal.tag-link {
+    color: var(--gray);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--dark);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+  }
+}
+
+.note-properties {
+  margin-top: 1rem;
+  border-radius: 2px;
+}
+
+// "Table of Contents" under the date, closed; it opens in place.
+.page-header .toc {
+  margin: 0.3rem 0 0;
+
+  button.toc-header {
+    padding: 0;
+    color: var(--gray);
+
+    h3 {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: inherit;
+    }
+
+    .fold {
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-left: 0.4rem;
+      stroke-width: 1.6;
+      opacity: 1;
+    }
+
+    &:hover {
+      color: var(--dark);
+    }
+  }
+
+  // the plugin closes the list by squeezing a flex item, which only works in
+  // a sidebar
+  ul.toc-content.collapsed {
+    display: none;
+  }
+
+  ul.toc-content.overflow {
+    max-height: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
+
+    &::after {
+      display: none;
+    }
+
+    > li {
+      margin: 0;
+
+      > a {
+        display: block;
+        padding: 0.05rem 0;
+        line-height: 1.6;
+        color: var(--gray);
+        background-color: transparent;
+        opacity: 1;
+        text-decoration: none;
+
+        &:hover {
+          color: var(--dark);
+          text-decoration: underline;
+          text-underline-offset: 0.25em;
+        }
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Article body
+// ----------------------------------------------------------------------------
+// A thin rule closes the header, as a label is ruled off from what it names.
+.page > #quartz-body .center > article,
+.page > #quartz-body .center > .popover-hint > article {
+  margin-top: 1.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--lightgray);
+}
+
+article {
+  color: var(--darkgray);
+
+  p {
+    margin: 0 0 1.15rem;
+    text-wrap: pretty;
+  }
+
+  // Headings are the size of the text. Weight and space set them apart.
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 2.8rem 0 0.8rem;
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.5;
+    text-wrap: balance;
+    color: var(--dark);
+  }
+
+  h1 {
+    font-size: 1.07rem;
+  }
+
+  h3 {
+    margin-top: 2.2rem;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.8rem;
+    font-weight: 400;
+    color: var(--gray);
+  }
+
+  // a heading that opens the note sits tight under the page header
+  > div > :first-child,
+  > :first-child {
+    margin-top: 0;
+  }
+
+  a {
+    color: var(--secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition:
+      color 0.15s ease,
+      text-decoration-color 0.15s ease;
+
+    &:hover {
+      color: var(--tertiary);
+      text-decoration-color: currentColor;
+    }
+
+    &.internal.broken {
+      color: var(--gray);
+      opacity: 1;
+      text-decoration-style: dashed;
+    }
+
+    // heading anchors
+    &[role="anchor"] {
+      text-decoration: none;
+      color: var(--gray);
+    }
+  }
+
+  ul,
+  ol {
+    padding-left: 1.6rem;
+  }
+
+  li {
+    margin: 0.3rem 0;
+
+    &::marker {
+      color: var(--gray);
+    }
+  }
+
+  img {
+    margin: 0.75rem 0;
+    border-radius: 2px;
+  }
+
+  hr {
+    height: 1px;
+    margin: 2.8rem 0;
+    border: 0;
+    background-color: var(--lightgray);
+  }
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0 0 0 1.15rem;
+  border-left: 1px solid var(--gray);
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.callout {
+  border-radius: 2px;
+}
+
+code {
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+  font-size: 1em;
+  color: var(--dark);
+  background: var(--highlight);
+}
+
+// A listing is a soft block of the same wash, with no border.
+pre {
+  margin: 1.5rem 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: var(--highlight);
+
+  > code {
+    padding: 0.9rem 0;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    background: none;
+
+    > [data-line] {
+      padding: 0 1.1rem;
+
+      &::before {
+        color: var(--gray);
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+// Like a wide table, a listing with long lines grows out of the column on
+// both sides before it scrolls.
+figure[data-rehype-pretty-code-figure] {
+  width: max-content;
+  min-width: 100%;
+  max-width: min(100vw - 2 * var(--gutter), 60rem);
+  margin-left: 50%;
+  transform: translateX(-50%);
+  line-height: inherit;
+
+  > [data-rehype-pretty-code-title] {
+    margin-bottom: -1.5rem;
+    padding: 0.2rem 1.1rem;
+    border: 0;
+    border-radius: 2px 2px 0 0;
+    font-size: 0.8rem;
+    color: var(--gray);
+    background: var(--highlight);
+  }
+}
+
+.clipboard-button {
+  border-color: var(--lightgray);
+  border-radius: 2px;
+  background-color: var(--light);
+}
+
+// Tables are ruled, not boxed. A table with more to say than the column has
+// room for grows out of it on both sides, up to the width of the window.
+.table-container {
+  width: max-content;
+  min-width: 100%;
+  max-width: min(100vw - 2 * var(--gutter), 68rem);
+  margin-left: 50%;
+  transform: translateX(-50%);
+
+  > table {
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 0;
+    font-size: 0.8rem;
+
+    > * {
+      line-height: 1.55;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--lightgray);
+    }
+
+    tbody tr:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+th {
+  padding: 0.4rem 1.2rem 0.4rem 0;
+  border-bottom: 1px solid var(--gray);
+  font-weight: 600;
+  text-align: left;
+  color: var(--dark);
+}
+
+td {
+  padding: 0.4rem 1.2rem 0.4rem 0;
+  vertical-align: top;
+}
+
+.footnotes {
+  margin-top: 2.8rem;
+}
+
+// ----------------------------------------------------------------------------
+// After the article: the note's plant, then backlinks and the graph in one
+// quiet row, then the comments
+// ----------------------------------------------------------------------------
+.page > #quartz-body .page-footer {
+  margin-top: 0;
+  opacity: 1;
+}
+
+// the frame's rule between the text and what follows it
+.page > #quartz-body .center > hr {
   display: none;
 }
 
-// ----------------------------------------------------------------------------
-// Graph: paint the container and its (transparent) canvas with the theme
-// background so the graph doesn't flash white while the PIXI canvas
-// re-initialises on SPA navigation in dark mode.
-// ----------------------------------------------------------------------------
+.page-footer > .flex-component {
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 4.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--lightgray);
+  font-size: 0.8rem;
+  line-height: 1.5;
+
+  // a note with no backlinks leaves its place in the row empty
+  > div:not(:has(*)) {
+    display: none;
+  }
+
+  // Quartz sizes the members of a group with inline styles, hence !important.
+  > div:has(> .backlinks) {
+    flex: 1 1 14rem !important;
+    align-self: flex-start !important;
+  }
+
+  > div:has(> .graph) {
+    flex: 0 1 13rem !important;
+    align-self: flex-start !important;
+  }
+}
+
+.backlinks > h3,
+.graph > h3 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 400;
+  color: var(--gray);
+}
+
+.backlinks > ul.overflow {
+  max-height: none;
+  margin: 0.5rem 0 0;
+
+  &::after {
+    display: none;
+  }
+
+  > li {
+    margin: 0;
+    color: var(--gray);
+
+    > a {
+      display: block;
+      padding: 0.1rem 0;
+      color: var(--darkgray);
+      background-color: transparent;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--dark);
+        text-decoration: underline;
+        text-underline-offset: 0.25em;
+      }
+    }
+  }
+}
+
+// Paint the graph's container and its transparent canvas with the page colour,
+// so the graph does not flash white while the PIXI canvas starts again on SPA
+// navigation in dark mode.
+.graph > .graph-outer {
+  height: 9rem;
+  margin-top: 0.5rem;
+  border-color: var(--lightgray);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
 .graph > .graph-outer,
 .graph > .graph-outer canvas {
   background-color: var(--light);
 }
 
+.graph > .global-graph-outer > .global-graph-container {
+  border-radius: 2px;
+}
+
+.page-footer .giscus {
+  margin-top: 3.5rem;
+}
+
 // ----------------------------------------------------------------------------
-// Scrollbars — theme every scrollbar (explorer, code blocks, TOC, tables,
-// the page itself, etc.) instead of the default OS chrome
+// Folder and tag pages: a plain list, title on the left and date on the right
 // ----------------------------------------------------------------------------
+.page-listing > p {
+  margin: 0 0 2rem;
+  color: var(--gray);
+}
+
+ul.section-ul {
+  margin: 0;
+}
+
+li.section-li {
+  margin: 0;
+
+  > .section {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.2rem 0;
+
+    .meta {
+      order: 3;
+      flex: none;
+      margin: 0;
+      font-family: inherit;
+      color: var(--gray);
+      opacity: 1;
+      white-space: nowrap;
+    }
+
+    > .desc {
+      min-width: 0;
+
+      > h3 {
+        margin: 0;
+        font-size: 1em;
+        font-weight: 400;
+        line-height: 1.5;
+
+        > a {
+          color: var(--darkgray);
+          text-decoration: none;
+
+          &:hover {
+            color: var(--dark);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.25em;
+          }
+        }
+      }
+    }
+
+    > .tags {
+      display: none;
+    }
+  }
+}
+
+// Folders that ./plugins/folder-tree covers show its grouped index, not the
+// flat list of direct children.
+body[data-slug^="notes/"] .page-listing {
+  display: none;
+}
+
+// An index page has no text of its own to rule off from the list.
+.page > #quartz-body .center > article:has(.page-listing),
+body[data-slug$="/index"] .page > #quartz-body .center > article:not(:has(> p, > div > p)) {
+  padding-top: 0;
+  border-top: 0;
+}
+
+// ----------------------------------------------------------------------------
+// Homepage: the scene runs the full width; the note and the index follow in
+// the reading column.
+// ----------------------------------------------------------------------------
+body[data-slug="index"] {
+  .page > #quartz-body > .center {
+    max-width: none;
+    padding: 0;
+  }
+
+  .page > #quartz-body .center > article,
+  .page > #quartz-body .center > .page-footer {
+    box-sizing: content-box;
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    border: 0;
+  }
+
+  .page > #quartz-body .center > article {
+    padding-top: 3.5rem;
+  }
+
+  // The site's name and the controls are labels in the top corners of the
+  // scene, in the colour the light gives them, with a halo of the sky behind.
+  .page > #quartz-body > .sidebar.left {
+    color: var(--l-hud);
+    text-shadow:
+      0 0 0.2rem var(--l-halo),
+      0 0 0.9rem var(--l-halo);
+
+    .site-back a:hover,
+    .light-switch:hover,
+    .search > .search-button:hover {
+      color: var(--l-hud);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  // The stock floral divider embedded at the top of the note. The garden
+  // replaces it; delete the embed from the note in the vault, then delete
+  // this rule.
+  article img[src*="45422"] {
+    display: none;
+  }
+}
+
+// A link preview of the homepage shows its text, not the garden.
+.popover .scene {
+  display: none;
+}
+
+// The 404 page uses the minimal frame, which has no head.
+.page[data-frame="minimal"] > #quartz-body {
+  > .center {
+    padding-top: 8.5rem;
+  }
+
+  .center > article {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Footer: the site's pages on one line, the links out on the next
+// ----------------------------------------------------------------------------
+.page > #quartz-body > footer {
+  opacity: 1;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  text-align: left;
+  color: var(--gray);
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    color: var(--darkgray);
+    text-decoration: none;
+
+    &[aria-current="page"] {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    &:hover {
+      color: var(--dark);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  .footer-out {
+    margin-top: 0.15rem;
+
+    a {
+      color: var(--gray);
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.25em;
+
+      &:hover {
+        color: var(--dark);
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Search dialog and link previews
+// ----------------------------------------------------------------------------
+.search > .search-container {
+  text-shadow: none;
+
+  > .search-space {
+    > input {
+      border-radius: 2px;
+      font-family: var(--bodyFont);
+      font-size: 0.95rem;
+      background-color: var(--light);
+    }
+
+    > .search-layout {
+      border-radius: 2px;
+
+      .highlight {
+        border-radius: 0;
+        background: var(--textHighlight);
+      }
+
+      .result-card {
+        font-family: var(--bodyFont);
+
+        h3 {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--dark);
+        }
+      }
+    }
+  }
+}
+
+.popover > .popover-inner {
+  border-color: var(--lightgray);
+  border-radius: 2px;
+  background-color: var(--light);
+  box-shadow: 0 12px 30px -16px rgb(0 0 0 / 35%);
+  padding: 1.1rem 1.3rem;
+  font-size: 0.8rem;
+
+  .article-title {
+    font-size: 0.875rem;
+  }
+
+  article {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--lightgray);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Chrome
+// ----------------------------------------------------------------------------
+// no progress bar during SPA navigation
+.navigation-progress {
+  display: none;
+}
+
+// Theme every scrollbar (listings, tables, the page).
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--gray) transparent;
+  scrollbar-color: var(--lightgray) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -60,13 +938,12 @@ body[data-slug="index"] footer {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--gray);
-  border-radius: 5px;
+  background-color: var(--lightgray);
   border: 2px solid transparent;
   background-clip: padding-box;
 
   &:hover {
-    background-color: var(--secondary);
+    background-color: var(--gray);
   }
 }
 
@@ -74,192 +951,40 @@ body[data-slug="index"] footer {
   background: transparent;
 }
 
-// ----------------------------------------------------------------------------
-// Site (brand) title: lighter weight
-// ----------------------------------------------------------------------------
-.page-title {
-  font-weight: 450;
-}
-
-// Drop the file tree's default 0.5rem top margin on desktop/tablet; the
-// sidebar's own 1.2rem flex gap already separates it from whatever sits above
-// (the Featured list on the homepage, the search/socials row elsewhere). The
-// earlier negative-margin pull-ups were tuned for the old layout where the
-// search bar sat directly above the tree and made Notes look squashed.
-@media all and not ($mobile) {
-  .page > #quartz-body .sidebar.left .explorer .explorer-content {
-    margin-top: 0;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 // ----------------------------------------------------------------------------
-// Top toolbar row: the socials icons share one row with the search / theme /
-// reading-mode icons, left-aligned with a small gap between the two groups.
-//
-// Vertical-alignment gotcha: each plugin's control is an inline-level <button>,
-// so inside its flex wrapper it sits on a text baseline and the descender space
-// below pushes the icon to the top of the wrapper — leaving the socials (a
-// block-level flex, no baseline) ~2px lower. Making the buttons block-level
-// `display: flex` removes that gap so they all centre on one line. Everything
-// is prefixed with `.sidebar.left` so it wins over each plugin's own rules
-// regardless of stylesheet order.
+// Scripting off. The site is the same: the scene is drawn at build time and
+// stands in its midday light, or in its night when the system asks for dark
+// (./plugins/light sets the scene's colours for that; the page colours here
+// repeat `darkMode` from quartz.config.yaml, which only a script can select).
+// What cannot work without a script is removed.
 // ----------------------------------------------------------------------------
-.sidebar.left .flex-component {
-  align-items: center;
-}
-
-// Search: strip the bar chrome (border, "Search" label, padding, full width)
-// down to a bare icon button matching darkmode/reader. `margin: 0` on the svg
-// kills the plugin's `0 .5rem`, which otherwise added a stray gap to its right.
-.sidebar.left .search > .search-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  min-width: 0;
-  height: auto;
-  padding: 0;
-  margin: 0;
-  border: none;
-  box-shadow: none;
-  background-color: transparent;
-  color: var(--darkgray);
-
-  & p {
+@media (scripting: none) {
+  .search,
+  .light-switch,
+  .graph,
+  .giscus,
+  .page-header .toc {
     display: none;
   }
 
-  & svg {
-    display: block;
-    width: 1.25rem;
-    height: 1.25rem;
-    min-width: 0;
-    margin: 0;
-  }
-
-  & svg .search-path {
-    stroke: currentColor;
-  }
-
-  &:hover {
-    color: var(--secondary);
-  }
-}
-
-// Darkmode / reader: block-level flex so they don't ride on a baseline. Their
-// icons are absolutely centred by the plugin at their native 20px, so leave the
-// svg size alone.
-.sidebar.left .darkmode,
-.sidebar.left .readermode {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-// Match the socials icons to the 20px (1.25rem) utility icons.
-.sidebar.left .socials .social-icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-// Fixed gap between the socials group and the search/theme/reading group
-// (socials no longer grows, so the two clusters sit close together rather than
-// at opposite edges of the sidebar). The layout group's own 0.5rem gap sits
-// between every icon; this margin adds to it, giving ~30px between the groups.
-.sidebar.left .search {
-  margin-left: 1.375rem;
-}
-
-// ----------------------------------------------------------------------------
-// Explorer: drop the desktop "Explorer ⌄" collapse toggle so the file list is
-// always shown. The active component is the remote quartz-community/explorer
-// plugin, whose desktop toggle is `.explorer-toggle.desktop-explorer` (the
-// mobile hamburger `.mobile-explorer` is left intact).
-// ----------------------------------------------------------------------------
-.explorer button.desktop-explorer {
-  display: none !important;
-}
-
-// ----------------------------------------------------------------------------
-// Explorer: long post titles wrap to 2–3 lines in the narrow sidebar and the
-// plugin renders each leaf link inline with no spacing, so wrapped titles run
-// straight into the next post and the list reads as a squashed block. Render
-// each file link as its own block with a tighter line-height (wrapped lines of
-// one title stay grouped) and add vertical padding (a clear gap between
-// distinct posts, larger than the gap between a title's own wrapped lines).
-// Targets the remote quartz-community/explorer leaf links (`a.nav-file-title`),
-// leaving folder titles untouched.
-// ----------------------------------------------------------------------------
-.explorer .explorer-content ul li > a.nav-file-title {
-  display: block;
-  line-height: 1.3;
-  padding: 0.25rem 0;
-}
-
-// ----------------------------------------------------------------------------
-// More breathing room between the body text and the sidebars (desktop).
-// Widening the sidebars' inner padding keeps the header and article aligned.
-// On the right, when a TOC is present it stays pinned to the top while the
-// backlinks and graph are pushed to the bottom (margin-top: auto absorbs the
-// free space above them); with no TOC they sit at the top instead.
-// ----------------------------------------------------------------------------
-@media all and ($desktop) {
-  .page > #quartz-body .sidebar.left {
-    padding-right: 3.5rem;
-  }
-
-  .page > #quartz-body .sidebar.right {
-    padding-left: 3.5rem;
-  }
-
-  // Pin the backlinks + graph cluster to the bottom of the right sidebar, but
-  // only when a table of contents is present to anchor against the top (the TOC
-  // is desktop-only, so :has(.toc) also scopes this to pages that actually have
-  // one). Without a TOC there's nothing above them, so they sit at the top in
-  // normal flow instead of floating at the bottom. The auto top-margin lands on
-  // whichever of the two comes first (backlinks is absent on pages with no
-  // inbound links); when both are present, the graph drops back to the normal
-  // gap so they stay together.
-  .page > #quartz-body .sidebar.right:has(.toc) > .backlinks,
-  .page > #quartz-body .sidebar.right:has(.toc) > .graph {
-    margin-top: auto;
-  }
-  .page > #quartz-body .sidebar.right:has(.toc) > .backlinks ~ .graph {
-    margin-top: 0;
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Mobile: the explorer is a full-screen hamburger drawer. Disable its slide
-// transition so the upstream SPA bug can't play — on navigation the drawer
-// briefly renders open (SSR default) then the script collapses it, animating
-// closed. With no transition that state change is instant, so there's no flash.
-// ----------------------------------------------------------------------------
-@media all and ($mobile) {
-  .explorer .explorer-content {
-    transition: none !important;
-  }
-
-  // Reduce the top padding so it's even with the 1rem left/bottom padding.
-  .page > #quartz-body .sidebar.left {
-    padding-top: 1rem;
-  }
-
-  // Align the hamburger above the github icon: drop the button's left padding
-  // and offset the lucide-menu icon's internal 4px so it lines up with the
-  // socials icons below it.
-  .explorer .mobile-explorer {
-    padding-left: 0;
-    margin-left: -4px;
-  }
-
-  // Let the top bar wrap and keep the name on one line. Socials now lives in the
-  // grouped toolbar row (with search / theme / reading), so it no longer needs
-  // its own reflow rule here.
-  .page > #quartz-body .sidebar.left {
-    flex-wrap: wrap;
-  }
-  .page-title {
-    white-space: nowrap;
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --light: #0c1219;
+      --lightgray: #26303b;
+      --gray: #8997a1;
+      --darkgray: #c7d0d1;
+      --dark: #e9eeea;
+      --secondary: #81c784;
+      --tertiary: #a5d6a7;
+      --highlight: rgba(140, 170, 190, 0.1);
+      --textHighlight: rgba(220, 205, 140, 0.28);
+      color-scheme: dark;
+    }
   }
 }

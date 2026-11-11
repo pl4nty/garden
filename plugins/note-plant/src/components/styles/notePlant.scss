@@ -1,0 +1,150 @@
+// A plant (markup from plantSvg in ../plant.ts) in its box. The homepage scene
+// and the foot of each note share these rules.
+//
+// The box is sized in drawing units: --w and --h are the size of the drawing,
+// --s scales this plant, and --u is the length of one unit on this page.
+.plant-box {
+  position: relative;
+  display: block;
+  width: calc(var(--w) * var(--s, 1) * var(--u, 1px));
+  height: calc(var(--h) * var(--s, 1) * var(--u, 1px));
+
+  > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+}
+
+// The colours of the shapes come from the light (plugins/light). These are
+// bare class selectors on purpose: the cast shadow is a <use> copy of the
+// plant, and a selector that names an ancestor does not reach inside one.
+.pl-a {
+  fill: var(--g1);
+}
+
+.pl-b {
+  fill: var(--g2);
+}
+
+.pl-c {
+  fill: var(--g3);
+}
+
+.pl-d {
+  fill: var(--g4);
+}
+
+.pl-k {
+  fill: var(--straw);
+}
+
+// --petal-edge outlines the white petals where the plant stands on the page
+// and not on the ground of the scene
+.pl-p1 {
+  fill: var(--p1);
+  stroke: var(--petal-edge, none);
+  stroke-width: 0.6;
+}
+
+.pl-p2 {
+  fill: var(--p2);
+}
+
+.pl-p3 {
+  fill: var(--p3);
+}
+
+.pl-y {
+  fill: var(--yolk);
+}
+
+// the body of an allium's globe, behind its florets
+.pl-h {
+  fill: var(--p2);
+  opacity: var(--globe, 0.3);
+}
+
+// the contact shadow under the base
+.pl-e {
+  fill: var(--sh);
+}
+
+.pl-s,
+.pl-w,
+.pl-t {
+  fill: none;
+  stroke-linecap: round;
+}
+
+// --stalk thickens the stems of the cast shadow, which the blur would
+// otherwise dissolve
+.pl-s {
+  stroke: var(--stem);
+  stroke-width: calc(1.5 * var(--stalk, 1));
+}
+
+.pl-w {
+  stroke: var(--wood);
+  stroke-width: calc(2.6 * var(--stalk, 1));
+}
+
+.pl-t {
+  stroke: var(--stem);
+  stroke-width: calc(0.8 * var(--stalk, 1));
+}
+
+// The cast shadow is the plant again, laid on the ground: skewed about the
+// plant's base by the direction of the light, blurred, and with every colour
+// replaced by the shadow colour. The copy is a <use>, which inherits custom
+// properties from here.
+.plant-shadow {
+  // 8 is FOOT in ../plant.ts: the room under the base
+  transform-origin: 50% calc(100% - 8 * var(--s, 1) * var(--u, 1px));
+  transform: matrix(var(--sha), var(--shb), var(--shx), var(--shy), 0, 0);
+  filter: blur(calc(1.4 * var(--s, 1) * var(--u, 1px)));
+  pointer-events: none;
+  --g1: var(--sh);
+  --g2: var(--sh);
+  --g3: var(--sh);
+  --g4: var(--sh);
+  --stem: var(--sh);
+  --wood: var(--sh);
+  --straw: var(--sh);
+  --p1: var(--sh);
+  --p2: var(--sh);
+  --p3: var(--sh);
+  --yolk: var(--sh);
+  --globe: 0;
+  --petal-edge: none;
+  --stalk: 1.8;
+}
+
+// At the foot of a note: its plant, and when it was planted and tended.
+.note-plant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5rem 0 0;
+  --s: 0.8;
+  --petal-edge: color-mix(in srgb, var(--gray) 55%, transparent);
+
+  figcaption {
+    margin-top: 0.9rem;
+    text-align: center;
+    font-size: 0.857rem;
+    line-height: 1.5;
+    color: var(--darkgray);
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.note-plant-faint {
+  color: var(--gray);
+}

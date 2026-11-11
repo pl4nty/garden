@@ -1,0 +1,39 @@
+// The site's name, on the homepage: a label in the corner of the scene.
+.site-name {
+  h1 {
+    margin: 0;
+    font-size: inherit;
+    font-weight: 600;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  p {
+    margin: 0;
+    line-height: inherit;
+    opacity: 0.8;
+  }
+}
+
+// The way back, on every other page.
+.site-back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
