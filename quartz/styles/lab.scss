@@ -1,0 +1,335 @@
+// ============================================================================
+// PREVIEW ONLY: the design variants that the design lab panel switches between
+// (plugins/design-lab). Each variant is a set of tokens under a `data-*`
+// attribute on the root element. Remove this file, its two lines in
+// custom.scss, the plugin, and the Titillium Web font files when the design is
+// settled, and copy the chosen tokens into quartz.config.yaml.
+// ============================================================================
+@use "./plain.scss" as *;
+
+// Titillium Web, the face the site used before, for the typeface switch.
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPAcZTIAOhVxoMyOr9n_E7fdMbWAaxWXr0.woff2")
+    format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPAcZTIAOhVxoMyOr9n_E7fdMbWD6xW.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPFcZTIAOhVxoMyOr9n_E7fdMbe0IhDb5yciWM.woff2")
+    format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPFcZTIAOhVxoMyOr9n_E7fdMbe0IhDYZyc.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPFcZTIAOhVxoMyOr9n_E7fdMbetIlDb5yciWM.woff2")
+    format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPFcZTIAOhVxoMyOr9n_E7fdMbetIlDYZyc.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPecZTIAOhVxoMyOr9n_E7fdM3mDbRS.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPecZTIAOhVxoMyOr9n_E7fdMPmDQ.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPDcZTIAOhVxoMyOr9n_E7ffBzCGIVzY4SY.woff2")
+    format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPDcZTIAOhVxoMyOr9n_E7ffBzCGItzYw.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPDcZTIAOhVxoMyOr9n_E7ffHjDGIVzY4SY.woff2")
+    format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Titillium Web";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/titilliumweb-v19-NaPDcZTIAOhVxoMyOr9n_E7ffHjDGItzYw.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@mixin lab {
+  // --------------------------------------------------------------------------
+  // Paper: light mode
+  // --------------------------------------------------------------------------
+  :root[data-paper="white"]:not([saved-theme="dark"]) {
+    --light: #ffffff;
+    --lightgray: #dbe6d9;
+    --bar: #eef5ec;
+  }
+
+  // the palette the site had: grey text, and green for links only
+  :root[data-paper="grey"]:not([saved-theme="dark"]) {
+    --light: #ffffff;
+    --lightgray: #e6e6e6;
+    --gray: #707070;
+    --darkgray: #4a4a4a;
+    --dark: #2a2a2a;
+    --bar: #f3f7f3;
+    --underline: #7fb486;
+
+    article a {
+      color: var(--secondary);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Night: dark mode
+  // --------------------------------------------------------------------------
+  :root[data-night="paper"][saved-theme="dark"] {
+    --light: #181b18;
+    --lightgray: #333833;
+    --gray: #919b92;
+    --darkgray: #d2dad2;
+    --dark: #f0f4f0;
+    --bar: #242824;
+  }
+
+  :root[data-night="warm"][saved-theme="dark"] {
+    --light: #161513;
+    --lightgray: #34312c;
+    --gray: #989488;
+    --darkgray: #d9d5ca;
+    --dark: #f2efe6;
+    --bar: #23211d;
+    --underline: #6f9a70;
+  }
+
+  :root[data-night="forest"][saved-theme="dark"] {
+    --light: #0f2a1d;
+    --lightgray: #2a4a37;
+    --gray: #8fae9b;
+    --darkgray: #cfe3d6;
+    --dark: #f1faf4;
+    --bar: #173a28;
+    --underline: #6fa982;
+  }
+
+  // --------------------------------------------------------------------------
+  // Typeface
+  // --------------------------------------------------------------------------
+  :root[data-type="sans"] {
+    --bodyFont: "Titillium Web", system-ui, sans-serif;
+    --headerFont: "Titillium Web", system-ui, sans-serif;
+    --titleFont: "Titillium Web", system-ui, sans-serif;
+
+    // the fonts plugin names the family on headings in an inline stylesheet
+    body :is(h1, h2, h3, h4, h5, h6, thead, .page-title, .article-title) {
+      font-family: var(--headerFont);
+    }
+
+    body {
+      font-size: 1.06rem;
+      font-variant-numeric: normal;
+    }
+
+    // Titillium Web has no small caps
+    .sc {
+      font-variant-caps: normal;
+      letter-spacing: 0;
+    }
+
+    article p {
+      text-align: left;
+    }
+
+    article :is(h1, h2),
+    .article-title {
+      font-weight: 600;
+    }
+
+    article h3 {
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Layout: the plain document, with scripting on
+  // --------------------------------------------------------------------------
+  :root[data-layout="plain"][data-layout] {
+    @include plain-vars;
+
+    &[saved-theme="dark"] {
+      @include plain-dark-vars;
+    }
+
+    @include plain-rules;
+  }
+
+  // --------------------------------------------------------------------------
+  // The panel. It keeps its own look, whatever the variant.
+  // --------------------------------------------------------------------------
+  .design-lab {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 200;
+    max-width: 17rem;
+    border: 1px solid #888;
+    font:
+      13px/1.4 system-ui,
+      sans-serif;
+    color: #111;
+    background: #fff;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+    color-scheme: light;
+
+    summary {
+      padding: 0.4rem 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    form {
+      padding: 0 0.7rem 0.6rem;
+    }
+
+    fieldset {
+      margin: 0 0 0.5rem;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      padding: 0;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      cursor: pointer;
+    }
+
+    input {
+      margin: 0 0.4rem 0 0;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    p {
+      margin: 0.5rem 0 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #555;
+    }
+  }
+
+  // the panel needs scripting
+  @media (scripting: none) {
+    .design-lab {
+      display: none;
+    }
+  }
+}

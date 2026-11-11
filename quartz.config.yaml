@@ -308,6 +308,13 @@ plugins:
     layout:
       position: afterBody
       priority: 3
+  # PREVIEW ONLY: a panel that switches between design variants. See
+  # quartz/styles/lab.scss. Remove it when the design is settled.
+  - source: ./plugins/design-lab
+    enabled: true
+    layout:
+      position: left
+      priority: 99
   - source: ./plugins/explorer-tweaks
     enabled: false
     layout:
