@@ -1,21 +1,21 @@
 # @tplant/note-plant
 
-Draws a plant at the end of each note: a stem routed like a PCB trace from a
-row of pads, with vias at the joints. The plant is a function of the note, so a note always grows the
-same plant, and the plant changes only when the note does.
+The colophon of a note: its own plant as a small two-ink stamp, in front of a
+setting sun, with the date the note was last tended and a line that says what
+the plant is grown from. The plant is a function of the note, so a note always
+grows the same plant, and the plant changes only when the note does.
 
 | Part of the plant | Comes from                                                       |
 | ----------------- | ---------------------------------------------------------------- |
 | Height            | The length of the note: one level for each doubling of words.    |
-| Leaves            | One for each note this one links to (10 at most).                |
-| Buds              | One for each note that links here (8 at most).                   |
-| Shape             | A random sequence seeded with the slug: sides, bends and angles. |
+| Flowers           | One for each link between this note and another, either way.     |
+| Species           | The folder the note is filed in. A post is always a daisy.       |
+| Habit             | A random sequence seeded with the slug: sides, leans and angles. |
 
-A note with no links in either direction is a seedling with two seed leaves.
-
-The caption shows the date the note was last modified and the three numbers.
-The homepage shows the same plants in a row (see `../home`).
-The plant renders on notes only: not on the homepage, folder pages or tag pages.
+The browser draws the stamp with `../shared/garden` (see `../home` for the
+files). With scripting off only the caption shows. The homepage shows the same
+plants in a bed. The stamp renders on notes only: not on the homepage, folder
+pages or tag pages.
 
 ## Options
 
@@ -36,7 +36,7 @@ The plant renders on notes only: not on the homepage, folder pages or tag pages.
 ## Building
 
 `dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
-edit to `src/`:
+edit to `src/` or to `../shared`:
 
 ```bash
 node plugins/build.mjs note-plant

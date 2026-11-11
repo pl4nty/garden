@@ -21,7 +21,6 @@ const plugins = {
   home: { name: "Home", component: true },
   "folder-tree": { name: "FolderTree", component: true },
   "note-plant": { name: "NotePlant", component: true },
-  "small-caps": { name: "SmallCaps", component: false },
 }
 
 const scssAsText = {
@@ -31,6 +30,27 @@ const scssAsText = {
       contents: sass.compile(args.path, { style: "compressed" }).css,
       loader: "text",
     }))
+  },
+}
+
+// A `*.inline.ts` file is browser code: it is bundled on its own, minified,
+// and imported as a string for a component's `afterDOMLoaded`.
+const inlineScript = {
+  name: "inline-script",
+  setup(b) {
+    b.onLoad({ filter: /\.inline\.ts$/ }, async (args) => {
+      const result = await build({
+        entryPoints: [args.path],
+        write: false,
+        bundle: true,
+        minify: true,
+        format: "iife",
+        platform: "browser",
+        target: "es2020",
+        logLevel: "warning",
+      })
+      return { contents: result.outputFiles[0].text, loader: "text" }
+    })
   },
 }
 
@@ -51,7 +71,7 @@ for (const [dir, { name, component }] of Object.entries(plugins)) {
     // resolved from the repository's node_modules, so every plugin shares one
     // preact instance with Quartz
     external: ["preact", "preact/*", "@quartz-community/*"],
-    plugins: [scssAsText],
+    plugins: [scssAsText, inlineScript],
     logLevel: "warning",
   })
   const type = component ? "QuartzComponentConstructor" : "QuartzTransformerPlugin"

@@ -2,43 +2,43 @@ import type {
   QuartzComponent,
   QuartzComponentConstructor,
   QuartzComponentProps,
-  QuartzPluginData,
 } from "@quartz-community/types"
-import { getDate, resolveRelative } from "@quartz-community/utils"
-import { drawPlant } from "../../../note-plant/src/components/plant"
+import { resolveRelative } from "@quartz-community/utils"
 import { noteStats } from "../../../note-plant/src/components/stats"
-import { smallCaps } from "../../../shared/smallCaps"
+import { dayMonthYear, newestFirst, titleOf } from "../../../shared/pages"
+// @ts-expect-error: bundled to a string by plugins/build.mjs
+import script from "../../../shared/garden/garden.inline.ts"
 import style from "./styles/home.scss"
 
 export interface HomeOptions {
-  // "bed" renders the row of plants (place it in beforeBody); "contents"
-  // renders the lists that follow the page content (place it in afterBody).
-  section: "bed" | "contents"
-  // Folder slug that holds the posts.
-  postsFolder: string
-  // Folder slug that holds the notes.
+  // Folder slugs that hold the notes and the posts.
   notesFolder: string
-  // Bed: the number of plants. The most recently tended notes get one each.
+  postsFolder: string
+  // The most notes the bed can hold. The browser draws as many as fit the
+  // width of the column, starting from the most recently tended.
   plants: number
-  // Contents: the number of recently tended notes to list.
-  recentCount: number
+  // Height of the picture, in cells.
+  height: number
 }
 
 const defaultOptions: HomeOptions = {
-  section: "contents",
-  postsFolder: "posts",
   notesFolder: "notes",
-  plants: 22,
-  recentCount: 6,
+  postsFolder: "posts",
+  plants: 36,
+  height: 64,
 }
 
 type Slug = Parameters<typeof resolveRelative>[0]
-type Dated = { f: QuartzPluginData; date: Date }
 
+// The banner of the homepage: a garden bed with a plant for each of the most
+// recently tended notes and for each post. The server writes the list of
+// pages, each with the numbers its plant grows from; the browser draws the
+// picture on the
+// canvas (plugins/shared/garden) and lays each link over its plant. With
+// scripting off the list stays hidden and the frame shows a halftone
+// pattern from the stylesheet.
 export default ((opts?: Partial<HomeOptions>) => {
   const options: HomeOptions = { ...defaultOptions, ...opts }
-  const postsPrefix = `${options.postsFolder.replace(/\/$/, "")}/`
-  const notesPrefix = `${options.notesFolder.replace(/\/$/, "")}/`
 
   const Home: QuartzComponent = ({
     fileData,
@@ -50,77 +50,45 @@ export default ((opts?: Partial<HomeOptions>) => {
     if (fileData.slug !== "index") return null
 
     const locale = cfg.locale || "en-US"
-    const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
-    const dateOf = (f: QuartzPluginData) => {
-      const data = { ...f, defaultDateType: f.defaultDateType ?? cfgDateType } as QuartzPluginData
-      return data.defaultDateType ? getDate(data) : undefined
-    }
-    const href = (slug: string) => resolveRelative(fileData.slug as Slug, slug as Slug)
-    const title = (f: QuartzPluginData) => (f.frontmatter?.title ?? f.slug ?? "") as string
-    const month = (d: Date) => d.toLocaleDateString(locale, { month: "short", year: "numeric" })
-    const newestFirst = (prefix: string): Dated[] =>
-      allFiles
-        .filter((f) => f.slug?.startsWith(prefix) && !f.slug.endsWith("/index"))
-        .map((f) => ({ f, date: dateOf(f) }))
-        .filter((n): n is Dated => Boolean(n.date))
-        .sort((a, b) => b.date.getTime() - a.date.getTime())
-
-    const notes = newestFirst(notesPrefix)
-
-    if (options.section === "bed") {
-      // One plant for each of the most recently tended notes, newest first.
-      return (
-        <nav class={`home-bed ${displayClass ?? ""}`} aria-label="Recently tended notes">
-          {notes.slice(0, options.plants).map(({ f, date }) => {
-            const plant = drawPlant({ seed: f.slug as string, ...noteStats(f, allFiles) })
-            return (
-              <a
-                href={href(f.slug!)}
-                title={`${title(f)} · ${month(date)}`}
-                aria-label={title(f)}
-                style={`aspect-ratio:${plant.width}/${plant.height};height:${Math.round((plant.height / 280) * 100)}%`}
-                dangerouslySetInnerHTML={{ __html: plant.svg }}
-              />
-            )
-          })}
-        </nav>
-      )
-    }
-
-    const posts = newestFirst(postsPrefix)
-    const list = (items: Dated[]) => (
-      <ol>
-        {items.map(({ f, date }) => (
-          <li>
-            <a href={href(f.slug!)}>{smallCaps(title(f))}</a>
-            <span class="home-dots" />
-            <time datetime={date.toISOString()}>{month(date)}</time>
-          </li>
-        ))}
-      </ol>
-    )
+    const pages = [
+      ...newestFirst(allFiles, cfg, [options.notesFolder]).slice(0, options.plants),
+      ...newestFirst(allFiles, cfg, [options.postsFolder]),
+    ]
 
     return (
-      <div class={`home-contents ${displayClass ?? ""}`}>
-        {posts.length > 0 && (
-          <section>
-            <h2>Writing</h2>
-            {list(posts)}
-          </section>
-        )}
-        {notes.length > 0 && (
-          <section>
-            <h2>Lately tended</h2>
-            {list(notes.slice(0, options.recentCount))}
-            <p>
-              <a href={href(`${notesPrefix}index`)}>The index of all {notes.length} notes</a>
-            </p>
-          </section>
-        )}
-      </div>
+      <figure class={`garden garden-bed ${displayClass ?? ""}`} data-garden="bed">
+        <div class="garden-plate">
+          <canvas data-h={options.height} aria-hidden="true" />
+          <ol>
+            {pages.map(({ f, date }) => {
+              const { words, linksOut, linksIn } = noteStats(f, allFiles)
+              return (
+                <li>
+                  <a
+                    href={resolveRelative(fileData.slug as Slug, f.slug as Slug)}
+                    data-seed={f.slug}
+                    data-words={words}
+                    data-out={linksOut}
+                    data-in={linksIn}
+                    data-label={`${titleOf(f)}, tended ${dayMonthYear(date, locale)}`}
+                    hidden
+                  >
+                    {titleOf(f)}
+                  </a>
+                </li>
+              )
+            })}
+          </ol>
+        </div>
+        <figcaption data-caption>
+          A plant for each note I’ve tended lately, and a daisy for each post. Longer notes grow
+          taller, and a flower opens for every link between two of them.
+        </figcaption>
+      </figure>
     )
   }
 
   Home.css = style
+  Home.afterDOMLoaded = script
   return Home
 }) satisfies QuartzComponentConstructor

@@ -1,67 +1,44 @@
-// The colophon: the note's plant stands on the rule that closes the note, with
-// the caption beside it.
-.note-plant {
+// The colophon: the stamp at the left, its caption beside it, on the rule
+// that closes the note. The frame and canvas rules common to every garden
+// picture are in plugins/home/src/components/styles/home.scss.
+.garden-stamp {
   display: flex;
   align-items: flex-end;
   gap: 1.25rem;
-  margin: 3.25rem 0 0;
-  border-bottom: 1px solid var(--dark);
-  color: var(--dark);
+  margin: 3.5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink1);
+
+  .garden-plate {
+    flex: none;
+    // 44 by 62 cells of two screen pixels
+    width: 88px;
+    height: 124px;
+  }
 
   figcaption {
-    padding-bottom: 0.75rem;
-    font-size: 0.92em;
-    font-style: italic;
+    max-width: 26rem;
+    font-size: 0.875rem;
     line-height: 1.5;
+    color: var(--gray);
 
     p {
       margin: 0;
       line-height: 1.5;
     }
   }
-}
 
-.note-plant-tended {
-  color: var(--darkgray);
-}
-
-.note-plant-stats {
-  color: var(--gray);
-}
-
-.note-plant-art {
-  flex-shrink: 0;
-
-  svg {
-    display: block;
-    overflow: visible;
-  }
-}
-
-// Shapes from plant.ts, for every plant on the site: t = trace, f = leaf fill,
-// r = leaf rib, v = via, b = bud, p = pad.
-svg {
-  .f {
-    fill: currentColor;
-    fill-opacity: 0.13;
-  }
-
-  .r {
-    stroke-width: 1;
-    opacity: 0.7;
-  }
-
-  .v {
-    fill: var(--light);
-  }
-
-  .b {
-    fill: currentColor;
-  }
-
-  .p {
-    fill: currentColor;
-    fill-opacity: 0.18;
-    stroke-width: 1.25;
+  // The date is struck with a rubber stamp in the second ink: a little
+  // askew, in a box.
+  .garden-tended {
+    display: inline-block;
+    margin: 0 0 0.6rem;
+    padding: 0.1rem 0.5rem;
+    border: 2px solid currentColor;
+    font-family: var(--headerFont);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink2-text);
+    transform: rotate(-2.5deg);
   }
 }

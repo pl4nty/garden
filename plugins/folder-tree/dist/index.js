@@ -1,28 +1,37 @@
 // src/components/FolderTree.tsx
 import { getDate, resolveRelative } from "@quartz-community/utils";
 
-// ../shared/smallCaps.tsx
-import { jsx } from "preact/jsx-runtime";
-var ACRONYM = /\b[A-Z]{2,}s?\b/g;
-function smallCaps(text) {
-  const out = [];
-  let last = 0;
-  for (const match of text.matchAll(ACRONYM)) {
-    if (match.index > last) out.push(text.slice(last, match.index));
-    out.push(/* @__PURE__ */ jsx("abbr", { class: "sc", children: match[0] }));
-    last = match.index + match[0].length;
+// ../shared/garden/plants.ts
+var NOTE_SPECIES = ["bay", "fern", "reed", "gum"];
+function hash(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
+  return h >>> 0;
+}
+function speciesOf(slug) {
+  const parts = slug.split("/");
+  if (parts[0] === "posts") return "daisy";
+  const folder = parts.slice(0, -1).join("/");
+  return NOTE_SPECIES[(hash(folder) >>> 24) % NOTE_SPECIES.length];
 }
 
 // src/components/styles/folderTree.scss
-var folderTree_default = ".folder-tree{margin-top:.5rem}.folder-tree-count{margin:0 0 1.75rem;color:var(--gray)}.folder-tree-groups{columns:3;column-gap:3rem}.folder-tree-groups.single{columns:1;max-width:24rem}@media(max-width: 1100px){.folder-tree-groups{columns:2}}@media(max-width: 600px){.folder-tree-groups{columns:1}}.folder-tree-group{break-inside:avoid;padding-bottom:1.5rem}.folder-tree-group h2{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin:0 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid var(--lightgray);font-size:1rem;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:.06em;line-height:1.4;color:var(--gray)}.folder-tree-group h2 a{color:inherit;background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group h2 a:hover{color:var(--dark)}.folder-tree-group .folder-tree-n{font-size:.9em;letter-spacing:0}.folder-tree-group ul{margin:0;padding:0;list-style:none}.folder-tree-group li{margin:0}.folder-tree-group li a{display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;padding:.12rem 0;line-height:1.4;color:var(--darkgray);background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group li a:hover span{color:var(--dark);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}.folder-tree-group time{flex-shrink:0;font-size:.9em;color:var(--gray)}";
+var folderTree_default = ".folder-tree{margin-top:.5rem}.folder-tree-count{margin:0 0 1.75rem;color:var(--gray)}.folder-tree-groups{columns:3;column-gap:2.5rem}.folder-tree-groups.single{columns:1;max-width:24rem}@media(max-width: 1100px){.folder-tree-groups{columns:2}}@media(max-width: 600px){.folder-tree-groups{columns:1}}.folder-tree-group{break-inside:avoid;padding-bottom:1.5rem}.folder-tree-group h2{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin:0 0 .35rem;padding-bottom:.25rem;border-bottom:2px solid var(--ink1);font-size:1rem;font-weight:700;line-height:1.4;color:var(--dark)}.folder-tree-group h2 a{font-weight:inherit;color:inherit;background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group h2 a:hover{text-decoration:underline;text-decoration-color:var(--ink2);text-decoration-thickness:2px;text-underline-offset:.18em}.folder-tree-group .folder-tree-n{font-family:var(--bodyFont);font-size:.85em;font-weight:400;color:var(--gray)}.folder-tree-group ul{margin:0;padding:0;list-style:none}.folder-tree-group li{margin:0}.folder-tree-group li a{display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;padding:.12rem 0;font-weight:400;line-height:1.4;color:var(--darkgray);background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group li a:hover span{color:var(--dark);text-decoration:underline;text-decoration-color:var(--ink2);text-decoration-thickness:2px;text-underline-offset:.18em}.folder-tree-group time{flex-shrink:0;font-size:.85em;color:var(--gray)}";
 
 // src/components/FolderTree.tsx
-import { jsx as jsx2, jsxs } from "preact/jsx-runtime";
+import { jsx, jsxs } from "preact/jsx-runtime";
 var defaultOptions = {
   roots: ["notes"]
+};
+var species = {
+  bay: ["bay", "bays"],
+  fern: ["fern", "ferns"],
+  reed: ["reed", "reeds"],
+  gum: ["gum", "gums"],
+  daisy: ["daisy", "daisies"]
 };
 var FolderTree_default = ((opts) => {
   const options = { ...defaultOptions, ...opts };
@@ -72,20 +81,24 @@ var FolderTree_default = ((opts) => {
         total === 1 ? "note" : "notes",
         hasSubfolders && ` in ${sorted.filter((g) => g.folder !== here).length} folders`
       ] }),
-      /* @__PURE__ */ jsx2("div", { class: `folder-tree-groups ${hasSubfolders ? "" : "single"}`, children: sorted.map((group) => /* @__PURE__ */ jsxs("div", { class: "folder-tree-group", children: [
+      /* @__PURE__ */ jsx("div", { class: `folder-tree-groups ${hasSubfolders ? "" : "single"}`, children: sorted.map((group) => /* @__PURE__ */ jsxs("div", { class: "folder-tree-group", children: [
         hasSubfolders && /* @__PURE__ */ jsxs("h2", { children: [
-          group.folder === here ? "Everything else" : /* @__PURE__ */ jsx2("a", { href: resolveRelative(slug, `${group.folder}/index`), children: group.names.join(" / ") }),
-          /* @__PURE__ */ jsx2("span", { class: "folder-tree-n", children: group.notes.length })
+          group.folder === here ? "Everything else" : /* @__PURE__ */ jsx("a", { href: resolveRelative(slug, `${group.folder}/index`), children: group.names.join(" / ") }),
+          /* @__PURE__ */ jsxs("span", { class: "folder-tree-n", children: [
+            group.notes.length,
+            " ",
+            species[speciesOf(`${group.folder}/`)][group.notes.length === 1 ? 0 : 1]
+          ] })
         ] }),
-        /* @__PURE__ */ jsx2("ul", { children: group.notes.sort(
+        /* @__PURE__ */ jsx("ul", { children: group.notes.sort(
           (a, b) => (a.f.frontmatter?.title ?? "").localeCompare(
             b.f.frontmatter?.title ?? "",
             locale,
             { numeric: true, sensitivity: "base" }
           )
-        ).map(({ f, date }) => /* @__PURE__ */ jsx2("li", { children: /* @__PURE__ */ jsxs("a", { href: resolveRelative(slug, f.slug), children: [
-          /* @__PURE__ */ jsx2("span", { children: smallCaps(f.frontmatter?.title ?? f.slug ?? "") }),
-          date && /* @__PURE__ */ jsx2("time", { datetime: date.toISOString(), children: date.toLocaleDateString(locale, { month: "short", year: "numeric" }) })
+        ).map(({ f, date }) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: resolveRelative(slug, f.slug), children: [
+          /* @__PURE__ */ jsx("span", { children: f.frontmatter?.title ?? f.slug ?? "" }),
+          date && /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: date.toLocaleDateString(locale, { month: "short", year: "numeric" }) })
         ] }) })) })
       ] })) })
     ] });

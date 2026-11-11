@@ -16,41 +16,44 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Vollkorn
-      body: Vollkorn
+      header: Rubik
+      body: Atkinson Hyperlegible Next
       code: Fira Code
-    # Green ink on greenbar paper: the green this site has always used, as the
-    # colour of the text itself and not as an accent on grey. There is no second
-    # hue. Dark mode is a near-black page with pale ink; green stays in the site
-    # title, the rules under links and the stripes.
+    # A two-ink risograph print. Every colour on the site is the paper, one of
+    # two inks, the two printed on top of each other, or a tint or shade of
+    # those. Ink 1 is the green this site has always used, a step brighter;
+    # ink 2 is fluorescent pink. In dark mode the stock is black and the inks
+    # are their luminous versions.
     #   light      the paper
     #   lightgray  rules and borders
-    #   gray       the lightest text: dates and captions (5.4:1 on light)
-    #   darkgray   body text
-    #   dark       headings, links, and the plants
-    #   secondary  the brand green: the site title and hover
-    # quartz/styles/custom.scss adds --bar (the greenbar stripe) and --underline.
+    #   gray       the faintest text: dates and captions
+    #   darkgray   body text: the overprint of both inks
+    #   dark       headings
+    #   secondary  ink 1 (green)
+    #   tertiary   ink 2 (pink)
+    # quartz/styles/custom.scss names these --paper, --ink1, --ink2 and --over,
+    # and adds the shades of each ink that are dark enough for small text.
     colors:
       lightMode:
-        light: "#F5F9F3"
-        lightgray: "#CFE0CC"
-        gray: "#566A5D"
-        darkgray: "#2B4233"
-        dark: "#12351F"
-        secondary: "#2E7D32"
-        tertiary: "#1B5E20"
-        highlight: "rgba(46, 125, 50, 0.12)"
-        textHighlight: "rgba(46, 125, 50, 0.22)"
+        light: "#F0F1ED"
+        lightgray: "#C8CEC6"
+        gray: "#56635A"
+        darkgray: "#1B2B22"
+        dark: "#1B2B22"
+        secondary: "#1F9140"
+        tertiary: "#FF48B0"
+        highlight: "rgba(31, 145, 64, 0.12)"
+        textHighlight: "rgba(255, 72, 176, 0.4)"
       darkMode:
-        light: "#131413"
-        lightgray: "#2F342F"
-        gray: "#8C968D"
-        darkgray: "#CDD5CE"
-        dark: "#EEF2EE"
-        secondary: "#81C784"
-        tertiary: "#A5D6A7"
-        highlight: "rgba(129, 199, 132, 0.12)"
-        textHighlight: "rgba(129, 199, 132, 0.25)"
+        light: "#151515"
+        lightgray: "#343834"
+        gray: "#9BA19B"
+        darkgray: "#E6E7E1"
+        dark: "#F2F2EC"
+        secondary: "#4CCB7A"
+        tertiary: "#FF6EC4"
+        highlight: "rgba(76, 203, 122, 0.14)"
+        textHighlight: "rgba(255, 110, 196, 0.4)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -111,10 +114,6 @@ plugins:
   - source: github:quartz-community/hard-line-breaks
     enabled: true
     order: 90
-  # acronyms in note bodies are set in small caps
-  - source: ./plugins/small-caps
-    enabled: true
-    order: 95
   - source: github:quartz-community/ox-hugo
     enabled: false
     order: 91
@@ -124,8 +123,8 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Vollkorn
-      body: Vollkorn
+      header: Rubik
+      body: Atkinson Hyperlegible Next
       code: Fira Code
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
@@ -202,8 +201,9 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # Left sidebar, top to bottom: the site title, the nav, then the toolbar
-  # group (socials, search, theme, reader mode) at the foot.
+  # Left sidebar, top to bottom: the site title with the toolbar group
+  # (search, theme, reader mode) beside it, the index of the site, and the
+  # links out at the foot.
   - source: github:quartz-community/page-title
     enabled: true
     layout:
@@ -212,6 +212,12 @@ plugins:
   - source: ./plugins/nav
     enabled: true
     options:
+      part: sidebar
+      featured:
+        - posts/building-australia's-largest-highschool-ctf
+        - posts/finding-an-unreleased-windows-feature
+        - posts/use-a-custom-outlook.com-email-without-godaddy
+      recentCount: 4
       links:
         Posts: posts/
         Notes: notes/
@@ -220,7 +226,21 @@ plugins:
         Whoami: whoami
     layout:
       position: left
-      priority: 12
+      priority: 40
+  # The same two lists at the foot of the homepage, for a phone, where the
+  # sidebar is a header with no room for them.
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      part: home
+      featured:
+        - posts/building-australia's-largest-highschool-ctf
+        - posts/finding-an-unreleased-windows-feature
+        - posts/use-a-custom-outlook.com-email-without-godaddy
+      recentCount: 4
+    layout:
+      position: afterBody
+      priority: 5
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
@@ -270,28 +290,19 @@ plugins:
         Homelab: https://lab.tplant.com.au/
     layout:
       position: left
-      priority: 15
-      group: toolbar
-  # Homepage: a row of plants above the note, one for each of the most
-  # recently tended notes, and contents lists below it. Index page only.
+      priority: 50
+  # Homepage banner: a dithered garden bed, drawn in the browser, with a
+  # plant for each of the most recently tended notes and a daisy for each post.
   - source: ./plugins/home
     enabled: true
     options:
-      section: bed
-      plants: 22
+      notesFolder: notes
+      postsFolder: posts
+      plants: 36
+      height: 64
     layout:
       position: beforeBody
       priority: 1
-  - source: ./plugins/home
-    enabled: true
-    options:
-      section: contents
-      postsFolder: posts
-      notesFolder: notes
-      recentCount: 6
-    layout:
-      position: afterBody
-      priority: 5
   # Every note below a folder, grouped by subfolder, on the folder's own page.
   - source: ./plugins/folder-tree
     enabled: true
@@ -301,8 +312,8 @@ plugins:
     layout:
       position: afterBody
       priority: 1
-  # The colophon: a plant at the end of each note, drawn from its length and
-  # its links, with the date it was last tended.
+  # The colophon: the note's own plant as a two-ink stamp at the end of each
+  # note, grown from its length and its links, with the date it was last tended.
   - source: ./plugins/note-plant
     enabled: true
     layout:
@@ -370,7 +381,7 @@ plugins:
 layout:
   groups:
     toolbar:
-      priority: 35
+      priority: 20
       direction: row
       gap: 0.5rem
   byPageType:

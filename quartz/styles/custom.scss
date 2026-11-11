@@ -3,7 +3,13 @@
 @use "./plain.scss" as *;
 
 // ============================================================================
-// Garden theme: a book set in one typeface, in green ink on greenbar paper.
+// Garden theme: a zine printed on a risograph, in two inks.
+//
+// Everything on a page is the paper, ink 1 (green), ink 2 (pink), the two
+// printed on top of each other (the overprint, which is the colour of the
+// text), or a tint or shade of one of those. Nothing has a third hue, a soft
+// shadow or a blend from one colour to another: a tone is a flat tint or a
+// screen of dots, as it would be in print.
 //
 // Quartz wraps its own styles and every component's styles in
 // `@layer quartz-base`, and this file is unlayered, so a rule here wins over
@@ -11,39 +17,76 @@
 // that: a bare element selector here (`a`, `h2`) also beats the styles of the
 // local plugins, so type rules are scoped to `article` and to named components.
 //
-// The page is the default Quartz frame. `.sidebar.left` holds the site title,
-// the nav and the toolbar; `.center` is the text; `.sidebar.right` is the
-// margin, for the table of contents, backlinks and graph.
+// The page is the default Quartz frame. `.sidebar.left` is the index of the
+// site (title, toolbar, selected writing, recent notes, section links);
+// `.center` is the text; `.sidebar.right` holds the table of contents,
+// backlinks and graph.
 //
-// Colours and font families come from `theme` in quartz.config.yaml.
+// The palette and the font families come from `theme` in quartz.config.yaml.
 // ============================================================================
 
+// The inks under the names the theme uses for them, and what is made of them.
+@mixin light-inks {
+  // both inks on one spot
+  --over: #1b2b22;
+  // shades of each ink that are dark enough for small text
+  --ink1-text: #177030;
+  --ink2-text: #b8126f;
+}
+
+@mixin dark-inks {
+  // on black stock the two inks add up to a pale glow
+  --over: #f4f1e6;
+  --ink1-text: #6ad791;
+  --ink2-text: #ff86ce;
+}
+
 :root {
-  // the stripe of greenbar paper: every other table row and every other three
-  // lines of a code listing
-  --bar: #e3efdf;
-  // the rule under a link
-  --underline: #569460;
-  --measure: 38rem;
-  --side: 11rem;
+  --paper: var(--light);
+  --ink1: var(--secondary);
+  --ink2: var(--tertiary);
+  @include light-inks;
+  // flat tints: a few parts in a hundred of an ink on the paper
+  --tint1: color-mix(in srgb, var(--ink1) 7%, var(--paper));
+  --tint2: color-mix(in srgb, var(--ink2) 16%, var(--paper));
+  // A screen of ink 1: one square dot, two pixels wide, in the corner of each
+  // tile. Whoever uses it sets `background-size` to the pitch of the screen
+  // (4px is a quarter tone, 6px a ninth).
+  --halftone: conic-gradient(at 2px 2px, transparent 75%, var(--ink1) 0);
+  --measure: 36.5rem;
+  --side: 16rem;
   --margin: 15rem;
-  --gap: 4.5rem;
-  --top: 3.25rem;
+  --gap: 4rem;
+  --top: 3.5rem;
 }
 
 :root[saved-theme="dark"] {
-  --bar: #202420;
-  --underline: #5f8f66;
+  @include dark-inks;
+}
+
+// An underline in ink 2, the mark of a link.
+@mixin underline($thickness: 2px) {
+  text-decoration: underline;
+  text-decoration-color: var(--ink2);
+  text-decoration-thickness: $thickness;
+  text-underline-offset: 0.2em;
+}
+
+// The two plates out of register: ink 1 a little up and left of the type,
+// ink 2 a little down and right. For the site title and the title of a page
+// only; text for reading stays in register.
+@mixin misregistered {
+  text-shadow:
+    -0.75px -0.5px 0 var(--ink1),
+    1.5px 1px 0 var(--ink2);
 }
 
 // ----------------------------------------------------------------------------
 // Type
 // ----------------------------------------------------------------------------
 body {
-  font-size: 1.09rem;
+  font-size: 1.0625rem;
   line-height: 1.6;
-  // old-style figures sit in running text like lower-case letters
-  font-variant-numeric: oldstyle-nums;
   text-rendering: optimizeLegibility;
 }
 
@@ -54,31 +97,21 @@ p {
 }
 
 ::selection {
-  background: var(--textHighlight);
-  color: var(--dark);
+  background: var(--ink2);
+  color: #1b2b22;
 }
 
-// An acronym, wrapped by ./plugins/small-caps. `all-small-caps` uses the
-// font's c2sc feature, so the text in the page stays "CTF".
-.sc {
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.03em;
-  text-decoration: inherit;
-}
-
-// A label: the head of a list or of a margin block.
-@mixin label {
-  font-family: var(--bodyFont);
-  font-size: 1rem;
-  font-weight: 400;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.06em;
-  color: var(--gray);
+// Quartz sets every link in semibold; here a link takes the weight of the
+// text it is in. Scoped, so that the local plugins can set their own weights.
+article a,
+.page-header a,
+.sidebar.right a,
+footer a,
+.popover a {
+  font-weight: inherit;
 }
 
 a {
-  font-weight: inherit;
-
   &.internal {
     padding: 0;
     border-radius: 0;
@@ -88,12 +121,12 @@ a {
 }
 
 strong {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--dark);
 }
 
 :focus-visible {
-  outline: 1px solid var(--dark);
+  outline: 2px solid var(--ink2-text);
   outline-offset: 2px;
 }
 
@@ -126,10 +159,6 @@ strong {
       max-width: none;
       margin: 0;
       padding-top: var(--top);
-
-      @media all and ($mobile) {
-        padding-top: 1.75rem;
-      }
     }
 
     > .sidebar.right {
@@ -143,7 +172,7 @@ strong {
       margin: 0;
     }
 
-    // No room for a margin: its blocks go below the text.
+    // No room for a third column: its blocks go below the text.
     @media all and not ($desktop) {
       grid-template-columns: var(--side) minmax(0, var(--measure));
       grid-template-rows: auto auto auto;
@@ -151,23 +180,63 @@ strong {
         "side center"
         "side margin"
         "side foot";
-      gap: 0 3rem;
+      gap: 0 2.5rem;
     }
 
+    // A phone: the sidebar dissolves, and its parts become rows of the page.
+    // The title and the toolbar make a header, the section links a second
+    // row, and the links out go to the foot.
     @media all and ($mobile) {
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-template-rows: auto;
       grid-template-areas:
-        "side"
-        "center"
-        "margin"
-        "foot";
-      padding: 0 1.15rem;
+        "title tools"
+        "links links"
+        "center center"
+        "margin margin"
+        "foot foot"
+        "out out";
+      padding: 0 1rem;
+
+      > .sidebar.left {
+        display: contents;
+
+        > .page-title {
+          grid-area: title;
+          align-self: center;
+          padding-top: 1rem;
+        }
+
+        > .flex-component {
+          grid-area: tools;
+          align-self: center;
+          padding-top: 1rem;
+        }
+
+        > .site-index {
+          grid-area: links;
+          padding: 0.6rem 0 0.7rem;
+          border-bottom: 2px solid var(--ink1);
+
+          section {
+            display: none;
+          }
+        }
+
+        > .socials {
+          grid-area: out;
+          padding: 0 0 2rem;
+        }
+      }
+
+      > .center {
+        padding-top: 1.5rem;
+      }
     }
   }
 }
 
-// A page that is an index, not prose, takes the margin's width too.
+// A page that is an index, not prose, takes the third column's width too.
 @media all and ($desktop) {
   body:has(.folder-tree-groups:not(.single)) .page > #quartz-body > .center {
     grid-column: 2 / 4;
@@ -175,103 +244,80 @@ strong {
 }
 
 // ----------------------------------------------------------------------------
-// Left sidebar: site title, nav, and the toolbar at the foot
+// Left sidebar: the site title and toolbar on one line, the index of the
+// site below (plugins/nav), and the links out at the foot
 // ----------------------------------------------------------------------------
 .page > #quartz-body > .sidebar.left {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
-  box-sizing: border-box;
-  height: 100vh;
-  padding: var(--top) 0 2rem;
+  @media all and not ($mobile) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    gap: 2rem 0.75rem;
+    box-sizing: border-box;
+    height: 100vh;
+    padding: var(--top) 0 2rem;
+    // the lists scroll with the sidebar on a short window
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    > .site-index {
+      grid-column: 1 / -1;
+      align-self: start;
+    }
+
+    > .socials {
+      grid-column: 1 / -1;
+    }
+  }
 
   // the toolbar group
   > .flex-component {
     align-items: center;
-    gap: 0.75rem;
-    margin-top: auto;
-  }
-
-  @media all and ($mobile) {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1rem;
-    height: auto;
-    padding: 1.25rem 0 0;
-
-    > .flex-component {
-      margin: 0 0 0 auto;
-    }
-
-    // the nav takes a row of its own, below the title and the toolbar
-    > .site-nav {
-      order: 3;
-      flex: 0 0 100%;
-
-      ul {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.1rem 1.1rem;
-      }
-
-      .here {
-        display: none;
-      }
-    }
+    gap: 0.7rem;
   }
 }
 
-// Site title: the sprout, then the name.
+// Site title: both inks, out of register.
 .page-title {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 400;
-  line-height: 1.3;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 
   a {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: var(--secondary);
+    color: var(--over);
     text-decoration: none;
     white-space: nowrap;
-
-    &::before {
-      content: "";
-      flex-shrink: 0;
-      width: 1.1rem;
-      height: 1.1rem;
-      background-color: currentColor;
-      mask: url("/static/sprout.svg") center / contain no-repeat;
-      -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
-    }
+    @include misregistered;
   }
 }
 
-// Toolbar: bare icons in the colour of the quiet text. Each control is an
-// inline-level <button>, which rides on a text baseline inside its flex
-// wrapper; `display: flex` puts them all on one centre line.
+// Toolbar and links out: bare icons. Each control is an inline-level
+// <button>, which rides on a text baseline inside its flex wrapper;
+// `display: flex` puts them all on one centre line.
 .sidebar.left {
   .socials {
-    gap: 0.75rem;
+    gap: 0.8rem;
   }
 
   .socials .social-link,
   .search > .search-button,
   .darkmode,
   .readermode {
-    color: var(--gray);
-    transition: color 0.15s ease;
+    color: var(--darkgray);
 
     &:hover {
-      color: var(--dark);
+      color: var(--ink2-text);
     }
+  }
+
+  .socials .social-link {
+    color: var(--gray);
   }
 
   .socials .social-icon svg {
@@ -282,8 +328,6 @@ strong {
   .search {
     min-width: 0;
     max-width: none;
-    // a wider gap between the links out and the controls
-    margin-left: 0.75rem;
 
     > .search-button {
       display: flex;
@@ -305,13 +349,14 @@ strong {
 
       svg {
         display: block;
-        width: 1.1rem;
-        height: 1.1rem;
+        width: 1.15rem;
+        height: 1.15rem;
         min-width: 0;
         margin: 0;
 
         .search-path {
           stroke: currentColor;
+          stroke-width: 2.5;
         }
       }
     }
@@ -322,16 +367,29 @@ strong {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.15rem;
+    height: 1.15rem;
 
     svg {
       position: static;
-      width: 1.1rem;
-      height: 1.1rem;
+      width: 1.15rem;
+      height: 1.15rem;
       fill: currentColor;
       stroke: currentColor;
     }
+  }
+}
+
+// The lists of the index at the foot of the homepage: for a phone only,
+// where the sidebar has no room for them.
+.site-index-home {
+  display: none;
+
+  @media all and ($mobile) {
+    display: block;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink1);
   }
 }
 
@@ -344,17 +402,16 @@ strong {
 }
 
 .breadcrumb-container {
-  gap: 0.3rem;
-  margin: 0 0 0.35rem;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.05em;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
   line-height: 1.4;
 
   .breadcrumb-element {
     color: var(--gray);
 
     p {
-      margin-left: 0.3rem;
+      margin-left: 0.35rem;
     }
 
     a {
@@ -363,54 +420,65 @@ strong {
 
       &:hover {
         color: var(--dark);
+        @include underline;
       }
     }
   }
 }
 
+// The title of the page: the one other place the plates slip.
 .article-title {
   margin: 0;
-  font-size: 2.1rem;
-  font-weight: 400;
-  line-height: 1.18;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   text-wrap: balance;
-  color: var(--dark);
+  color: var(--over);
+  @include misregistered;
+
+  @media all and ($mobile) {
+    font-size: 1.75rem;
+  }
 }
 
 .content-meta {
-  margin: 0.35rem 0 0;
-  font-size: 0.95em;
+  margin: 0.6rem 0 0;
+  font-size: 0.875rem;
   color: var(--gray);
 
   &[show-comma="true"] > *:not(:last-child) {
     margin-right: 0;
 
     &::after {
-      content: "·";
-      margin: 0 0.4em;
+      content: ",";
+      margin-right: 0.35em;
     }
   }
 
   a {
     color: var(--gray);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
-  }
-}
-
-.tags {
-  gap: 0.2rem 0.9rem;
-  margin: 0.35rem 0 0;
-
-  a.internal.tag-link {
-    font-style: italic;
-    color: var(--gray);
-    text-decoration: none;
+    @include underline(1.5px);
 
     &:hover {
       color: var(--dark);
+    }
+  }
+}
+
+// A tag is set in the shade of ink 2.
+.tags {
+  gap: 0.2rem 0.8rem;
+  margin: 0.4rem 0 0;
+
+  a.internal.tag-link {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink2-text);
+    text-decoration: none;
+
+    &:hover {
+      @include underline;
     }
   }
 }
@@ -425,23 +493,13 @@ strong {
 // ----------------------------------------------------------------------------
 .page > #quartz-body .center > article,
 .page > #quartz-body .center > .popover-hint > article {
-  margin-top: 1.9rem;
+  margin-top: 1.75rem;
 }
 
 article {
-  // Identifiers (M365, RK3588, AADSTS50011) must read as digits, so the body
-  // of a note uses lining figures. Dates and counts around it stay old-style.
-  font-variant-numeric: lining-nums;
-
   p {
-    margin: 0 0 1rem;
-    text-align: justify;
-    hyphens: auto;
+    margin: 0 0 1.05rem;
     text-wrap: pretty;
-
-    @media all and ($mobile) {
-      text-align: left;
-    }
   }
 
   h1,
@@ -450,37 +508,37 @@ article {
   h4,
   h5,
   h6 {
-    font-weight: 400;
+    font-weight: 700;
+    letter-spacing: -0.005em;
     text-wrap: balance;
     color: var(--dark);
   }
 
   h1 {
-    margin: 2.5rem 0 0.6rem;
-    font-size: 1.8rem;
+    margin: 2.4rem 0 0.7rem;
+    font-size: 1.6rem;
     line-height: 1.2;
   }
 
   h2 {
-    margin: 2.3rem 0 0.5rem;
-    font-size: 1.5rem;
+    margin: 2.2rem 0 0.6rem;
+    font-size: 1.35rem;
     line-height: 1.25;
   }
 
   h3 {
-    margin: 1.8rem 0 0.4rem;
-    font-size: 1.15rem;
-    font-style: italic;
-    line-height: 1.35;
+    margin: 1.8rem 0 0.45rem;
+    font-size: 1.125rem;
+    line-height: 1.3;
   }
 
   h4,
   h5,
   h6 {
-    margin: 1.5rem 0 0.3rem;
+    margin: 1.5rem 0 0.35rem;
     font-size: 1rem;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
+    font-weight: 600;
+    line-height: 1.35;
   }
 
   // a heading that opens the note sits tight under the page header
@@ -488,19 +546,18 @@ article {
     margin-top: 0;
   }
 
+  // A link is the text colour on a rule of ink 2. Under the pointer the rule
+  // swells into a highlighter stroke that prints over the words.
   a {
     color: var(--dark);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
+    @include underline;
     transition:
-      color 0.15s ease,
-      text-decoration-color 0.15s ease;
+      background-color 0.12s ease,
+      color 0.12s ease;
 
     &:hover {
-      color: var(--secondary);
-      text-decoration-color: currentColor;
+      color: #1b2b22;
+      background-color: var(--ink2);
     }
 
     &.internal.broken {
@@ -513,120 +570,181 @@ article {
     &[role="anchor"] {
       text-decoration: none;
       color: var(--gray);
+      background-color: transparent;
     }
+  }
+
+  // a highlight: a stroke of ink 2 printed over the text
+  .text-highlight,
+  mark {
+    padding: 0 0.15em;
+    border-radius: 0;
+    color: #1b2b22;
+    background-color: var(--ink2);
   }
 
   ul,
   ol {
-    padding-left: 1.25rem;
+    padding-left: 1.3rem;
   }
 
   li {
     margin: 0.25rem 0;
 
     &::marker {
-      color: var(--gray);
+      color: var(--ink1-text);
     }
   }
 
+  // A picture is a plate tipped into the page: its own colours, inside a
+  // keyline of ink 1.
   img {
     margin: 0.75rem 0;
-    border: 1px solid var(--lightgray);
+    border: 2px solid var(--ink1);
     border-radius: 0;
   }
 
-  // A rule inside a note is a sprout between two lines.
+  // A rule inside a note is a strip of halftone.
   hr {
-    position: relative;
-    height: 1px;
-    margin: 2.5rem auto;
-    background-color: var(--lightgray);
-    overflow: visible;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 2.4rem;
-      height: 1rem;
-      background: var(--light);
-      transform: translate(-50%, -50%);
-    }
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      z-index: 1;
-      width: 1rem;
-      height: 1rem;
-      background-color: var(--gray);
-      mask: url("/static/sprout.svg") center / contain no-repeat;
-      -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
-      transform: translate(-50%, -50%);
-    }
+    height: 6px;
+    margin: 2.5rem 0;
+    border: 0;
+    background-color: transparent;
+    background-image: var(--halftone);
+    background-size: 4px 4px;
   }
 }
 
+// A quotation stands beside a strip of halftone.
 blockquote {
-  margin: 1.3rem 0 1.3rem 1.5rem;
-  padding: 0;
+  position: relative;
+  margin: 1.4rem 0;
+  padding: 0.1rem 0 0.1rem 1.6rem;
   border: 0;
-  font-size: 0.95em;
-  color: var(--gray);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 10px;
+    background-image: var(--halftone);
+    background-size: 4px 4px;
+  }
 
   p {
-    text-align: left;
-    color: inherit;
+    color: var(--darkgray);
+  }
+
+  > :last-child {
+    margin-bottom: 0;
   }
 }
 
+// Callouts keep to the two inks: ink 1 for notes and tips, ink 2 for
+// warnings.
 .callout {
   border-radius: 0;
+  border-width: 2px;
+
+  &[data-callout] {
+    --color: var(--ink1-text);
+    --border: var(--ink1);
+    --bg: var(--tint1);
+  }
+
+  &[data-callout="warning"],
+  &[data-callout="danger"],
+  &[data-callout="failure"],
+  &[data-callout="bug"],
+  &[data-callout="question"] {
+    --color: var(--ink2-text);
+    --border: var(--ink2);
+    --bg: var(--tint2);
+  }
 }
 
-// Inline code and listings. Ligatures stay off: a writeup must show the
-// characters that were typed.
+// Inline code sits on a tint of ink 1. Ligatures stay off: a writeup must
+// show the characters that were typed.
 code {
-  padding: 0.08em 0.3em;
+  padding: 0.1em 0.3em;
   border-radius: 0;
-  font-size: 0.8em;
+  font-size: 0.82em;
   font-variant-ligatures: none;
-  font-variant-numeric: normal;
   color: var(--dark);
-  background: var(--bar);
+  background: var(--tint1);
 }
 
-// A listing is printed on greenbar: three lines striped, three lines plain.
+// A listing: on the tint, under a keyline of ink 1.
 pre {
-  margin: 1.3rem 0;
+  margin: 1.4rem 0;
   padding: 0;
-  border: 1px solid var(--lightgray);
+  border: 0;
+  border-top: 2px solid var(--ink1);
   border-radius: 0;
+  background: var(--tint1);
 
   > code {
     padding: 0.85rem 0;
-    font-size: 0.78rem;
-    line-height: 1.55;
-    background-color: transparent;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      var(--bar) 0 4.65em,
-      transparent 4.65em 9.3em
-    );
-    background-origin: content-box;
-    background-clip: content-box;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    background: transparent;
 
     > [data-line] {
-      padding: 0 1rem 0 0.75rem;
+      padding: 0 1rem;
+      border-left: 0;
 
       &::before {
         color: var(--gray);
-        opacity: 0.6;
+      }
+
+      // a line the author has marked
+      &[data-highlighted-line] {
+        background-color: var(--tint2);
       }
     }
+  }
+}
+
+// Syntax colours. Shiki writes a colour from the GitHub themes on every
+// token; here each of those is mapped to one of the two inks, the overprint,
+// or the faint text, so a listing is printed with the same two plates as the
+// page. The selectors match on the light theme's value, which every token
+// carries in both modes.
+pre > code[data-theme] span[style] {
+  // names, punctuation and anything not listed below
+  color: var(--darkgray);
+
+  // keywords and operators: the shade of ink 2
+  &[style*="--shiki-light:#D73A49"] {
+    color: var(--ink2-text);
+  }
+
+  // strings, tags, and the names of properties: the shade of ink 1
+  &[style*="--shiki-light:#032F62"],
+  &[style*="--shiki-light:#22863A"],
+  &[style*="--shiki-light:#005CC5"] {
+    color: var(--ink1-text);
+  }
+
+  // functions and types: the text colour, heavier
+  &[style*="--shiki-light:#6F42C1"] {
+    font-weight: 600;
+  }
+
+  // variables and parameters: the text colour, slanted
+  &[style*="--shiki-light:#E36209"] {
+    font-style: italic;
+  }
+
+  // comments: faint and slanted
+  &[style*="--shiki-light:#6A737D"] {
+    font-style: italic;
+    color: var(--gray);
+  }
+
+  // what the grammar could not parse: ink 2
+  &[style*="--shiki-light:#B31D28"] {
+    color: var(--ink2-text);
   }
 }
 
@@ -634,53 +752,60 @@ figure[data-rehype-pretty-code-figure] {
   line-height: inherit;
 
   > [data-rehype-pretty-code-title] {
-    margin-bottom: -1.3rem;
-    padding: 0.15rem 0.75rem;
+    margin-bottom: -1.4rem;
+    padding: 0.2rem 1rem;
+    border: 0;
     border-radius: 0;
-    border-bottom: 0;
     font-size: 0.78rem;
-    color: var(--gray);
+    color: var(--paper);
+    background: var(--ink1-text);
   }
 }
 
 .clipboard-button {
-  border-color: var(--lightgray);
+  border: 2px solid var(--ink1);
   border-radius: 0;
-  background-color: var(--light);
+  color: var(--dark);
+  background-color: var(--paper);
 }
 
-// Tables are greenbar too.
+// A table: the head row on a tint between two keylines, rows parted by
+// hairlines.
 .table-container > table {
-  margin: 1.3rem 0;
+  margin: 1.4rem 0;
   padding: 0;
   font-size: 0.9em;
-  font-variant-numeric: lining-nums tabular-nums;
+  font-variant-numeric: tabular-nums;
 
   > * {
     line-height: 1.45;
   }
 
-  tbody tr {
-    border: 0;
+  thead {
+    border-top: 2px solid var(--ink1);
+    background-color: var(--tint1);
+  }
 
-    &:nth-child(odd) {
-      background-color: var(--bar);
+  tbody tr {
+    border-bottom: 1px solid var(--lightgray);
+
+    &:last-child {
+      border-bottom: 2px solid var(--ink1);
     }
   }
 }
 
 th {
-  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
-  border-bottom: 1px solid var(--dark);
-  font-size: 1.05em;
-  font-weight: 400;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.05em;
-  color: var(--gray);
+  padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+  border-bottom: 2px solid var(--ink1);
+  font-family: var(--headerFont);
+  font-weight: 600;
+  text-align: left;
+  color: var(--dark);
 }
 
 td {
-  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.5rem;
   vertical-align: top;
 }
 
@@ -690,61 +815,30 @@ td {
 }
 
 // ----------------------------------------------------------------------------
-// Plants (shapes from plugins/note-plant/src/components/plant.ts):
-// t = trace, f = leaf fill, r = leaf rib, v = via, b = bud, p = pad
-// ----------------------------------------------------------------------------
-.home-bed svg,
-.note-plant svg {
-  .f {
-    fill: currentColor;
-    fill-opacity: 0.13;
-  }
-
-  .r {
-    stroke-width: 1;
-    opacity: 0.7;
-  }
-
-  .v {
-    fill: var(--light);
-  }
-
-  .b {
-    fill: currentColor;
-  }
-
-  .p {
-    fill: currentColor;
-    fill-opacity: 0.18;
-    stroke-width: 1.25;
-  }
-}
-
-// ----------------------------------------------------------------------------
-// After the article: the colophon, then the comments
+// After the article: the colophon (plugins/note-plant), then the comments
 // ----------------------------------------------------------------------------
 .page > #quartz-body .page-footer {
   margin-top: 0;
   opacity: 1;
 }
 
-// The frame's rule between the text and what follows it. The colophon's ground
-// line, an index, and the homepage's contents each replace it.
-.center:has(.note-plant) > hr,
+// The frame's rule between the text and what follows it. The colophon's
+// keyline, an index, and the homepage's lists each replace it.
+.center:has(.garden-stamp) > hr,
 .center:has(.page-listing) > hr,
 body[data-slug="index"] .center > hr {
   display: none;
 }
 
-.note-plant ~ .giscus {
+.garden-stamp ~ .giscus {
   margin-top: 2.5rem;
 }
 
 // ----------------------------------------------------------------------------
-// The margin: table of contents, backlinks, graph
+// Right column: table of contents, backlinks, graph
 // ----------------------------------------------------------------------------
 .page > #quartz-body > .sidebar.right {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   line-height: 1.45;
 
   @media all and ($desktop) {
@@ -752,13 +846,13 @@ body[data-slug="index"] .center > hr {
     top: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 2rem;
     box-sizing: border-box;
     height: 100vh;
-    padding: calc(var(--top) + 0.3rem) 0 2rem;
+    padding: calc(var(--top) + 0.4rem) 0 2rem;
 
     // With a table of contents to anchor the top, the backlinks and graph go
-    // to the foot of the margin. Without one they start at the top.
+    // to the foot of the column. Without one they start at the top.
     &:has(.toc) > .backlinks,
     &:has(.toc) > .graph {
       margin-top: auto;
@@ -798,29 +892,35 @@ body[data-slug="index"] .center > hr {
 .toc button.toc-header h3,
 .backlinks > h3,
 .graph > h3 {
-  @include label;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--dark);
 }
 
 ul.toc-content.overflow,
 .backlinks > ul.overflow {
-  margin: 0.3rem 0 0;
+  margin: 0.4rem 0 0;
 
   > li {
     margin: 0;
 
     > a {
       display: block;
-      padding: 0.15rem 0;
+      padding: 0.18rem 0;
       line-height: 1.4;
       color: var(--gray);
       background-color: transparent;
       opacity: 1;
       text-decoration: none;
-      transition: color 0.2s ease;
 
-      &:hover,
+      &:hover {
+        color: var(--dark);
+      }
+
+      // the section being read
       &.in-view {
         color: var(--dark);
+        font-weight: 700;
         opacity: 1;
       }
     }
@@ -832,25 +932,28 @@ ul.toc-content.overflow,
 // navigation in dark mode.
 .graph > .graph-outer {
   margin-top: 0.5rem;
-  border-color: var(--lightgray);
+  border: 2px solid var(--ink1);
   border-radius: 0;
   overflow: hidden;
 }
 
 .graph > .graph-outer,
 .graph > .graph-outer canvas {
-  background-color: var(--light);
+  background-color: var(--paper);
 }
 
 .graph > .global-graph-outer > .global-graph-container {
+  border: 2px solid var(--ink1);
   border-radius: 0;
+  box-shadow: 6px 6px 0 var(--ink2);
 }
 
 // ----------------------------------------------------------------------------
-// Folder and tag pages: a contents list
+// Folder and tag pages: a list of titles and dates
 // ----------------------------------------------------------------------------
 .page-listing > p {
   margin: 0;
+  font-size: 0.875rem;
   color: var(--gray);
 }
 
@@ -860,52 +963,40 @@ ul.section-ul {
 
 li.section-li {
   margin: 0;
+  border-bottom: 1px solid var(--lightgray);
 
   > .section {
     display: flex;
     align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.16rem 0;
+    gap: 1rem;
+    padding: 0.55rem 0;
 
     .meta {
       order: 3;
       margin: 0;
+      font-size: 0.875rem;
       color: var(--gray);
       opacity: 1;
       white-space: nowrap;
     }
 
-    // the title, then leader dots up to the date
     > .desc {
       flex: 1;
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
       min-width: 0;
-
-      &::after {
-        content: "";
-        flex: 1;
-        min-width: 1rem;
-        border-bottom: 1px dotted var(--underline);
-        transform: translateY(-0.28em);
-      }
 
       > h3 {
         margin: 0;
-        font-family: var(--bodyFont);
-        font-size: 1em;
-        font-weight: 400;
-        line-height: 1.6;
+        font-size: 1.06rem;
+        font-weight: 600;
+        line-height: 1.35;
 
         > a {
           color: var(--dark);
+          background-color: transparent;
           text-decoration: none;
 
           &:hover {
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 0.16em;
+            @include underline;
           }
         }
       }
@@ -927,24 +1018,10 @@ body[data-slug^="notes/"] .page-listing {
 // Homepage
 // ----------------------------------------------------------------------------
 body[data-slug="index"] {
-  .center > article {
-    margin-top: 1.6rem;
-
-    p {
-      text-align: left;
-    }
-  }
-
-  // The stock floral divider embedded at the top of the note. The row of
-  // plants replaces it; delete the embed from the note in the vault, then
-  // delete this rule.
+  // The stock floral divider embedded at the top of the note. The banner
+  // replaces it; delete the embed from the note in the vault, then delete
+  // this rule.
   .center > article img[src*="45422"] {
-    display: none;
-  }
-
-  // The site footer is a structural slot, so `condition: not-index` in the
-  // config does not reach it.
-  footer {
     display: none;
   }
 }
@@ -957,13 +1034,13 @@ body[data-slug="index"] {
 }
 
 // ----------------------------------------------------------------------------
-// Footer
+// Footer: the small print
 // ----------------------------------------------------------------------------
 .page > #quartz-body > footer {
   margin: 4rem 0 0;
   padding: 0 0 2rem;
   opacity: 1;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--gray);
 
   hr {
@@ -972,7 +1049,7 @@ body[data-slug="index"] {
 
   ul {
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 0.3rem 1.5rem;
     width: auto;
     margin: 0;
@@ -984,10 +1061,7 @@ body[data-slug="index"] {
 
   a {
     color: var(--gray);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
+    @include underline(1.5px);
 
     &:hover {
       color: var(--dark);
@@ -996,38 +1070,61 @@ body[data-slug="index"] {
 }
 
 // ----------------------------------------------------------------------------
-// Search dialog and link previews
+// Search dialog and link previews: sheets laid on the page, each with a
+// hard shadow of ink 2
 // ----------------------------------------------------------------------------
-.search > .search-container > .search-space {
-  > input {
-    border-radius: 0;
-    font-family: var(--bodyFont);
-    background-color: var(--light);
-  }
+.search > .search-container {
+  backdrop-filter: none;
+  background-color: color-mix(in srgb, var(--paper) 82%, transparent);
 
-  > .search-layout {
-    border-radius: 0;
-
-    .highlight {
+  > .search-space {
+    > input {
+      border: 2px solid var(--ink1);
       border-radius: 0;
-      background: var(--textHighlight);
+      // the frame and its shadow already show where the caret is
+      outline: none;
+      box-shadow: 6px 6px 0 var(--ink2);
+      font-family: var(--bodyFont);
+      color: var(--dark);
+      background-color: var(--paper);
     }
 
-    .result-card {
-      font-family: var(--bodyFont);
+    > .search-layout {
+      margin-top: 1rem;
+      border: 2px solid var(--ink1);
+      border-radius: 0;
+      box-shadow: 6px 6px 0 var(--ink2);
+      background-color: var(--paper);
 
-      h3 {
-        font-weight: 400;
+      .highlight {
+        border-radius: 0;
+        color: #1b2b22;
+        background: var(--ink2);
+      }
+
+      .result-card {
+        font-family: var(--bodyFont);
+
+        h3 {
+          font-weight: 600;
+          color: var(--dark);
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+          background-color: var(--tint1);
+        }
       }
     }
   }
 }
 
 .popover > .popover-inner {
-  border-color: var(--lightgray);
+  border: 2px solid var(--ink1);
   border-radius: 0;
-  background-color: var(--light);
-  box-shadow: 0 10px 28px -14px rgb(0 0 0 / 35%);
+  background-color: var(--paper);
+  box-shadow: 6px 6px 0 var(--ink2);
 }
 
 // ----------------------------------------------------------------------------
@@ -1038,7 +1135,7 @@ body[data-slug="index"] {
   display: none;
 }
 
-// Theme every scrollbar (listings, tables, the margin, the page).
+// Theme every scrollbar (listings, tables, the right column, the page).
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--lightgray) transparent;
@@ -1071,7 +1168,11 @@ body[data-slug="index"] {
   html {
     scroll-behavior: auto;
   }
+
+  article a {
+    transition: none;
+  }
 }
 
-// Scripting off: the plain document. Last, so that it overrides the theme.
+// Scripting off. Last, so that it overrides the theme.
 @include plain;

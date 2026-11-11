@@ -5,7 +5,7 @@ import type {
   QuartzPluginData,
 } from "@quartz-community/types"
 import { getDate, resolveRelative } from "@quartz-community/utils"
-import { smallCaps } from "../../../shared/smallCaps"
+import { speciesOf, type Species } from "../../../shared/garden/plants"
 import style from "./styles/folderTree.scss"
 
 export interface FolderTreeOptions {
@@ -19,6 +19,16 @@ const defaultOptions: FolderTreeOptions = {
 }
 
 type Slug = Parameters<typeof resolveRelative>[0]
+
+// What the notes of a folder grow as in the garden pictures (plugins/home,
+// plugins/note-plant): one and many.
+const species: Record<Species, [string, string]> = {
+  bay: ["bay", "bays"],
+  fern: ["fern", "ferns"],
+  reed: ["reed", "reeds"],
+  gum: ["gum", "gums"],
+  daisy: ["daisy", "daisies"],
+}
 
 interface Group {
   // slug of the folder, without a trailing slash
@@ -93,7 +103,10 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
                       {group.names.join(" / ")}
                     </a>
                   )}
-                  <span class="folder-tree-n">{group.notes.length}</span>
+                  <span class="folder-tree-n">
+                    {group.notes.length}{" "}
+                    {species[speciesOf(`${group.folder}/`)][group.notes.length === 1 ? 0 : 1]}
+                  </span>
                 </h2>
               )}
               <ul>
@@ -108,7 +121,7 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
                   .map(({ f, date }) => (
                     <li>
                       <a href={resolveRelative(slug as Slug, f.slug as Slug)}>
-                        <span>{smallCaps((f.frontmatter?.title ?? f.slug ?? "") as string)}</span>
+                        <span>{(f.frontmatter?.title ?? f.slug ?? "") as string}</span>
                         {date && (
                           <time datetime={date.toISOString()}>
                             {date.toLocaleDateString(locale, { month: "short", year: "numeric" })}

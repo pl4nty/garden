@@ -1,5 +1,5 @@
-// Set as the index at the back of a book: narrow columns, a small-caps head for
-// each folder, and groups that never split across columns.
+// The index of every note: narrow columns, a head on a keyline for each
+// folder, and groups that never split across columns.
 .folder-tree {
   margin-top: 0.5rem;
 }
@@ -11,7 +11,7 @@
 
 .folder-tree-groups {
   columns: 3;
-  column-gap: 3rem;
+  column-gap: 2.5rem;
 
   &.single {
     columns: 1;
@@ -36,30 +36,34 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
-    margin: 0 0 0.3rem;
-    padding-bottom: 0.2rem;
-    border-bottom: 1px solid var(--lightgray);
+    margin: 0 0 0.35rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid var(--ink1);
     font-size: 1rem;
-    font-weight: 400;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
+    font-weight: 700;
     line-height: 1.4;
-    color: var(--gray);
+    color: var(--dark);
 
     a {
+      font-weight: inherit;
       color: inherit;
       background-color: transparent;
       text-decoration: none;
 
       &:hover {
-        color: var(--dark);
+        text-decoration: underline;
+        text-decoration-color: var(--ink2);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.18em;
       }
     }
   }
 
   .folder-tree-n {
-    font-size: 0.9em;
-    letter-spacing: 0;
+    font-family: var(--bodyFont);
+    font-size: 0.85em;
+    font-weight: 400;
+    color: var(--gray);
   }
 
   ul {
@@ -78,6 +82,7 @@
     justify-content: space-between;
     gap: 0.8rem;
     padding: 0.12rem 0;
+    font-weight: 400;
     line-height: 1.4;
     color: var(--darkgray);
     background-color: transparent;
@@ -86,14 +91,15 @@
     &:hover span {
       color: var(--dark);
       text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
+      text-decoration-color: var(--ink2);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
     }
   }
 
   time {
     flex-shrink: 0;
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: var(--gray);
   }
 }

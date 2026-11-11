@@ -1,7 +1,7 @@
 {
   "name": "@tplant/nav",
   "version": "0.1.0",
-  "description": "Site navigation links for the top bar, with the current section marked",
+  "description": "The index of the site for the sidebar: selected writing, recent notes and the section links",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,7 +47,12 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "links": {}
+      "part": "sidebar",
+      "links": {},
+      "featured": [],
+      "postsFolder": "posts",
+      "notesFolder": "notes",
+      "recentCount": 5
     },
     "components": {
       "Nav": {
@@ -57,8 +62,30 @@
       }
     },
     "optionSchema": {
+      "part": {
+        "type": "string",
+        "enum": [
+          "sidebar",
+          "home"
+        ]
+      },
       "links": {
         "type": "object"
+      },
+      "featured": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "postsFolder": {
+        "type": "string"
+      },
+      "notesFolder": {
+        "type": "string"
+      },
+      "recentCount": {
+        "type": "number"
       }
     }
   }

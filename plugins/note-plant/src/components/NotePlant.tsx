@@ -2,10 +2,11 @@ import type {
   QuartzComponent,
   QuartzComponentConstructor,
   QuartzComponentProps,
-  QuartzPluginData,
 } from "@quartz-community/types"
-import { formatDate, getDate } from "@quartz-community/utils"
-import { drawPlant } from "./plant"
+import { speciesOf, type Species } from "../../../shared/garden/plants"
+import { dateOf, dayMonthYear } from "../../../shared/pages"
+// @ts-expect-error: bundled to a string by plugins/build.mjs
+import script from "../../../shared/garden/garden.inline.ts"
 import { noteStats } from "./stats"
 import style from "./styles/notePlant.scss"
 
@@ -18,9 +19,18 @@ const defaultOptions: NotePlantOptions = {
   roots: [],
 }
 
-const plural = (n: number, one: string, many: string) =>
-  `${n.toLocaleString("en")} ${n === 1 ? one : many}`
+const names: Record<Species, string> = {
+  bay: "A bay",
+  fern: "A fern",
+  reed: "A reed",
+  gum: "A gum",
+  daisy: "A daisy",
+}
 
+// The colophon: the note's own plant as a small two-ink stamp, with the date
+// the note was last tended and what the plant is grown from. The browser
+// draws the stamp (plugins/shared/garden); with scripting off only the
+// caption shows.
 export default ((opts?: Partial<NotePlantOptions>) => {
   const options: NotePlantOptions = { ...defaultOptions, ...opts }
   const roots = options.roots.map((root) => root.replace(/\/$/, "").toLowerCase())
@@ -38,39 +48,44 @@ export default ((opts?: Partial<NotePlantOptions>) => {
     if (roots.length > 0 && !roots.some((root) => slug.startsWith(`${root}/`))) return null
 
     const { words, linksOut, linksIn } = noteStats(fileData, allFiles)
+    const species = speciesOf(slug)
+    const links = linksOut + linksIn
+    const date = dateOf(fileData, cfg)
 
-    const plant = drawPlant({ seed: slug, words, linksOut, linksIn })
-
-    const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
-    const dated = {
-      ...fileData,
-      defaultDateType: fileData.defaultDateType ?? cfgDateType,
-    } as QuartzPluginData
-    const date = dated.defaultDateType ? getDate(dated) : undefined
-
-    const description =
-      `A plant drawn from this note. Its height comes from the note's length, ` +
-      `it has ${plural(plant.leaves, "leaf", "leaves")} for the notes it links to ` +
-      `and ${plural(plant.buds, "bud", "buds")} for the notes that link here.`
+    // "Notes/Microsoft/Intune/Error codes.md" is filed in "Microsoft / Intune"
+    const folders = ((fileData.relativePath ?? "") as string).split("/").slice(0, -1)
+    const filed =
+      species === "daisy"
+        ? "like every post"
+        : folders.length > 1
+          ? `like every note in ${folders.slice(1).join(" / ")}`
+          : folders.length === 1
+            ? `like every loose note in ${folders[0]}`
+            : "like every page that stands alone"
 
     return (
-      <figure class={`note-plant ${displayClass ?? ""}`}>
-        <div
-          class="note-plant-art"
-          role="img"
-          aria-label={description}
-          dangerouslySetInnerHTML={{ __html: plant.svg }}
-        />
+      <figure class={`garden garden-stamp ${displayClass ?? ""}`} data-garden="stamp">
+        <div class="garden-plate">
+          <canvas
+            data-w="44"
+            data-h="62"
+            data-seed={slug}
+            data-words={words}
+            data-out={linksOut}
+            data-in={linksIn}
+            aria-hidden="true"
+          />
+        </div>
         <figcaption>
           {date && (
-            <p class="note-plant-tended">
-              Tended{" "}
-              <time datetime={date.toISOString()}>{formatDate(date, cfg.locale || "en-US")}</time>
+            <p class="garden-tended">
+              Tended <time datetime={date.toISOString()}>{dayMonthYear(date, cfg.locale)}</time>
             </p>
           )}
-          <p class="note-plant-stats">
-            {plural(words, "word", "words")} · {plural(linksOut, "link", "links")} out ·{" "}
-            {plural(linksIn, "link", "links")} in
+          <p>
+            {names[species]}, {filed}. It stands {words.toLocaleString("en")}{" "}
+            {words === 1 ? "word" : "words"} tall, with a {species === "daisy" && "side "}flower for
+            every link to or from another note: {links === 0 ? "none" : links} so far.
           </p>
         </figcaption>
       </figure>
@@ -78,5 +93,6 @@ export default ((opts?: Partial<NotePlantOptions>) => {
   }
 
   NotePlant.css = style
+  NotePlant.afterDOMLoaded = script
   return NotePlant
 }) satisfies QuartzComponentConstructor

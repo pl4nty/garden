@@ -1,55 +1,32 @@
-// The garden bed: a row of plants standing on a ground line. Each plant is a
-// link to its note. A plant's height is a share of the bed's, so the tallest
-// possible plant fills it.
-.home-bed {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2px;
-  height: 8rem;
-  overflow: hidden;
-  border-bottom: 1px solid var(--dark);
-  color: var(--dark);
+// The pictures drawn by plugins/shared/garden. The rules for the frame and
+// the canvas apply to both pictures: the bed on the homepage, styled here,
+// and the stamp at the foot of a note, styled in plugins/note-plant (Quartz
+// puts every component's styles in one sheet, so that plugin relies on these).
+//
+// The frame holds a place of the picture's exact size, so nothing moves when
+// the canvas is drawn. Until then, and when scripting is off, the frame of
+// the bed shows a halftone hedge, a ground line and the sun, made of
+// gradients.
+.garden {
+  // screen pixels to a cell; garden.inline.ts uses the same numbers
+  --cell: 3px;
+  margin: 0;
 
-  a {
-    flex: none;
-    display: block;
-    color: inherit;
-    transition: color 0.15s ease;
-
-    &:hover {
-      color: var(--secondary);
-    }
-  }
-
-  svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  // on a narrow screen, as many plants as fit
   @media (max-width: 800px) {
-    height: 6rem;
-    justify-content: flex-start;
-    gap: 6px;
+    --cell: 2px;
   }
 }
 
-// Contents lists, set as in the front of a book: title, leader dots, date.
-.home-contents {
-  section {
-    margin-top: 2.75rem;
-  }
+.garden-plate {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--ink1);
+  background-color: var(--paper);
 
-  h2 {
-    margin: 0 0 0.5rem;
-    font-size: 1rem;
-    font-weight: 400;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
-    color: var(--gray);
+  canvas {
+    position: relative;
+    display: block;
+    image-rendering: pixelated;
   }
 
   ol {
@@ -58,47 +35,64 @@
     list-style: none;
   }
 
-  li {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0.16rem 0;
-  }
-
+  // a link lies over its plant
   a {
-    color: var(--dark);
-    background-color: transparent;
-    text-decoration: none;
+    position: absolute;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
 
-    &:hover {
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
+    &:focus-visible {
+      outline: 2px solid var(--over);
+      outline-offset: -2px;
+    }
+  }
+}
+
+.garden-bed {
+  .garden-plate {
+    height: calc(64 * var(--cell));
+
+    // the hedge: a screen of dots over the lower half
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 45% 0 0;
+      background-image:
+        conic-gradient(at var(--cell) var(--cell), transparent 75%, var(--ink1) 0),
+        conic-gradient(at var(--cell) var(--cell), transparent 75%, var(--ink1) 0);
+      background-position:
+        0 0,
+        calc(2 * var(--cell)) calc(2 * var(--cell));
+      background-size: calc(4 * var(--cell)) calc(4 * var(--cell));
+    }
+
+    // the ground, and the sun above it
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(var(--ink1), var(--ink1)) bottom / 100% calc(5 * var(--cell)) no-repeat,
+        radial-gradient(
+          circle at 72% 34%,
+          var(--ink2) calc(10 * var(--cell)),
+          transparent calc(10 * var(--cell) + 0.5px)
+        );
     }
   }
 
-  .home-dots {
-    flex: 1;
-    min-width: 1rem;
-    border-bottom: 1px dotted var(--underline, var(--gray));
-    transform: translateY(-0.28em);
+  &.grown .garden-plate {
+    &::before,
+    &::after {
+      display: none;
+    }
   }
 
-  time {
+  figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
     color: var(--gray);
-    white-space: nowrap;
-  }
-
-  p {
-    margin: 0.8rem 0 0;
-    font-style: italic;
-
-    a {
-      text-decoration: underline;
-      text-decoration-color: var(--underline, var(--gray));
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
-    }
   }
 }

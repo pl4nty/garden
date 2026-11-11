@@ -2,7 +2,8 @@
 
 An index of every note below a folder, grouped by subfolder. It renders on the
 index page of each configured root folder and of every folder below it, and
-nowhere else. It is set like the index at the back of a book, and it replaces the
+nowhere else. It is set in narrow columns under a head for each folder, which also says
+what its notes grow as in the garden pictures (`../shared/garden`). It replaces the
 file tree that the explorer showed in the sidebar.
 
 `quartz/styles/custom.scss` hides the stock folder listing on the same pages.
