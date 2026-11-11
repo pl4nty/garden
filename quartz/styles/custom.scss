@@ -1,79 +1,127 @@
 @use "./variables.scss" as *;
 @use "./fonts.scss";
-@use "./plain.scss" as *;
 
 // ============================================================================
-// Garden theme: a book set in one typeface, in green ink on greenbar paper.
+// Terminal theme: the site as plain text, 80 columns wide.
+//
+// One monospace face at one size. Hierarchy comes from weight, indentation and
+// the conventions of plain text, not from type size:
+//
+//   - A note or a post is a manual page. A header line and a footer line frame
+//     it, section headings are bold capitals at the left edge, and the body is
+//     indented under them.
+//   - A page that lists other pages is the output of a shell command, with the
+//     command above it: `ls -lt` for posts, `tree` for notes.
+//   - An underlined word is a link. A [bracketed] word is a button.
+//
+// Every horizontal measure is a number of characters (--ch) and every vertical
+// measure a number of lines (--row), so the text sits on a character grid as
+// it would in a terminal.
 //
 // Quartz wraps its own styles and every component's styles in
 // `@layer quartz-base`, and this file is unlayered, so a rule here wins over
-// them whatever its specificity. No `!important` is needed. The other side of
-// that: a bare element selector here (`a`, `h2`) also beats the styles of the
-// local plugins, so type rules are scoped to `article` and to named components.
+// them whatever its specificity. The other side of that: a bare element
+// selector here (`a`, `h2`) also beats the styles of the local plugins, so type
+// rules are scoped to `article` and to named components.
 //
-// The page is the default Quartz frame. `.sidebar.left` holds the site title,
-// the nav and the toolbar; `.center` is the text; `.sidebar.right` is the
-// margin, for the table of contents, backlinks and graph.
+// The page is the default Quartz frame turned into one column:
+// `.sidebar.left` is the head (header line, nav paths, search and theme),
+// `.center` is the text and what follows it, `.sidebar.right` is unused.
 //
-// Colours and font families come from `theme` in quartz.config.yaml.
+// Colours and the font family come from `theme` in quartz.config.yaml.
 // ============================================================================
 
 :root {
-  // the stripe of greenbar paper: every other table row and every other three
-  // lines of a code listing
-  --bar: #e3efdf;
-  // the rule under a link
-  --underline: #569460;
-  --measure: 38rem;
-  --side: 11rem;
-  --margin: 15rem;
-  --gap: 4.5rem;
-  --top: 3.25rem;
+  // The width of one character. Fira Code's advance is 0.6em, and the unit is
+  // rem so that it holds inside elements with a smaller font size.
+  --ch: 0.6rem;
+  // the height of one line of text
+  --row: 1.625rem;
+  // how far the body of a manual page sits in from its section headings
+  --indent: calc(var(--ch) * 4);
+  // the column that line numbers and list markers hang in: never less than 4
+  --gutter: calc(var(--ch) * 4);
+  // the background of inline code
+  --tint: #eceee9;
 }
 
 :root[saved-theme="dark"] {
-  --bar: #202420;
-  --underline: #5f8f66;
+  --tint: #242624;
+}
+
+// On a phone the column is as wide as the screen: about 39 characters at 390px.
+@media all and ($mobile) {
+  :root {
+    --ch: 0.5625rem;
+    --row: 1.5rem;
+    --indent: calc(var(--ch) * 2);
+  }
+}
+
+// One long line of a repeated character, for rules and for the column of
+// markers down the side of a quotation. Pseudo-elements clip it to length.
+@function times($string, $times) {
+  $out: "";
+  @for $i from 1 through $times {
+    $out: $out + $string;
+  }
+  @return $out;
 }
 
 // ----------------------------------------------------------------------------
 // Type
 // ----------------------------------------------------------------------------
+// Quartz falls back from the configured family to the system's sans-serif.
+// Here the fallback must be monospace too, or nothing lines up while the font
+// loads. `:root:root` outranks the `:root` rule that sets the families.
+$mono:
+  "Fira Code", ui-monospace, "SFMono-Regular", "Menlo", "Consolas", "DejaVu Sans Mono",
+  "Liberation Mono", monospace;
+
+:root:root {
+  --bodyFont: #{$mono};
+  --headerFont: #{$mono};
+  --titleFont: #{$mono};
+  --codeFont: #{$mono};
+}
+
+html {
+  // one character is 9.6px wide, or 9px on a phone
+  font-size: 100%;
+}
+
 body {
-  font-size: 1.09rem;
-  line-height: 1.6;
-  // old-style figures sit in running text like lower-case letters
-  font-variant-numeric: oldstyle-nums;
+  font-size: 1rem;
+  line-height: var(--row);
+  // A writeup must show the characters that were typed: no "=>" drawn as an
+  // arrow. Fira Code makes its ligatures with `calt`.
+  font-variant-ligatures: none;
+  font-feature-settings:
+    "calt" 0,
+    "liga" 0;
   text-rendering: optimizeLegibility;
+
+  @media all and ($mobile) {
+    font-size: 0.9375rem;
+  }
+}
+
+// The fonts plugin sets the heading family in an inline stylesheet that comes
+// after this one; `body` outranks it. Buttons and inputs do not inherit a font.
+body :is(h1, h2, h3, h4, h5, h6, thead, button, input) {
+  font-family: var(--bodyFont);
 }
 
 tbody,
 li,
 p {
-  line-height: 1.6;
+  line-height: var(--row);
 }
 
+// reverse video, as a terminal selects
 ::selection {
-  background: var(--textHighlight);
-  color: var(--dark);
-}
-
-// An acronym, wrapped by ./plugins/small-caps. `all-small-caps` uses the
-// font's c2sc feature, so the text in the page stays "CTF".
-.sc {
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.03em;
-  text-decoration: inherit;
-}
-
-// A label: the head of a list or of a margin block.
-@mixin label {
-  font-family: var(--bodyFont);
-  font-size: 1rem;
-  font-weight: 400;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.06em;
-  color: var(--gray);
+  background: var(--dark);
+  color: var(--light);
 }
 
 a {
@@ -88,281 +136,266 @@ a {
 }
 
 strong {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--dark);
 }
 
 :focus-visible {
-  outline: 1px solid var(--dark);
+  outline: 2px solid var(--secondary);
   outline-offset: 2px;
 }
 
+// A link in running text: green and underlined.
+@mixin link {
+  color: var(--secondary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+
+  &:hover {
+    color: var(--tertiary);
+    text-decoration-thickness: 2px;
+  }
+}
+
+// A link in a list of links (nav, listings): the underline comes with the
+// pointer or the keyboard.
+@mixin list-link {
+  color: var(--secondary);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--tertiary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+}
+
+// A button: a quiet word in brackets.
+@mixin bracketed {
+  display: inline;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 1em;
+  line-height: var(--row);
+  color: var(--gray);
+  background: none;
+  cursor: pointer;
+
+  &::before {
+    content: "[";
+  }
+
+  &::after {
+    content: "]";
+  }
+
+  &:hover {
+    color: var(--dark);
+  }
+}
+
+// A shell command above its output. plugins/shared/listing.tsx writes the
+// command; the prompt is drawn here.
+.cmd {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: var(--row);
+  color: var(--dark);
+
+  &::before {
+    content: "$ ";
+    color: var(--secondary);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+
+    &:hover {
+      color: var(--secondary);
+    }
+  }
+}
+
 // ----------------------------------------------------------------------------
-// Page grid
+// The page: one column, 80 characters wide, left of centre
 // ----------------------------------------------------------------------------
 .page {
   max-width: none;
   margin: 0;
 
   > #quartz-body {
-    display: grid;
-    grid-template-columns: var(--side) minmax(0, var(--measure)) var(--margin);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "side center margin"
-      "side foot margin";
-    justify-content: center;
-    gap: 0 var(--gap);
-    min-height: 100vh;
-    padding: 0 2rem;
-
-    > .sidebar.left {
-      grid-area: side;
-    }
-
-    > .center {
-      grid-area: center;
-      min-width: 0;
-      max-width: none;
-      margin: 0;
-      padding-top: var(--top);
-
-      @media all and ($mobile) {
-        padding-top: 1.75rem;
-      }
-    }
-
-    > .sidebar.right {
-      grid-area: margin;
-    }
-
-    > footer {
-      grid-area: foot;
-      min-width: 0;
-      max-width: none;
-      margin: 0;
-    }
-
-    // No room for a margin: its blocks go below the text.
-    @media all and not ($desktop) {
-      grid-template-columns: var(--side) minmax(0, var(--measure));
-      grid-template-rows: auto auto auto;
-      grid-template-areas:
-        "side center"
-        "side margin"
-        "side foot";
-      gap: 0 3rem;
-    }
+    display: block;
+    box-sizing: content-box;
+    max-width: calc(var(--ch) * 80);
+    // three tenths of the spare width go to the left of the column
+    margin: 0 auto 0 clamp(0px, (100vw - var(--ch) * 84) * 0.3, 20rem);
+    padding: var(--row) calc(var(--ch) * 2) calc(var(--row) * 2);
 
     @media all and ($mobile) {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto;
-      grid-template-areas:
-        "side"
-        "center"
-        "margin"
-        "foot";
-      padding: 0 1.15rem;
+      margin: 0;
+      padding: var(--row) calc(var(--ch) * 1.5) calc(var(--row) * 2);
+    }
+
+    > .center,
+    > footer {
+      min-width: 0;
+      max-width: none;
+      margin: 0;
+    }
+
+    // nothing is set beside the text
+    > .sidebar.right {
+      display: none;
     }
   }
 }
 
-// A page that is an index, not prose, takes the margin's width too.
-@media all and ($desktop) {
-  body:has(.folder-tree-groups:not(.single)) .page > #quartz-body > .center {
-    grid-column: 2 / 4;
-  }
-}
-
 // ----------------------------------------------------------------------------
-// Left sidebar: site title, nav, and the toolbar at the foot
+// The head: the header line of a manual page, then the nav and the controls
 // ----------------------------------------------------------------------------
 .page > #quartz-body > .sidebar.left {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  position: static;
+  z-index: auto;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
-  box-sizing: border-box;
-  height: 100vh;
-  padding: var(--top) 0 2rem;
+  flex-flow: row wrap;
+  align-items: baseline;
+  gap: 0 calc(var(--ch) * 2);
+  height: auto;
+  margin: 0 0 calc(var(--row) * 2);
+  padding: 0;
 
-  // the toolbar group
+  > .man-head {
+    flex: 0 0 100%;
+    margin-bottom: var(--row);
+  }
+
+  > .site-nav {
+    flex: 1 1 auto;
+  }
+
+  // the toolbar group: search and theme
   > .flex-component {
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: auto;
-  }
-
-  @media all and ($mobile) {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1rem;
-    height: auto;
-    padding: 1.25rem 0 0;
-
-    > .flex-component {
-      margin: 0 0 0 auto;
-    }
-
-    // the nav takes a row of its own, below the title and the toolbar
-    > .site-nav {
-      order: 3;
-      flex: 0 0 100%;
-
-      ul {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.1rem 1.1rem;
-      }
-
-      .here {
-        display: none;
-      }
-    }
+    align-items: baseline;
+    gap: var(--ch);
+    margin-left: auto;
   }
 }
 
-// Site title: the sprout, then the name.
-.page-title {
+// TPLANT(7)            Tom's Garden            TPLANT(7)
+.man-line {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 400;
-  line-height: 1.3;
+  color: var(--darkgray);
+  text-decoration: none;
 
-  a {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: var(--secondary);
-    text-decoration: none;
-    white-space: nowrap;
-
-    &::before {
-      content: "";
-      flex-shrink: 0;
-      width: 1.1rem;
-      height: 1.1rem;
-      background-color: currentColor;
-      mask: url("/static/sprout.svg") center / contain no-repeat;
-      -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
-    }
+  span {
+    color: inherit;
   }
 }
 
-// Toolbar: bare icons in the colour of the quiet text. Each control is an
-// inline-level <button>, which rides on a text baseline inside its flex
-// wrapper; `display: flex` puts them all on one centre line.
-.sidebar.left {
-  .socials {
-    gap: 0.75rem;
+a.man-head:hover {
+  color: var(--secondary);
+}
+
+.site-nav a {
+  @include list-link;
+
+  // the section that holds this page
+  &.active {
+    font-weight: 700;
+    color: var(--dark);
   }
+}
 
-  .socials .social-link,
-  .search > .search-button,
-  .darkmode,
-  .readermode {
-    color: var(--gray);
-    transition: color 0.15s ease;
+.search {
+  flex: none;
+  min-width: 0;
+  max-width: none;
 
-    &:hover {
-      color: var(--dark);
-    }
-  }
-
-  .socials .social-icon svg {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-
-  .search {
-    min-width: 0;
-    max-width: none;
-    // a wider gap between the links out and the controls
-    margin-left: 0.75rem;
-
-    > .search-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: auto;
-      min-width: 0;
-      height: auto;
-      margin: 0;
-      padding: 0;
-      border: none;
-      box-shadow: none;
-      background-color: transparent;
-      cursor: pointer;
-
-      p {
-        display: none;
-      }
-
-      svg {
-        display: block;
-        width: 1.1rem;
-        height: 1.1rem;
-        min-width: 0;
-        margin: 0;
-
-        .search-path {
-          stroke: currentColor;
-        }
-      }
-    }
-  }
-
-  .darkmode,
-  .readermode {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.1rem;
-    height: 1.1rem;
+  > .search-button {
+    @include bracketed;
 
     svg {
-      position: static;
-      width: 1.1rem;
-      height: 1.1rem;
-      fill: currentColor;
-      stroke: currentColor;
+      display: none;
+    }
+
+    p {
+      display: inline;
+      margin: 0;
+      color: inherit;
+      text-transform: lowercase;
     }
   }
+}
+
+// The theme switch names the theme it switches to.
+.darkmode {
+  @include bracketed;
+
+  svg {
+    display: none !important;
+  }
+
+  &::before {
+    content: "[dark";
+  }
+}
+
+:root[saved-theme="dark"] .darkmode::before {
+  content: "[light";
 }
 
 // ----------------------------------------------------------------------------
-// Page header: breadcrumbs, title, date, tags
+// Page header: path, title, the line of facts, contents
 // ----------------------------------------------------------------------------
 .page > #quartz-body .page-header {
   margin: 0;
   padding: 0;
 }
 
+// ~/notes/microsoft/intune: the folders above the page. A page at the top
+// level has only "~" above it, which says nothing.
+.breadcrumb-container:not(:has(.breadcrumb-element + .breadcrumb-element)) {
+  display: none;
+}
+
 .breadcrumb-container {
-  gap: 0.3rem;
-  margin: 0 0 0.35rem;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
+  gap: 0;
+  margin: 0;
+  line-height: var(--row);
+  text-transform: lowercase;
 
   .breadcrumb-element {
     color: var(--gray);
 
     p {
-      margin-left: 0.3rem;
+      margin: 0;
+      line-height: var(--row);
+      color: var(--gray);
     }
 
     a {
       color: var(--gray);
       text-decoration: none;
 
-      &:hover {
-        color: var(--dark);
+      &:hover,
+      &:focus-visible {
+        color: var(--secondary);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.22em;
       }
     }
   }
@@ -370,138 +403,170 @@ strong {
 
 .article-title {
   margin: 0;
-  font-size: 2.1rem;
-  font-weight: 400;
-  line-height: 1.18;
-  text-wrap: balance;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: var(--row);
   color: var(--dark);
 }
 
 .content-meta {
-  margin: 0.35rem 0 0;
-  font-size: 0.95em;
+  line-height: var(--row);
   color: var(--gray);
 
-  &[show-comma="true"] > *:not(:last-child) {
-    margin-right: 0;
-
-    &::after {
-      content: "·";
-      margin: 0 0.4em;
-    }
+  time,
+  span {
+    color: inherit;
   }
 
   a {
+    @include link;
     color: var(--gray);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
   }
 }
 
 .tags {
-  gap: 0.2rem 0.9rem;
-  margin: 0.35rem 0 0;
+  gap: 0 calc(var(--ch) * 2);
+  margin: 0;
+  padding: 0;
+
+  > li {
+    margin: 0;
+  }
 
   a.internal.tag-link {
-    font-style: italic;
-    color: var(--gray);
-    text-decoration: none;
-
-    &:hover {
-      color: var(--dark);
-    }
+    @include list-link;
   }
 }
 
 .note-properties {
-  margin-top: 1rem;
+  margin: var(--row) 0 0;
   border-radius: 0;
+}
+
+// The table of contents: a [bracketed] button that unfolds a list.
+.toc {
+  display: block;
+  min-height: 0;
+  overflow: visible;
+
+  button.toc-header {
+    @include bracketed;
+
+    h3 {
+      display: inline;
+      margin: 0;
+      font-size: 1em;
+      font-weight: 400;
+      line-height: var(--row);
+      color: inherit;
+      text-transform: lowercase;
+    }
+
+    .fold {
+      display: none;
+    }
+
+    // [table of contents +] folded, [table of contents -] open
+    &::after {
+      content: " -]";
+    }
+
+    &.collapsed::after {
+      content: " +]";
+    }
+  }
+
+  ul.toc-content.overflow {
+    max-height: none;
+    margin: 0;
+    padding: 0 0 0 var(--indent);
+    overflow: visible;
+    mask-image: none;
+
+    &.collapsed {
+      display: none;
+    }
+
+    > li {
+      margin: 0;
+
+      > a {
+        @include list-link;
+        opacity: 1;
+        transition: none;
+      }
+
+      &.overflow-end {
+        display: none;
+      }
+    }
+
+    @for $i from 0 through 6 {
+      .depth-#{$i} {
+        padding-left: calc(var(--ch) * #{$i * 2});
+      }
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
 // Article body
 // ----------------------------------------------------------------------------
-.page > #quartz-body .center > article,
-.page > #quartz-body .center > .popover-hint > article {
-  margin-top: 1.9rem;
+.page > #quartz-body .center > article {
+  margin: var(--row) 0 0;
+  // a manual page: the body sits in from the section headings
+  padding-left: var(--indent);
 }
 
 article {
-  // Identifiers (M365, RK3588, AADSTS50011) must read as digits, so the body
-  // of a note uses lining figures. Dates and counts around it stay old-style.
-  font-variant-numeric: lining-nums;
-
   p {
-    margin: 0 0 1rem;
-    text-align: justify;
-    hyphens: auto;
-    text-wrap: pretty;
-
-    @media all and ($mobile) {
-      text-align: left;
-    }
+    margin: 0 0 var(--row);
   }
 
+  // Headings are the size of the text. Weight and position mark them.
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-weight: 400;
-    text-wrap: balance;
+    margin: var(--row) 0 0;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: var(--row);
     color: var(--dark);
+
+    // a block that follows a heading starts on the next line
+    + * {
+      margin-top: 0;
+    }
+
+    code {
+      text-transform: none;
+    }
   }
 
-  h1 {
-    margin: 2.5rem 0 0.6rem;
-    font-size: 1.8rem;
-    line-height: 1.2;
-  }
-
+  // SECTION HEADINGS at the left edge, as `man` prints them
+  h1,
   h2 {
-    margin: 2.3rem 0 0.5rem;
-    font-size: 1.5rem;
-    line-height: 1.25;
+    margin-top: calc(var(--row) * 2);
+    margin-left: calc(var(--indent) * -1);
+    text-transform: uppercase;
   }
 
+  // a subsection, halfway in
   h3 {
-    margin: 1.8rem 0 0.4rem;
-    font-size: 1.15rem;
-    font-style: italic;
-    line-height: 1.35;
+    margin-left: calc(var(--indent) * -0.5);
   }
 
-  h4,
-  h5,
-  h6 {
-    margin: 1.5rem 0 0.3rem;
-    font-size: 1rem;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
-  }
-
-  // a heading that opens the note sits tight under the page header
-  > div > :first-child {
+  // a heading or anything else that opens the note sits tight under the header
+  > :first-child,
+  > .markdown-preview-view > :first-child {
     margin-top: 0;
   }
 
   a {
-    color: var(--dark);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
-    transition:
-      color 0.15s ease,
-      text-decoration-color 0.15s ease;
-
-    &:hover {
-      color: var(--secondary);
-      text-decoration-color: currentColor;
-    }
+    @include link;
 
     &.internal.broken {
       color: var(--gray);
@@ -509,320 +574,420 @@ article {
       text-decoration-style: dashed;
     }
 
-    // heading anchors
+    // The anchor of a heading: a "#" in place of the icon, shown with the
+    // pointer or the keyboard.
     &[role="anchor"] {
-      text-decoration: none;
+      margin: 0 0 0 var(--ch);
+      font-weight: 400;
       color: var(--gray);
+      text-decoration: none;
+      transform: none;
+
+      svg {
+        display: none;
+      }
+
+      &::before {
+        content: "#";
+      }
+
+      &:focus-visible {
+        opacity: 1;
+      }
     }
   }
 
+  // "- " and "* " for lists, hung in a two-character column
   ul,
   ol {
-    padding-left: 1.25rem;
+    margin: 0 0 var(--row);
+    padding-left: calc(var(--ch) * 2);
+  }
+
+  ul {
+    list-style-type: "- ";
+
+    ul {
+      list-style-type: "* ";
+
+      ul {
+        list-style-type: "+ ";
+      }
+    }
+  }
+
+  // "1. " to "99. "
+  ol {
+    padding-left: calc(var(--ch) * 4);
   }
 
   li {
-    margin: 0.25rem 0;
+    margin: 0;
 
     &::marker {
-      color: var(--gray);
+      color: var(--secondary);
+    }
+
+    > ul,
+    > ol {
+      margin-bottom: 0;
     }
   }
 
   img {
-    margin: 0.75rem 0;
+    display: block;
+    box-sizing: border-box;
+    margin: var(--row) 0;
     border: 1px solid var(--lightgray);
     border-radius: 0;
   }
 
-  // A rule inside a note is a sprout between two lines.
-  hr {
-    position: relative;
-    height: 1px;
-    margin: 2.5rem auto;
-    background-color: var(--lightgray);
-    overflow: visible;
+  p > img:first-child {
+    margin-top: 0;
+  }
 
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 2.4rem;
-      height: 1rem;
-      background: var(--light);
-      transform: translate(-50%, -50%);
-    }
+  // a rule is a line of ─
+  hr {
+    height: var(--row);
+    margin: var(--row) 0;
+    overflow: hidden;
+    line-height: var(--row);
+    white-space: nowrap;
+    color: var(--gray);
+    background: none;
 
     &::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      z-index: 1;
-      width: 1rem;
-      height: 1rem;
-      background-color: var(--gray);
-      mask: url("/static/sprout.svg") center / contain no-repeat;
-      -webkit-mask: url("/static/sprout.svg") center / contain no-repeat;
-      transform: translate(-50%, -50%);
+      content: times("─", 120);
     }
+  }
+
+  // footnote references read [1]
+  sup {
+    font-size: 1em;
+    vertical-align: baseline;
+
+    > a::before {
+      content: "[";
+    }
+
+    > a::after {
+      content: "]";
+    }
+  }
+
+  mark,
+  .text-highlight {
+    padding: 0;
+    border-radius: 0;
+    color: var(--dark);
+    background-color: var(--textHighlight);
+  }
+
+  kbd {
+    padding: 0;
+    border: 0;
+    font-family: inherit;
+    font-size: 1em;
+    color: var(--dark);
+    background: var(--tint);
   }
 }
 
+// A quotation, as plain-text mail quotes: a ">" before every line. The column
+// of markers is one string, a ">" to a line, clipped to the quotation.
 blockquote {
-  margin: 1.3rem 0 1.3rem 1.5rem;
-  padding: 0;
+  position: relative;
+  margin: 0 0 var(--row);
+  padding: 0 0 0 calc(var(--ch) * 2);
   border: 0;
-  font-size: 0.95em;
-  color: var(--gray);
+  overflow: hidden;
 
-  p {
-    text-align: left;
-    color: inherit;
+  &::before {
+    content: times(">\a", 300);
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: var(--row);
+    white-space: pre;
+    color: var(--secondary);
   }
-}
 
-.callout {
-  border-radius: 0;
-}
+  > :last-child {
+    margin-bottom: 0;
+  }
 
-// Inline code and listings. Ligatures stay off: a writeup must show the
-// characters that were typed.
-code {
-  padding: 0.08em 0.3em;
-  border-radius: 0;
-  font-size: 0.8em;
-  font-variant-ligatures: none;
-  font-variant-numeric: normal;
-  color: var(--dark);
-  background: var(--bar);
-}
+  // a callout is a ruled box with its own title, not a quotation
+  &.callout {
+    padding: 0 var(--ch);
+    border: 1px solid var(--lightgray);
+    border-radius: 0;
 
-// A listing is printed on greenbar: three lines striped, three lines plain.
-pre {
-  margin: 1.3rem 0;
-  padding: 0;
-  border: 1px solid var(--lightgray);
-  border-radius: 0;
-
-  > code {
-    padding: 0.85rem 0;
-    font-size: 0.78rem;
-    line-height: 1.55;
-    background-color: transparent;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      var(--bar) 0 4.65em,
-      transparent 4.65em 9.3em
-    );
-    background-origin: content-box;
-    background-clip: content-box;
-
-    > [data-line] {
-      padding: 0 1rem 0 0.75rem;
-
-      &::before {
-        color: var(--gray);
-        opacity: 0.6;
-      }
+    &::before {
+      display: none;
     }
   }
 }
 
+// Inline code: a tinted cell, the size and width of the text around it.
+code {
+  padding: 0;
+  border-radius: 0;
+  font-size: 1em;
+  font-variant-ligatures: none;
+  color: var(--dark);
+  background: var(--tint);
+}
+
+// A listing: a ruled box with its language set into the top rule and line
+// numbers in the gutter. The box reaches out to the left edge, so that on a
+// manual page the numbers hang in the indent and the code lines up with the
+// text.
 figure[data-rehype-pretty-code-figure] {
+  margin: 0 0 var(--row) calc(var(--indent) * -1);
   line-height: inherit;
 
   > [data-rehype-pretty-code-title] {
-    margin-bottom: -1.3rem;
-    padding: 0.15rem 0.75rem;
-    border-radius: 0;
+    width: auto;
+    margin: 0;
+    padding: 0 var(--ch);
+    border: 1px solid var(--gray);
     border-bottom: 0;
-    font-size: 0.78rem;
+    border-radius: 0;
+    font-size: 0.875rem;
+    line-height: var(--row);
     color: var(--gray);
   }
 }
 
-.clipboard-button {
-  border-color: var(--lightgray);
-  border-radius: 0;
-  background-color: var(--light);
-}
-
-// Tables are greenbar too.
-.table-container > table {
-  margin: 1.3rem 0;
+pre {
+  margin: 0;
   padding: 0;
-  font-size: 0.9em;
-  font-variant-numeric: lining-nums tabular-nums;
+  border: 1px solid var(--gray);
+  border-radius: 0;
+  // the code scrolls inside; the label and the copy button sit on the rule
+  overflow: visible;
 
-  > * {
-    line-height: 1.45;
+  &[data-language]::before {
+    content: attr(data-language);
+    position: absolute;
+    z-index: 1;
+    top: calc(var(--row) * -0.5);
+    left: calc(var(--ch) * 2);
+    padding: 0 var(--ch);
+    font-size: 0.875rem;
+    line-height: var(--row);
+    color: var(--gray);
+    background: var(--light);
   }
 
-  tbody tr {
-    border: 0;
+  > code {
+    padding: calc(var(--row) * 0.5) 0;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    color: var(--darkgray);
+    background: none;
+    tab-size: 4;
+    // The GitHub token colours, with some of the colour taken out: on a page
+    // with one accent, their red and blue are loud.
+    filter: saturate(0.6);
 
-    &:nth-child(odd) {
-      background-color: var(--bar);
+    > [data-line] {
+      padding: 0 var(--ch) 0 0;
+      border-left: 0;
+
+      &[data-highlighted-line] {
+        border-left: 0;
+        background-color: var(--tint);
+      }
+
+      // the line number, right-aligned in the gutter
+      &::before {
+        box-sizing: border-box;
+        width: var(--gutter);
+        margin-right: 0;
+        padding-right: var(--ch);
+        color: var(--gray);
+      }
+    }
+
+    &[data-line-numbers-max-digits="2"] > [data-line]::before,
+    &[data-line-numbers-max-digits="3"] > [data-line]::before {
+      width: var(--gutter);
+    }
+
+    [data-highlighted-chars] {
+      border-radius: 0;
+      background-color: var(--textHighlight);
     }
   }
 }
 
-th {
-  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
-  border-bottom: 1px solid var(--dark);
-  font-size: 1.05em;
-  font-weight: 400;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.05em;
-  color: var(--gray);
-}
-
-td {
-  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
-  vertical-align: top;
-}
-
-.footnotes {
-  margin-top: 2.5rem;
-  font-size: 0.92em;
-}
-
-// ----------------------------------------------------------------------------
-// Plants (shapes from plugins/note-plant/src/components/plant.ts):
-// t = trace, f = leaf fill, r = leaf rib, v = via, b = bud, p = pad
-// ----------------------------------------------------------------------------
-.home-bed svg,
-.note-plant svg {
-  .f {
-    fill: currentColor;
-    fill-opacity: 0.13;
+// On a phone the gutter is too narrow for a number: the code starts at the
+// text's indent.
+@media all and ($mobile) {
+  pre > code {
+    tab-size: 2;
   }
 
-  .r {
-    stroke-width: 1;
-    opacity: 0.7;
-  }
+  pre > code > [data-line] {
+    padding-left: var(--indent);
 
-  .v {
-    fill: var(--light);
-  }
-
-  .b {
-    fill: currentColor;
-  }
-
-  .p {
-    fill: currentColor;
-    fill-opacity: 0.18;
-    stroke-width: 1.25;
-  }
-}
-
-// ----------------------------------------------------------------------------
-// After the article: the colophon, then the comments
-// ----------------------------------------------------------------------------
-.page > #quartz-body .page-footer {
-  margin-top: 0;
-  opacity: 1;
-}
-
-// The frame's rule between the text and what follows it. The colophon's ground
-// line, an index, and the homepage's contents each replace it.
-.center:has(.note-plant) > hr,
-.center:has(.page-listing) > hr,
-body[data-slug="index"] .center > hr {
-  display: none;
-}
-
-.note-plant ~ .giscus {
-  margin-top: 2.5rem;
-}
-
-// ----------------------------------------------------------------------------
-// The margin: table of contents, backlinks, graph
-// ----------------------------------------------------------------------------
-.page > #quartz-body > .sidebar.right {
-  font-size: 0.9rem;
-  line-height: 1.45;
-
-  @media all and ($desktop) {
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-    box-sizing: border-box;
-    height: 100vh;
-    padding: calc(var(--top) + 0.3rem) 0 2rem;
-
-    // With a table of contents to anchor the top, the backlinks and graph go
-    // to the foot of the margin. Without one they start at the top.
-    &:has(.toc) > .backlinks,
-    &:has(.toc) > .graph {
-      margin-top: auto;
-    }
-
-    &:has(.toc) > .backlinks ~ .graph {
-      margin-top: 0;
-    }
-  }
-
-  @media all and not ($desktop) {
-    position: static;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
-    width: auto;
-    height: auto;
-    margin: 0;
-    padding: 2.5rem 0 0;
-
-    > * {
-      flex: 1 1 14rem;
-      max-height: 24rem;
-    }
-
-    > .toc {
+    &::before {
       display: none;
     }
   }
+}
 
-  &:not(:has(.toc, .backlinks, .graph)) {
+// [copy], on the top rule at the right. Quartz adds the button's own styles
+// outside its layer, so the selector carries `pre` to outrank them.
+pre > .clipboard-button {
+  @include bracketed;
+  position: absolute;
+  top: calc(var(--row) * -0.5);
+  right: calc(var(--ch) * 2);
+  float: none;
+  padding: 0 var(--ch);
+  font-size: 0.875rem;
+  background: var(--light);
+  // above the code, whose filter makes it a layer of its own
+  z-index: 1;
+  // always there: a phone has no pointer to bring it out
+  opacity: 1;
+  transition: none;
+
+  > svg {
     display: none;
+  }
+
+  &::before {
+    content: "[copy";
+  }
+
+  // for two seconds after a copy the script swaps in a tick, drawn in a colour
+  &:has(path[fill^="rgb"])::before {
+    content: "[copied";
   }
 }
 
-.toc button.toc-header h3,
-.backlinks > h3,
-.graph > h3 {
-  @include label;
+// A table as psql draws one: a rule under the head and between the columns.
+// A wide table scrolls inside its container.
+.table-container {
+  margin: 0 0 var(--row);
+
+  > table {
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+
+    > * {
+      line-height: var(--row);
+    }
+
+    tr {
+      border: 0;
+    }
+
+    th,
+    td {
+      min-width: 0;
+      padding: 0 var(--ch);
+      border: 0;
+      line-height: var(--row);
+      text-align: left;
+      vertical-align: top;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      + th,
+      + td {
+        border-left: 1px solid var(--gray);
+      }
+    }
+
+    th {
+      border-bottom: 1px solid var(--gray);
+      font-weight: 700;
+      color: var(--dark);
+    }
+  }
 }
 
-ul.toc-content.overflow,
+.footnotes {
+  margin-top: calc(var(--row) * 2);
+  border: 0;
+}
+
+// ----------------------------------------------------------------------------
+// After the article: the plant, then backlinks, graph and comments, each under
+// a section heading
+// ----------------------------------------------------------------------------
+.page > #quartz-body .page-footer {
+  margin: 0;
+  opacity: 1;
+}
+
+// the frame's rule between the text and what follows it
+.center > hr {
+  display: none;
+}
+
+// An ASCII plant: tight lines, so that the stem is unbroken.
+.note-plant pre {
+  border: 0;
+  font-size: 1em;
+  line-height: 1.25;
+  color: var(--darkgray);
+}
+
+.note-plant {
+  margin: var(--row) 0 0 var(--indent);
+
+  figcaption {
+    line-height: var(--row);
+    color: var(--gray);
+
+    time {
+      color: inherit;
+    }
+  }
+}
+
+@mixin section-heading {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: var(--row);
+  color: var(--dark);
+  text-transform: uppercase;
+}
+
+.backlinks,
+.graph {
+  margin-top: calc(var(--row) * 2);
+
+  > h3 {
+    @include section-heading;
+  }
+}
+
 .backlinks > ul.overflow {
-  margin: 0.3rem 0 0;
+  max-height: none;
+  margin: 0;
+  padding: 0 0 0 var(--indent);
+  overflow: visible;
+  mask-image: none;
 
   > li {
     margin: 0;
 
     > a {
-      display: block;
-      padding: 0.15rem 0;
-      line-height: 1.4;
-      color: var(--gray);
-      background-color: transparent;
-      opacity: 1;
-      text-decoration: none;
-      transition: color 0.2s ease;
+      @include list-link;
+    }
 
-      &:hover,
-      &.in-view {
-        color: var(--dark);
-        opacity: 1;
-      }
+    &.overflow-end {
+      display: none;
     }
   }
 }
@@ -831,8 +996,9 @@ ul.toc-content.overflow,
 // so the graph does not flash white while the PIXI canvas starts again on SPA
 // navigation in dark mode.
 .graph > .graph-outer {
-  margin-top: 0.5rem;
-  border-color: var(--lightgray);
+  height: calc(var(--row) * 10);
+  margin: calc(var(--row) * 0.5) 0 0 var(--indent);
+  border: 1px solid var(--gray);
   border-radius: 0;
   overflow: hidden;
 }
@@ -843,71 +1009,150 @@ ul.toc-content.overflow,
 }
 
 .graph > .global-graph-outer > .global-graph-container {
+  border: 1px solid var(--gray);
   border-radius: 0;
+  box-shadow: none;
+}
+
+// The comments have no heading of their own.
+.giscus {
+  margin: calc(var(--row) * 2) 0 0;
+  padding-left: var(--indent);
+  box-sizing: border-box;
+
+  &::before {
+    content: "COMMENTS";
+    display: block;
+    margin: 0 0 calc(var(--row) * 0.5) calc(var(--indent) * -1);
+    font-weight: 700;
+    color: var(--dark);
+  }
 }
 
 // ----------------------------------------------------------------------------
-// Folder and tag pages: a contents list
+// Listings
 // ----------------------------------------------------------------------------
+// `ls -l`: date, size in words, name.
+.ls {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: calc(var(--ch) * 10) calc(var(--ch) * 4) minmax(0, 1fr);
+    column-gap: calc(var(--ch) * 2);
+    margin: 0;
+  }
+
+  time,
+  .ls-size {
+    white-space: nowrap;
+    color: var(--gray);
+  }
+
+  .ls-size {
+    text-align: right;
+  }
+
+  a {
+    @include list-link;
+  }
+
+  // on a phone the size makes way for the name
+  @media all and ($mobile) {
+    li {
+      grid-template-columns: calc(var(--ch) * 10) minmax(0, 1fr);
+    }
+
+    .ls-size {
+      display: none;
+    }
+  }
+}
+
+.ls-total,
+.tree-total,
+.home-more {
+  margin: 0;
+  color: var(--gray);
+
+  a {
+    @include link;
+  }
+}
+
+.tree-total {
+  margin-top: var(--row);
+}
+
+// `tree`: the branches are drawn by plugins/folder-tree.
+.tree {
+  p {
+    margin: 0;
+    color: var(--darkgray);
+  }
+
+  li {
+    line-height: var(--row);
+
+    &::before,
+    &::after {
+      color: var(--gray);
+    }
+  }
+
+  a {
+    @include list-link;
+  }
+
+  a.tree-dir {
+    font-weight: 700;
+    color: var(--dark);
+  }
+}
+
+.folder-tree,
+.folder-ls {
+  margin-top: var(--row);
+}
+
+// Folder and tag pages: the list that Quartz makes, where the listings above
+// do not replace it.
 .page-listing > p {
   margin: 0;
   color: var(--gray);
 }
 
 ul.section-ul {
-  margin-top: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 li.section-li {
   margin: 0;
 
   > .section {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.16rem 0;
+    display: grid;
+    grid-template-columns: calc(var(--ch) * 10) minmax(0, 1fr);
+    column-gap: calc(var(--ch) * 2);
 
     .meta {
-      order: 3;
       margin: 0;
+      white-space: nowrap;
       color: var(--gray);
       opacity: 1;
-      white-space: nowrap;
     }
 
-    // the title, then leader dots up to the date
-    > .desc {
-      flex: 1;
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      min-width: 0;
+    > .desc > h3 {
+      margin: 0;
+      font-size: 1em;
+      font-weight: 400;
+      line-height: var(--row);
 
-      &::after {
-        content: "";
-        flex: 1;
-        min-width: 1rem;
-        border-bottom: 1px dotted var(--underline);
-        transform: translateY(-0.28em);
-      }
-
-      > h3 {
-        margin: 0;
-        font-family: var(--bodyFont);
-        font-size: 1em;
-        font-weight: 400;
-        line-height: 1.6;
-
-        > a {
-          color: var(--dark);
-          text-decoration: none;
-
-          &:hover {
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 0.16em;
-          }
-        }
+      > a {
+        @include list-link;
       }
     }
 
@@ -917,63 +1162,131 @@ li.section-li {
   }
 }
 
-// Folders that ./plugins/folder-tree covers show its grouped index, not the
-// flat list of direct children.
-body[data-slug^="notes/"] .page-listing {
+// A folder whose page has a listing from ./plugins/folder-tree shows that and
+// not the flat list of its direct children.
+.center:has(.folder-tree, .folder-ls) .page-listing {
   display: none;
 }
 
-// ----------------------------------------------------------------------------
-// Homepage
-// ----------------------------------------------------------------------------
-body[data-slug="index"] {
-  .center > article {
-    margin-top: 1.6rem;
+// A folder with no note of its own: the command above the listing names it, so
+// the page's path and title are for screen readers only.
+.center:has(.markdown-preview-view:empty) {
+  .page-header {
+    .breadcrumb-container {
+      display: none;
+    }
 
-    p {
-      text-align: left;
+    .article-title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 
-  // The stock floral divider embedded at the top of the note. The row of
-  // plants replaces it; delete the embed from the note in the vault, then
-  // delete this rule.
-  .center > article img[src*="45422"] {
+  article {
     display: none;
   }
 
-  // The site footer is a structural slot, so `condition: not-index` in the
-  // config does not reach it.
-  footer {
-    display: none;
+  .folder-tree,
+  .folder-ls,
+  .page-listing {
+    margin-top: 0;
   }
 }
 
-// The 404 page uses the minimal frame, which has no sidebar.
-.page[data-frame="minimal"] > #quartz-body {
-  display: block;
-  max-width: var(--measure);
-  margin: 0 auto;
+// A folder with a note of its own: the note, then the listing.
+.center > .popover-hint > article {
+  margin: var(--row) 0 0;
+}
+
+// A page that is a listing is not a manual page: nothing is indented.
+body[data-slug="index"],
+body:has(.folder-tree, .folder-ls, .page-listing) {
+  --indent: 0px;
 }
 
 // ----------------------------------------------------------------------------
-// Footer
+// Homepage: a shell session
+// ----------------------------------------------------------------------------
+body[data-slug="index"] {
+  // The stock floral divider embedded at the top of the note; delete the embed
+  // from the note in the vault, then delete this rule.
+  .center > article img[src*="45422"],
+  .center > article img[src*="45422"] + br {
+    display: none;
+  }
+
+  .center > article {
+    margin-top: 0;
+  }
+}
+
+.home-listing {
+  section {
+    margin-top: var(--row);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// 404: `man` answers for the missing page.
+// ----------------------------------------------------------------------------
+body[data-slug="404"] {
+  --indent: 0px;
+
+  article {
+    h1 {
+      margin: 0;
+      text-transform: none;
+
+      &::before {
+        content: "$ man ";
+      }
+
+      // the prompt
+      &::first-letter {
+        color: var(--secondary);
+      }
+
+      &::after {
+        content: "No manual entry for 404";
+        display: block;
+        margin-bottom: var(--row);
+        font-weight: 400;
+        color: var(--darkgray);
+      }
+    }
+
+    .error-poem {
+      color: var(--gray);
+
+      strong {
+        color: inherit;
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Footer: the footer line of a manual page, then the links out
 // ----------------------------------------------------------------------------
 .page > #quartz-body > footer {
-  margin: 4rem 0 0;
-  padding: 0 0 2rem;
+  margin: calc(var(--row) * 3) 0 0;
+  padding: 0;
   opacity: 1;
-  font-size: 0.9rem;
   color: var(--gray);
 
-  hr {
-    display: none;
+  .man-foot {
+    color: var(--darkgray);
+
+    time {
+      color: inherit;
+    }
   }
 
   ul {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.3rem 1.5rem;
     width: auto;
     margin: 0;
   }
@@ -983,51 +1296,80 @@ body[data-slug="index"] {
   }
 
   a {
+    @include list-link;
     color: var(--gray);
-    text-decoration: underline;
-    text-decoration-color: var(--underline);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.16em;
-
-    &:hover {
-      color: var(--dark);
-    }
   }
 }
 
 // ----------------------------------------------------------------------------
 // Search dialog and link previews
 // ----------------------------------------------------------------------------
-.search > .search-container > .search-space {
-  > input {
-    border-radius: 0;
-    font-family: var(--bodyFont);
-    background-color: var(--light);
-  }
+.search > .search-container {
+  backdrop-filter: none;
+  background: color-mix(in srgb, var(--light) 88%, transparent);
 
-  > .search-layout {
-    border-radius: 0;
+  > .search-space {
+    width: min(calc(var(--ch) * 100), 92%);
 
-    .highlight {
+    > input {
+      margin: 0;
+      border: 1px solid var(--darkgray);
       border-radius: 0;
-      background: var(--textHighlight);
+      box-shadow: none;
+      font-family: var(--bodyFont);
+      font-size: 1rem;
+      color: var(--dark);
+      background-color: var(--light);
+
+      &:focus-visible {
+        outline-offset: -2px;
+      }
     }
 
-    .result-card {
-      font-family: var(--bodyFont);
+    > .search-layout {
+      margin-top: 0;
+      border: 1px solid var(--darkgray);
+      border-top: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: var(--light);
 
-      h3 {
-        font-weight: 400;
+      .highlight {
+        border-radius: 0;
+        background: var(--textHighlight);
+      }
+
+      .result-card {
+        border-radius: 0;
+        font-family: var(--bodyFont);
+
+        h3 {
+          font-size: 1em;
+          font-weight: 700;
+        }
+      }
+
+      .preview-container,
+      .results-container {
+        border-radius: 0;
       }
     }
   }
 }
 
 .popover > .popover-inner {
-  border-color: var(--lightgray);
+  // a preview is not a manual page: nothing is indented
+  --indent: 0px;
+  padding: var(--row) calc(var(--ch) * 2);
+  border: 1px solid var(--darkgray);
   border-radius: 0;
+  font-size: 1rem;
   background-color: var(--light);
-  box-shadow: 0 10px 28px -14px rgb(0 0 0 / 35%);
+  box-shadow: none;
+
+  .toc {
+    display: none;
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -1038,7 +1380,7 @@ body[data-slug="index"] {
   display: none;
 }
 
-// Theme every scrollbar (listings, tables, the margin, the page).
+// Theme every scrollbar (listings, tables, the page).
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--lightgray) transparent;
@@ -1073,5 +1415,46 @@ body[data-slug="index"] {
   }
 }
 
-// Scripting off: the plain document. Last, so that it overrides the theme.
-@include plain;
+// ----------------------------------------------------------------------------
+// Scripting off. The page is plain text already, so little changes: the
+// controls that need a script go, the table of contents opens, and the colours
+// follow the system's scheme, because the theme switch cannot run.
+//
+// `scripting: none` is true when the browser has scripting turned off:
+// Chrome 120, Firefox 113, Safari 17.
+// ----------------------------------------------------------------------------
+@media (scripting: none) {
+  .search,
+  .darkmode,
+  .graph,
+  .giscus,
+  .toc button.toc-header {
+    display: none !important;
+  }
+
+  .toc ul.toc-content.overflow.collapsed {
+    display: block;
+    padding-left: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --light: #141514;
+      --lightgray: #343734;
+      --gray: #8e948e;
+      --darkgray: #c8ccc8;
+      --dark: #f0f2ef;
+      --secondary: #81c784;
+      --tertiary: #a5d6a7;
+      --highlight: rgba(200, 204, 200, 0.09);
+      --textHighlight: rgba(129, 199, 132, 0.28);
+      --tint: #242624;
+      color-scheme: dark;
+    }
+
+    // shiki's dark token colours, which the theme switch otherwise turns on
+    pre > code span {
+      color: var(--shiki-dark);
+    }
+  }
+}

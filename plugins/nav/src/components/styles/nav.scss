@@ -1,31 +1,29 @@
-.site-nav {
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+// Structure only. Colour and type are in quartz/styles/custom.scss.
+//
+// A line of three fields, as at the head and foot of a manual page: the first
+// at the left edge, the last at the right, the middle one centred on the page.
+.man-line {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0 2ch;
+
+  > :last-child {
+    text-align: right;
   }
+}
 
-  a {
-    color: var(--gray);
-    background-color: transparent;
-    text-decoration: none;
-    transition: color 0.15s ease;
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2ch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-    &:hover,
-    &.active {
-      color: var(--dark);
-    }
-  }
-
-  // the title of the page that is open, under its section
-  .here {
-    display: block;
-    margin: 0.1rem 0 0.3rem 1rem;
-    font-size: 0.9em;
-    line-height: 1.35;
-    color: var(--dark);
+// five paths fit across a phone with one space between them
+@media (max-width: 800px) {
+  .site-nav ul {
+    gap: 0 1ch;
   }
 }

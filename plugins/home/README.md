@@ -1,31 +1,23 @@
 # @tplant/home
 
-The homepage. It renders on the site index only (`slug === "index"`), in two
-parts that are configured as two plugin entries:
+The homepage as a shell session. It renders on the index page only, in two
+parts chosen by `section`:
 
-- `section: bed` is a row of plants standing on a ground line, one for each of
-  the most recently tended notes. Each plant is a link to its note, and is the
-  same drawing that closes the note (see `../note-plant`). Put it in
-  `beforeBody`.
-- `section: contents` is two lists set like a table of contents, with leader
-  dots between title and date: every post, then the most recently tended
-  notes. Put it in `afterBody`.
+- `head` (place in `beforeBody`): the command above the homepage's own text,
+  `$ cat ~/index.md`.
+- `listing` (place in `afterBody`): `$ ls -lt ~/posts` with every post, then
+  `$ ls -lt ~/notes | head -n 8` with the notes tended most recently. Each row
+  is a date, a size in words and a title.
 
 ## Options
 
-| Option        | Type                  | Default      | Description                                       |
-| ------------- | --------------------- | ------------ | ------------------------------------------------- |
-| `section`     | `"bed" \| "contents"` | `"contents"` | The part to render.                               |
-| `postsFolder` | `string`              | `"posts"`    | Folder slug that holds the posts.                 |
-| `notesFolder` | `string`              | `"notes"`    | Folder slug that holds the notes.                 |
-| `plants`      | `number`              | `22`         | Bed: the number of plants.                        |
-| `recentCount` | `number`              | `6`          | Contents: the number of notes in the second list. |
+| Option        | Type                  | Default   | Description                                 |
+| ------------- | --------------------- | --------- | ------------------------------------------- |
+| `section`     | `"head" \| "listing"` | `listing` | Which part to render.                       |
+| `postsFolder` | `string`              | `posts`   | Folder slug that holds the posts.           |
+| `notesFolder` | `string`              | `notes`   | Folder slug that holds the notes.           |
+| `recentCount` | `number`              | `8`       | The number of recently tended notes listed. |
 
-## Building
+## Build
 
-`dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
-edit to `src/`, to `../note-plant/src` or to `../shared`:
-
-```bash
-node plugins/build.mjs home
-```
+`node plugins/build.mjs home` from the repository root. `dist/` is committed.

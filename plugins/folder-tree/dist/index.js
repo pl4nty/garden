@@ -1,32 +1,49 @@
 // src/components/FolderTree.tsx
-import { getDate, resolveRelative } from "@quartz-community/utils";
+import { resolveRelative } from "@quartz-community/utils";
 
-// ../shared/smallCaps.tsx
-import { jsx } from "preact/jsx-runtime";
-var ACRONYM = /\b[A-Z]{2,}s?\b/g;
-function smallCaps(text) {
-  const out = [];
-  let last = 0;
-  for (const match of text.matchAll(ACRONYM)) {
-    if (match.index > last) out.push(text.slice(last, match.index));
-    out.push(/* @__PURE__ */ jsx("abbr", { class: "sc", children: match[0] }));
-    last = match.index + match[0].length;
-  }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
+// ../shared/listing.tsx
+import { getDate } from "@quartz-community/utils";
+import { jsx, jsxs } from "preact/jsx-runtime";
+var isoDate = (d) => d.toISOString().slice(0, 10);
+var wordCount = (f) => (f.text ?? "").split(/\s+/).filter(Boolean).length;
+function humanSize(n) {
+  if (n < 1e3) return String(n);
+  const k = n / 1e3;
+  return k < 9.95 ? `${k.toFixed(1)}k` : `${Math.round(k)}k`;
+}
+function dateOf(f, cfg) {
+  const fallback = cfg.defaultDateType;
+  const data = { ...f, defaultDateType: f.defaultDateType ?? fallback };
+  return data.defaultDateType ? getDate(data) : void 0;
+}
+var titleOf = (f) => f.frontmatter?.title ?? f.slug ?? "";
+function LsRows({ rows }) {
+  return /* @__PURE__ */ jsx("ul", { class: "ls", children: rows.map(({ href, title, date, words }) => /* @__PURE__ */ jsxs("li", { children: [
+    date ? /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: isoDate(date) }) : /* @__PURE__ */ jsx("span", {}),
+    /* @__PURE__ */ jsx("span", { class: "ls-size", title: `${words.toLocaleString("en")} words`, children: humanSize(words) }),
+    /* @__PURE__ */ jsx("a", { href, children: title })
+  ] })) });
+}
+function Cmd({ children, label }) {
+  return /* @__PURE__ */ jsx("h2", { class: "cmd", "aria-label": label, children });
 }
 
 // src/components/styles/folderTree.scss
-var folderTree_default = ".folder-tree{margin-top:.5rem}.folder-tree-count{margin:0 0 1.75rem;color:var(--gray)}.folder-tree-groups{columns:3;column-gap:3rem}.folder-tree-groups.single{columns:1;max-width:24rem}@media(max-width: 1100px){.folder-tree-groups{columns:2}}@media(max-width: 600px){.folder-tree-groups{columns:1}}.folder-tree-group{break-inside:avoid;padding-bottom:1.5rem}.folder-tree-group h2{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin:0 0 .3rem;padding-bottom:.2rem;border-bottom:1px solid var(--lightgray);font-size:1rem;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:.06em;line-height:1.4;color:var(--gray)}.folder-tree-group h2 a{color:inherit;background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group h2 a:hover{color:var(--dark)}.folder-tree-group .folder-tree-n{font-size:.9em;letter-spacing:0}.folder-tree-group ul{margin:0;padding:0;list-style:none}.folder-tree-group li{margin:0}.folder-tree-group li a{display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;padding:.12rem 0;line-height:1.4;color:var(--darkgray);background-color:rgba(0,0,0,0);text-decoration:none}.folder-tree-group li a:hover span{color:var(--dark);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}.folder-tree-group time{flex-shrink:0;font-size:.9em;color:var(--gray)}";
+var folderTree_default = '.tree ul{margin:0;padding:0;list-style:none}.tree li{position:relative;margin:0;padding-left:4ch}.tree li::before,.tree li::after{position:absolute;left:0;white-space:pre;pointer-events:none}.tree li::before{content:"\u251C\u2500\u2500 ";top:0}.tree li:last-child::before{content:"\u2514\u2500\u2500 "}.tree li::after{content:"\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a\u2502\\a";top:0;bottom:0;overflow:hidden;line-height:1.2}.tree li:last-child::after{bottom:auto;height:calc(var(--row, 1.6em)/2 - .3em)}';
 
 // src/components/FolderTree.tsx
-import { jsx as jsx2, jsxs } from "preact/jsx-runtime";
+import { jsx as jsx2, jsxs as jsxs2 } from "preact/jsx-runtime";
 var defaultOptions = {
-  roots: ["notes"]
+  trees: ["notes"],
+  lists: []
 };
+var plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 var FolderTree_default = ((opts) => {
   const options = { ...defaultOptions, ...opts };
-  const roots = options.roots.map((r) => r.replace(/\/$/, "").toLowerCase());
+  const clean = (roots) => roots.map((r) => r.replace(/\/$/, "").toLowerCase());
+  const trees = clean(options.trees);
+  const lists = clean(options.lists);
+  const below = (roots, folder) => roots.some((r) => folder === r || folder.startsWith(`${r}/`));
   const FolderTree = ({
     fileData,
     allFiles,
@@ -36,58 +53,78 @@ var FolderTree_default = ((opts) => {
     const slug = fileData.slug ?? "";
     if (!slug.endsWith("/index")) return null;
     const here = slug.slice(0, -"/index".length);
-    if (!roots.some((r) => here === r || here.startsWith(`${r}/`))) return null;
+    const href = (to) => resolveRelative(slug, to);
     const locale = cfg.locale || "en-US";
-    const cfgDateType = cfg.defaultDateType;
-    const dateOf = (f) => {
-      const data = {
-        ...f,
-        defaultDateType: f.defaultDateType ?? cfgDateType
-      };
-      return data.defaultDateType ? getDate(data) : void 0;
-    };
-    const depth = here.split("/").length;
-    const groups = /* @__PURE__ */ new Map();
-    for (const f of allFiles) {
+    const pages = allFiles.filter((f) => {
       const s = f.slug;
-      if (!s || !s.startsWith(`${here}/`) || s.endsWith("/index")) continue;
-      const folder = s.split("/").slice(0, -1).join("/");
-      const names = (f.relativePath ?? "").split("/").slice(depth, -1);
-      const group = groups.get(folder) ?? { folder, names, notes: [] };
-      group.notes.push({ f, date: dateOf(f) });
-      groups.set(folder, group);
-    }
-    if (groups.size === 0) return null;
-    const sorted = [...groups.values()].sort((a, b) => {
-      if (a.folder === here) return 1;
-      if (b.folder === here) return -1;
-      return a.folder.localeCompare(b.folder);
+      return s && s.startsWith(`${here}/`) && !s.endsWith("/index");
     });
-    const total = sorted.reduce((n, g) => n + g.notes.length, 0);
-    const hasSubfolders = sorted.some((g) => g.folder !== here);
-    return /* @__PURE__ */ jsxs("section", { class: `folder-tree ${displayClass ?? ""}`, children: [
-      /* @__PURE__ */ jsxs("p", { class: "folder-tree-count", children: [
-        total,
-        " ",
-        total === 1 ? "note" : "notes",
-        hasSubfolders && ` in ${sorted.filter((g) => g.folder !== here).length} folders`
-      ] }),
-      /* @__PURE__ */ jsx2("div", { class: `folder-tree-groups ${hasSubfolders ? "" : "single"}`, children: sorted.map((group) => /* @__PURE__ */ jsxs("div", { class: "folder-tree-group", children: [
-        hasSubfolders && /* @__PURE__ */ jsxs("h2", { children: [
-          group.folder === here ? "Everything else" : /* @__PURE__ */ jsx2("a", { href: resolveRelative(slug, `${group.folder}/index`), children: group.names.join(" / ") }),
-          /* @__PURE__ */ jsx2("span", { class: "folder-tree-n", children: group.notes.length })
+    if (pages.length === 0) return null;
+    if (below(lists, here)) {
+      const rows = pages.map((f) => ({
+        href: href(f.slug),
+        title: titleOf(f),
+        date: dateOf(f, cfg),
+        words: wordCount(f)
+      })).sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
+      return /* @__PURE__ */ jsxs2("section", { class: `folder-ls ${displayClass ?? ""}`, children: [
+        /* @__PURE__ */ jsxs2(Cmd, { label: `${rows.length} pages, newest first`, children: [
+          "ls -lt ~/",
+          here
         ] }),
-        /* @__PURE__ */ jsx2("ul", { children: group.notes.sort(
-          (a, b) => (a.f.frontmatter?.title ?? "").localeCompare(
-            b.f.frontmatter?.title ?? "",
-            locale,
-            { numeric: true, sensitivity: "base" }
-          )
-        ).map(({ f, date }) => /* @__PURE__ */ jsx2("li", { children: /* @__PURE__ */ jsxs("a", { href: resolveRelative(slug, f.slug), children: [
-          /* @__PURE__ */ jsx2("span", { children: smallCaps(f.frontmatter?.title ?? f.slug ?? "") }),
-          date && /* @__PURE__ */ jsx2("time", { datetime: date.toISOString(), children: date.toLocaleDateString(locale, { month: "short", year: "numeric" }) })
-        ] }) })) })
-      ] })) })
+        /* @__PURE__ */ jsxs2("p", { class: "ls-total", children: [
+          "total ",
+          rows.length
+        ] }),
+        /* @__PURE__ */ jsx2(LsRows, { rows })
+      ] });
+    }
+    if (!below(trees, here)) return null;
+    const root = { name: here, slug: here, dirs: /* @__PURE__ */ new Map(), files: [] };
+    let dirCount = 0;
+    for (const f of pages) {
+      const parts = f.slug.slice(here.length + 1).split("/");
+      let dir = root;
+      for (const part of parts.slice(0, -1)) {
+        let next = dir.dirs.get(part);
+        if (!next) {
+          next = { name: part, slug: `${dir.slug}/${part}`, dirs: /* @__PURE__ */ new Map(), files: [] };
+          dir.dirs.set(part, next);
+          dirCount++;
+        }
+        dir = next;
+      }
+      dir.files.push(f);
+    }
+    const list = (dir) => /* @__PURE__ */ jsxs2("ul", { children: [
+      [...dir.dirs.values()].sort((a, b) => a.name.localeCompare(b.name, locale)).map((d) => /* @__PURE__ */ jsxs2("li", { children: [
+        /* @__PURE__ */ jsxs2("a", { class: "tree-dir", href: href(`${d.slug}/index`), children: [
+          d.name,
+          "/"
+        ] }),
+        list(d)
+      ] })),
+      dir.files.sort(
+        (a, b) => titleOf(a).localeCompare(titleOf(b), locale, { numeric: true, sensitivity: "base" })
+      ).map((f) => /* @__PURE__ */ jsx2("li", { children: /* @__PURE__ */ jsx2("a", { href: href(f.slug), children: titleOf(f) }) }))
+    ] });
+    return /* @__PURE__ */ jsxs2("section", { class: `folder-tree ${displayClass ?? ""}`, children: [
+      /* @__PURE__ */ jsxs2(Cmd, { label: `${pages.length} notes, by folder`, children: [
+        "tree --dirsfirst ~/",
+        here
+      ] }),
+      /* @__PURE__ */ jsxs2("div", { class: "tree", children: [
+        /* @__PURE__ */ jsxs2("p", { children: [
+          "~/",
+          here
+        ] }),
+        list(root)
+      ] }),
+      /* @__PURE__ */ jsxs2("p", { class: "tree-total", children: [
+        plural(dirCount, "directory", "directories"),
+        ", ",
+        plural(pages.length, "file", "files")
+      ] })
     ] });
   };
   FolderTree.css = folderTree_default;

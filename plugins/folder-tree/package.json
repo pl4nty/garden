@@ -1,7 +1,7 @@
 {
   "name": "@tplant/folder-tree",
   "version": "0.1.0",
-  "description": "Renders every note below a folder page, grouped by subfolder",
+  "description": "A folder's own page lists what is below it: `tree` output for notes, `ls -lt` output for posts",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,9 +47,10 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "roots": [
+      "trees": [
         "notes"
-      ]
+      ],
+      "lists": []
     },
     "components": {
       "FolderTree": {
@@ -59,7 +60,10 @@
       }
     },
     "optionSchema": {
-      "roots": {
+      "trees": {
+        "type": "array"
+      },
+      "lists": {
         "type": "array"
       }
     }

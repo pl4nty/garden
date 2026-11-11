@@ -1,7 +1,7 @@
 {
   "name": "@tplant/home",
   "version": "0.1.0",
-  "description": "Homepage: a row of plants, one for each recently tended note, and contents lists of posts and notes",
+  "description": "Homepage as a shell session: `ls -lt` listings of posts and recently tended notes",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,11 +47,10 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "section": "contents",
+      "section": "listing",
       "postsFolder": "posts",
       "notesFolder": "notes",
-      "plants": 22,
-      "recentCount": 6
+      "recentCount": 8
     },
     "components": {
       "Home": {
@@ -64,8 +63,8 @@
       "section": {
         "type": "string",
         "enum": [
-          "bed",
-          "contents"
+          "head",
+          "listing"
         ]
       },
       "postsFolder": {
@@ -73,9 +72,6 @@
       },
       "notesFolder": {
         "type": "string"
-      },
-      "plants": {
-        "type": "number"
       },
       "recentCount": {
         "type": "number"

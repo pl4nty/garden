@@ -1,14 +1,24 @@
 # @tplant/nav
 
-The site navigation: a list of links for the left sidebar. The link for the
-section that holds the current page is marked as active, and the title of the
-current page is listed under it.
+The head of every page: the header line of a manual page, which links home, and
+the site's sections as paths. The path for the section that holds the current
+page is marked as active.
+
+```
+TPLANT(7)                        Tom's Garden                         TPLANT(7)
+
+~/posts  ~/notes  ~/ideas  ~/now  ~/whoami
+```
+
+The middle field is `pageTitle` from the site configuration.
 
 ## Options
 
-| Option  | Type                     | Default | Description                                                               |
-| ------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
-| `links` | `Record<string, string>` | `{}`    | Label to slug. A slug that ends in `/` is a folder, for example `posts/`. |
+| Option    | Type                     | Default | Description                                                               |
+| --------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
+| `name`    | `string`                 | `SITE`  | The name at both ends of the header line.                                 |
+| `section` | `number`                 | `7`     | The manual section after the name.                                        |
+| `links`   | `Record<string, string>` | `{}`    | Label to slug. A slug that ends in `/` is a folder, for example `posts/`. |
 
 ## Example
 
@@ -16,20 +26,16 @@ current page is listed under it.
 - source: ./plugins/nav
   enabled: true
   options:
+    name: TPLANT
+    section: 7
     links:
-      Posts: posts/
-      Notes: notes/
-      About: whoami
+      ~/posts: posts/
+      ~/whoami: whoami
   layout:
     position: left
-    priority: 20
+    priority: 12
 ```
 
-## Building
+## Build
 
-`dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
-edit to `src/`:
-
-```bash
-node plugins/build.mjs nav
-```
+`node plugins/build.mjs nav` from the repository root. `dist/` is committed.

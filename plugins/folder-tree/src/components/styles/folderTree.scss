@@ -1,67 +1,21 @@
-// Set as the index at the back of a book: narrow columns, a small-caps head for
-// each folder, and groups that never split across columns.
-.folder-tree {
-  margin-top: 0.5rem;
+// Structure only. Colour and type are in quartz/styles/custom.scss.
+//
+// `tree` output from a nested list. Each item is indented four columns and
+// draws its own connector in them:
+//
+//   ├── a          ::before of an item is "├── " ("└── " on the last one)
+//   │   └── b      ::after is a column of "│" down the item's left edge, for
+//   └── c          the lines below its first; the last item has none
+//
+// The column is one long string of "│" on lines of its own height, clipped to
+// the item, so the rule is unbroken whatever the line height of the text.
+$bar: "│\a";
+$bars: "";
+@for $i from 1 through 160 {
+  $bars: $bars + $bar;
 }
 
-.folder-tree-count {
-  margin: 0 0 1.75rem;
-  color: var(--gray);
-}
-
-.folder-tree-groups {
-  columns: 3;
-  column-gap: 3rem;
-
-  &.single {
-    columns: 1;
-    max-width: 24rem;
-  }
-
-  @media (max-width: 1100px) {
-    columns: 2;
-  }
-
-  @media (max-width: 600px) {
-    columns: 1;
-  }
-}
-
-.folder-tree-group {
-  break-inside: avoid;
-  padding-bottom: 1.5rem;
-
-  h2 {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin: 0 0 0.3rem;
-    padding-bottom: 0.2rem;
-    border-bottom: 1px solid var(--lightgray);
-    font-size: 1rem;
-    font-weight: 400;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
-    line-height: 1.4;
-    color: var(--gray);
-
-    a {
-      color: inherit;
-      background-color: transparent;
-      text-decoration: none;
-
-      &:hover {
-        color: var(--dark);
-      }
-    }
-  }
-
-  .folder-tree-n {
-    font-size: 0.9em;
-    letter-spacing: 0;
-  }
-
+.tree {
   ul {
     margin: 0;
     padding: 0;
@@ -69,31 +23,39 @@
   }
 
   li {
+    position: relative;
     margin: 0;
-  }
+    padding-left: 4ch;
 
-  li a {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.8rem;
-    padding: 0.12rem 0;
-    line-height: 1.4;
-    color: var(--darkgray);
-    background-color: transparent;
-    text-decoration: none;
-
-    &:hover span {
-      color: var(--dark);
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
+    &::before,
+    &::after {
+      position: absolute;
+      left: 0;
+      white-space: pre;
+      pointer-events: none;
     }
-  }
 
-  time {
-    flex-shrink: 0;
-    font-size: 0.9em;
-    color: var(--gray);
+    &::before {
+      content: "├── ";
+      top: 0;
+    }
+
+    &:last-child::before {
+      content: "└── ";
+    }
+
+    &::after {
+      content: $bars;
+      top: 0;
+      bottom: 0;
+      overflow: hidden;
+      line-height: 1.2;
+    }
+
+    // above the corner of the last item: only the stub that reaches it
+    &:last-child::after {
+      bottom: auto;
+      height: calc(var(--row, 1.6em) / 2 - 0.3em);
+    }
   }
 }

@@ -21,14 +21,15 @@ const plugins = {
   home: { name: "Home", component: true },
   "folder-tree": { name: "FolderTree", component: true },
   "note-plant": { name: "NotePlant", component: true },
-  "small-caps": { name: "SmallCaps", component: false },
+  footer: { name: "Footer", component: true },
+  "content-meta": { name: "ContentMeta", component: true },
 }
 
 const scssAsText = {
   name: "scss-as-text",
   setup(b) {
     b.onLoad({ filter: /\.scss$/ }, (args) => ({
-      contents: sass.compile(args.path, { style: "compressed" }).css,
+      contents: sass.compile(args.path, { style: "compressed", charset: false }).css,
       loader: "text",
     }))
   },

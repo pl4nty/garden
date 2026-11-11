@@ -1,36 +1,21 @@
 # @tplant/folder-tree
 
-An index of every note below a folder, grouped by subfolder. It renders on the
-index page of each configured root folder and of every folder below it, and
-nowhere else. It is set like the index at the back of a book, and it replaces the
-file tree that the explorer showed in the sidebar.
+Lists what is below a folder, on the folder's own page, as the output of a
+shell command:
 
-`quartz/styles/custom.scss` hides the stock folder listing on the same pages.
+- `trees`: `tree --dirsfirst` output. Every note below the folder, nested by
+  subfolder, with a count of directories and files. The list is a nested `<ul>`
+  and the box-drawing branches are drawn in CSS, so it reads as a list to a
+  screen reader and wraps on a narrow screen without breaking the branches.
+- `lists`: `ls -lt` output. Date, size in words and title, newest first.
 
 ## Options
 
-| Option  | Type       | Default     | Description                          |
-| ------- | ---------- | ----------- | ------------------------------------ |
-| `roots` | `string[]` | `["notes"]` | Folder slugs to render a tree below. |
+| Option  | Type       | Default     | Description                           |
+| ------- | ---------- | ----------- | ------------------------------------- |
+| `trees` | `string[]` | `["notes"]` | Folder slugs listed as a tree.        |
+| `lists` | `string[]` | `[]`        | Folder slugs listed as `ls -lt` rows. |
 
-## Example
+## Build
 
-```yaml
-- source: ./plugins/folder-tree
-  enabled: true
-  options:
-    roots:
-      - notes
-  layout:
-    position: afterBody
-    priority: 1
-```
-
-## Building
-
-`dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
-edit to `src/`:
-
-```bash
-node plugins/build.mjs folder-tree
-```
+`node plugins/build.mjs folder-tree` from the repository root. `dist/` is committed.

@@ -1,7 +1,7 @@
 {
   "name": "@tplant/nav",
   "version": "0.1.0",
-  "description": "Site navigation links for the top bar, with the current section marked",
+  "description": "The head of every page: the header line of a manual page, and the site's sections as paths",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,6 +47,8 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
+      "name": "SITE",
+      "section": 7,
       "links": {}
     },
     "components": {
@@ -57,6 +59,12 @@
       }
     },
     "optionSchema": {
+      "name": {
+        "type": "string"
+      },
+      "section": {
+        "type": "number"
+      },
       "links": {
         "type": "object"
       }
