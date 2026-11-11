@@ -1,7 +1,7 @@
 {
   "name": "@tplant/home",
   "version": "0.1.0",
-  "description": "Homepage: a row of plants, one for each recently tended note, and contents lists of posts and notes",
+  "description": "Homepage: a garden scene with a plant for every note and post, and lists of posts by year and notes by folder",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,11 +47,9 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "section": "contents",
+      "section": "index",
       "postsFolder": "posts",
-      "notesFolder": "notes",
-      "plants": 22,
-      "recentCount": 6
+      "notesFolder": "notes"
     },
     "components": {
       "Home": {
@@ -64,8 +62,8 @@
       "section": {
         "type": "string",
         "enum": [
-          "bed",
-          "contents"
+          "scene",
+          "index"
         ]
       },
       "postsFolder": {
@@ -73,12 +71,6 @@
       },
       "notesFolder": {
         "type": "string"
-      },
-      "plants": {
-        "type": "number"
-      },
-      "recentCount": {
-        "type": "number"
       }
     }
   }

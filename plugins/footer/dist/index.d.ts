@@ -1,9 +1,5 @@
-import { QuartzComponent } from '@quartz-community/types';
-export { QuartzComponent, QuartzComponentProps, StringResource } from '@quartz-community/types';
+import { QuartzComponentConstructor } from "@quartz-community/types"
 
-interface FooterOptions {
-    links: Record<string, string>;
-}
-declare const _default: (opts?: FooterOptions) => QuartzComponent;
+declare const Footer: QuartzComponentConstructor
 
-export { _default as Footer, type FooterOptions };
+export { Footer }

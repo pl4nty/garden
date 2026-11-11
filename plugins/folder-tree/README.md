@@ -2,8 +2,9 @@
 
 An index of every note below a folder, grouped by subfolder. It renders on the
 index page of each configured root folder and of every folder below it, and
-nowhere else. It is set like the index at the back of a book, and it replaces the
-file tree that the explorer showed in the sidebar.
+nowhere else. Each folder is a heading over a thin rule, with a row for each
+note and the date it was tended. It replaces the file tree that the explorer
+showed in the sidebar.
 
 `quartz/styles/custom.scss` hides the stock folder listing on the same pages.
 

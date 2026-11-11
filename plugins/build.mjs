@@ -21,7 +21,8 @@ const plugins = {
   home: { name: "Home", component: true },
   "folder-tree": { name: "FolderTree", component: true },
   "note-plant": { name: "NotePlant", component: true },
-  "small-caps": { name: "SmallCaps", component: false },
+  light: { name: "Light", component: true },
+  footer: { name: "Footer", component: true },
 }
 
 const scssAsText = {
@@ -31,6 +32,28 @@ const scssAsText = {
       contents: sass.compile(args.path, { style: "compressed" }).css,
       loader: "text",
     }))
+  },
+}
+
+// A component's browser script (`*.inline.ts`) is bundled on its own for the
+// browser and imported as a string, which Quartz writes into the page's
+// prescript or postscript.
+const inlineScript = {
+  name: "inline-script",
+  setup(b) {
+    b.onLoad({ filter: /\.inline\.ts$/ }, async (args) => {
+      const out = await build({
+        entryPoints: [args.path],
+        bundle: true,
+        write: false,
+        minify: true,
+        format: "iife",
+        platform: "browser",
+        target: "es2020",
+        logLevel: "warning",
+      })
+      return { contents: out.outputFiles[0].text, loader: "text" }
+    })
   },
 }
 
@@ -51,7 +74,7 @@ for (const [dir, { name, component }] of Object.entries(plugins)) {
     // resolved from the repository's node_modules, so every plugin shares one
     // preact instance with Quartz
     external: ["preact", "preact/*", "@quartz-community/*"],
-    plugins: [scssAsText],
+    plugins: [scssAsText, inlineScript],
     logLevel: "warning",
   })
   const type = component ? "QuartzComponentConstructor" : "QuartzTransformerPlugin"

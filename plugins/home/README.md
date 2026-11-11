@@ -3,28 +3,28 @@
 The homepage. It renders on the site index only (`slug === "index"`), in two
 parts that are configured as two plugin entries:
 
-- `section: bed` is a row of plants standing on a ground line, one for each of
-  the most recently tended notes. Each plant is a link to its note, and is the
-  same drawing that closes the note (see `../note-plant`). Put it in
-  `beforeBody`.
-- `section: contents` is two lists set like a table of contents, with leader
-  dots between title and date: every post, then the most recently tended
-  notes. Put it in `afterBody`.
+- `section: scene` is the garden that fills the first screen: sky, ground and
+  a plant for every note and post, drawn as inline SVG at build time. Each
+  plant is a link to its note, and is the same drawing that stands at the foot
+  of the note (see `../note-plant`). Notes from one folder grow together in a
+  bed; `src/components/scene.ts` holds the beds and where they lie, for a wide
+  screen and for an upright phone. The colours are CSS variables that
+  `../light` sets for the time of day. Put it in `beforeBody`.
+- `section: index` is the plain lists that follow the note's own text: posts
+  by year, then notes by folder. Put it in `afterBody`.
 
 ## Options
 
-| Option        | Type                  | Default      | Description                                       |
-| ------------- | --------------------- | ------------ | ------------------------------------------------- |
-| `section`     | `"bed" \| "contents"` | `"contents"` | The part to render.                               |
-| `postsFolder` | `string`              | `"posts"`    | Folder slug that holds the posts.                 |
-| `notesFolder` | `string`              | `"notes"`    | Folder slug that holds the notes.                 |
-| `plants`      | `number`              | `22`         | Bed: the number of plants.                        |
-| `recentCount` | `number`              | `6`          | Contents: the number of notes in the second list. |
+| Option        | Type                 | Default   | Description                       |
+| ------------- | -------------------- | --------- | --------------------------------- |
+| `section`     | `"scene" \| "index"` | `"index"` | The part to render.               |
+| `postsFolder` | `string`             | `"posts"` | Folder slug that holds the posts. |
+| `notesFolder` | `string`             | `"notes"` | Folder slug that holds the notes. |
 
 ## Building
 
 `dist/` is committed, because Quartz loads it at runtime. Rebuild it after an
-edit to `src/`, to `../note-plant/src` or to `../shared`:
+edit to `src/` or to `../note-plant/src`:
 
 ```bash
 node plugins/build.mjs home

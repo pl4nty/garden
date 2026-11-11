@@ -2,10 +2,8 @@ import type {
   QuartzComponent,
   QuartzComponentConstructor,
   QuartzComponentProps,
-  QuartzPluginData,
 } from "@quartz-community/types"
-import { formatDate, getDate } from "@quartz-community/utils"
-import { drawPlant } from "./plant"
+import { FOOT, drawPlant, plantSvg, speciesOf } from "./plant"
 import { noteStats } from "./stats"
 import style from "./styles/notePlant.scss"
 
@@ -20,6 +18,10 @@ const defaultOptions: NotePlantOptions = {
 
 const plural = (n: number, one: string, many: string) =>
   `${n.toLocaleString("en")} ${n === 1 ? one : many}`
+
+// "2 Jun 2026"
+export const day = (date: Date, locale: string) =>
+  date.toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })
 
 export default ((opts?: Partial<NotePlantOptions>) => {
   const options: NotePlantOptions = { ...defaultOptions, ...opts }
@@ -38,39 +40,48 @@ export default ((opts?: Partial<NotePlantOptions>) => {
     if (roots.length > 0 && !roots.some((root) => slug.startsWith(`${root}/`))) return null
 
     const { words, linksOut, linksIn } = noteStats(fileData, allFiles)
+    const plant = drawPlant({ seed: slug, words, linksOut, linksIn, species: speciesOf(slug) })
 
-    const plant = drawPlant({ seed: slug, words, linksOut, linksIn })
-
-    const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
-    const dated = {
-      ...fileData,
-      defaultDateType: fileData.defaultDateType ?? cfgDateType,
-    } as QuartzPluginData
-    const date = dated.defaultDateType ? getDate(dated) : undefined
+    const locale = cfg.locale || "en-US"
+    const dates = fileData.dates as { created?: Date; modified?: Date } | undefined
+    const tended = dates?.modified
+    // Only a date written in the note counts as its planting: without one,
+    // Quartz falls back to the file's creation time on the build machine.
+    const written = Boolean(fileData.frontmatter?.created)
+    const planted =
+      written && dates?.created && tended && day(dates.created, locale) !== day(tended, locale)
+        ? dates.created
+        : undefined
 
     const description =
-      `A plant drawn from this note. Its height comes from the note's length, ` +
-      `it has ${plural(plant.leaves, "leaf", "leaves")} for the notes it links to ` +
-      `and ${plural(plant.buds, "bud", "buds")} for the notes that link here.`
+      `This note's plant. Its size comes from the note's length ` +
+      `(${plural(words, "word", "words")}), its leaves from the ${plural(linksOut, "note", "notes")} ` +
+      `it links to, and its flowers from the ${plural(linksIn, "note", "notes")} that link here.`
 
     return (
       <figure class={`note-plant ${displayClass ?? ""}`}>
         <div
-          class="note-plant-art"
+          class="plant-box"
           role="img"
           aria-label={description}
-          dangerouslySetInnerHTML={{ __html: plant.svg }}
+          title={description}
+          style={`--w:${plant.halfWidth * 2};--h:${plant.height + FOOT}`}
+          dangerouslySetInnerHTML={{ __html: plantSvg(plant, "note-plant") }}
         />
         <figcaption>
-          {date && (
-            <p class="note-plant-tended">
-              Tended{" "}
-              <time datetime={date.toISOString()}>{formatDate(date, cfg.locale || "en-US")}</time>
+          {planted && (
+            <p>
+              Planted <time datetime={planted.toISOString()}>{day(planted, locale)}</time>
             </p>
           )}
-          <p class="note-plant-stats">
-            {plural(words, "word", "words")} · {plural(linksOut, "link", "links")} out ·{" "}
-            {plural(linksIn, "link", "links")} in
+          {tended && (
+            <p class={planted ? "note-plant-faint" : undefined}>
+              Tended <time datetime={tended.toISOString()}>{day(tended, locale)}</time>
+            </p>
+          )}
+          <p class="note-plant-faint note-plant-stats">
+            {plural(words, "word", "words")}, {plural(linksOut, "link", "links")} out,{" "}
+            {linksIn.toLocaleString("en")} in
           </p>
         </figcaption>
       </figure>

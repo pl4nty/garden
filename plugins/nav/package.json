@@ -1,7 +1,7 @@
 {
   "name": "@tplant/nav",
   "version": "0.1.0",
-  "description": "Site navigation links for the top bar, with the current section marked",
+  "description": "The head of a page: the site's name on the homepage, and one link back up on every other page",
   "type": "module",
   "license": "MIT",
   "author": "Tom Plant",
@@ -47,18 +47,18 @@
     "defaultOrder": 50,
     "defaultEnabled": true,
     "defaultOptions": {
-      "links": {}
+      "descriptor": ""
     },
     "components": {
       "Nav": {
         "displayName": "Nav",
         "defaultPosition": "left",
-        "defaultPriority": 20
+        "defaultPriority": 10
       }
     },
     "optionSchema": {
-      "links": {
-        "type": "object"
+      "descriptor": {
+        "type": "string"
       }
     }
   }

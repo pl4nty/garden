@@ -5,7 +5,6 @@ import type {
   QuartzPluginData,
 } from "@quartz-community/types"
 import { getDate, resolveRelative } from "@quartz-community/utils"
-import { smallCaps } from "../../../shared/smallCaps"
 import style from "./styles/folderTree.scss"
 
 export interface FolderTreeOptions {
@@ -108,10 +107,14 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
                   .map(({ f, date }) => (
                     <li>
                       <a href={resolveRelative(slug as Slug, f.slug as Slug)}>
-                        <span>{smallCaps((f.frontmatter?.title ?? f.slug ?? "") as string)}</span>
+                        <span>{(f.frontmatter?.title ?? f.slug ?? "") as string}</span>
                         {date && (
                           <time datetime={date.toISOString()}>
-                            {date.toLocaleDateString(locale, { month: "short", year: "numeric" })}
+                            {date.toLocaleDateString(locale, {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
                           </time>
                         )}
                       </a>

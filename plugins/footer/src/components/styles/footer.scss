@@ -1,15 +1,17 @@
+// Two short lines at the foot of the page: the site's pages, then the links
+// out. custom.scss sets the column and the colours.
 footer {
-  text-align: left;
-  margin-bottom: 4rem;
-  opacity: 0.7;
-
-  & ul {
-    list-style: none;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6em;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    margin-top: -1rem;
+    list-style: none;
+  }
+
+  li:not(:last-child)::after {
+    content: "·";
+    margin-left: 0.6em;
   }
 }

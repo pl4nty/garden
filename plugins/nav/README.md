@@ -1,14 +1,16 @@
 # @tplant/nav
 
-The site navigation: a list of links for the left sidebar. The link for the
-section that holds the current page is marked as active, and the title of the
-current page is listed under it.
+The head of a page. On the homepage it is the site's name (`pageTitle` from
+the site configuration) with one line under it. On every other page it is one
+link, "Back", to the page one level up: a note's folder, a folder's parent, or
+the homepage. The rest of the site's navigation is the line of links in the
+footer (`../footer`).
 
 ## Options
 
-| Option  | Type                     | Default | Description                                                               |
-| ------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
-| `links` | `Record<string, string>` | `{}`    | Label to slug. A slug that ends in `/` is a folder, for example `posts/`. |
+| Option       | Type     | Default | Description                                    |
+| ------------ | -------- | ------- | ---------------------------------------------- |
+| `descriptor` | `string` | `""`    | The line under the site name, on the homepage. |
 
 ## Example
 
@@ -16,13 +18,10 @@ current page is listed under it.
 - source: ./plugins/nav
   enabled: true
   options:
-    links:
-      Posts: posts/
-      Notes: notes/
-      About: whoami
+    descriptor: notes and posts by Tom Plant
   layout:
     position: left
-    priority: 20
+    priority: 10
 ```
 
 ## Building
