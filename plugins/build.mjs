@@ -6,7 +6,7 @@
 //   node plugins/build.mjs home nav   # only the named ones
 //
 // Quartz loads dist/ at runtime and skips the build step when it is present,
-// so dist/ is committed. Run this after an edit to src/ or to plugins/shared.
+// so dist/ is committed. Run this after an edit to src/.
 import { build } from "esbuild"
 import * as sass from "sass"
 import { mkdir, writeFile } from "node:fs/promises"
@@ -21,7 +21,8 @@ const plugins = {
   home: { name: "Home", component: true },
   "folder-tree": { name: "FolderTree", component: true },
   "note-plant": { name: "NotePlant", component: true },
-  "small-caps": { name: "SmallCaps", component: false },
+  footer: { name: "Footer", component: true },
+  socials: { name: "Socials", component: true },
 }
 
 const scssAsText = {

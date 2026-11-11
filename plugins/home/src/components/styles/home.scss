@@ -1,6 +1,6 @@
-// The garden bed: a row of plants standing on a ground line. Each plant is a
-// link to its note. A plant's height is a share of the bed's, so the tallest
-// possible plant fills it.
+// The garden bed: a row of plants growing from a wire. Each plant is a link
+// to its note. A plant's height is a share of the bed's, so the tallest
+// possible plant fills it. The colours of the plants are in custom.scss.
 .home-bed {
   display: flex;
   align-items: flex-end;
@@ -8,18 +8,11 @@
   gap: 2px;
   height: 8rem;
   overflow: hidden;
-  border-bottom: 1px solid var(--dark);
-  color: var(--dark);
+  border-bottom: 1px solid var(--wire);
 
   a {
     flex: none;
     display: block;
-    color: inherit;
-    transition: color 0.15s ease;
-
-    &:hover {
-      color: var(--secondary);
-    }
   }
 
   svg {
@@ -37,68 +30,75 @@
   }
 }
 
-// Contents lists, set as in the front of a book: title, leader dots, date.
+// The posts as a parts list, after the intro. The ruling of `table.bom` is in
+// custom.scss, shared with the tables inside notes.
 .home-contents {
   section {
-    margin-top: 2.75rem;
+    margin-top: 2.5rem;
   }
 
   h2 {
     margin: 0 0 0.5rem;
-    font-size: 1rem;
-    font-weight: 400;
-    font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
-    color: var(--gray);
-  }
-
-  ol {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  li {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0.16rem 0;
-  }
-
-  a {
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.25;
     color: var(--dark);
-    background-color: transparent;
-    text-decoration: none;
 
-    &:hover {
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
+    a {
+      color: inherit;
+      background-color: transparent;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-color: var(--wire);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 0.2em;
+      }
     }
   }
+}
 
-  .home-dots {
-    flex: 1;
-    min-width: 1rem;
-    border-bottom: 1px dotted var(--underline, var(--gray));
-    transform: translateY(-0.28em);
+// The revision history: the latest changes to notes. custom.scss places it in
+// the top right of the sheet on a wide screen.
+.home-revisions {
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--label);
   }
 
-  time {
+  // the folder of a note, on a line of its own under the title
+  .folder {
+    display: block;
+    font-family: var(--headerFont);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.3;
     color: var(--gray);
-    white-space: nowrap;
   }
 
   p {
-    margin: 0.8rem 0 0;
-    font-style: italic;
+    margin: 0.5rem 0 0;
+    font-family: var(--headerFont);
+    font-size: 0.84rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--gray);
 
     a {
+      color: var(--darkgray);
+      background-color: transparent;
       text-decoration: underline;
-      text-decoration-color: var(--underline, var(--gray));
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.16em;
+      text-decoration-color: var(--wire);
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 0.2em;
+
+      &:hover {
+        color: var(--secondary);
+      }
     }
   }
 }

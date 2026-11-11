@@ -2,9 +2,7 @@ import type {
   QuartzComponent,
   QuartzComponentConstructor,
   QuartzComponentProps,
-  QuartzPluginData,
 } from "@quartz-community/types"
-import { formatDate, getDate } from "@quartz-community/utils"
 import { drawPlant } from "./plant"
 import { noteStats } from "./stats"
 import style from "./styles/notePlant.scss"
@@ -28,7 +26,6 @@ export default ((opts?: Partial<NotePlantOptions>) => {
   const NotePlant: QuartzComponent = ({
     fileData,
     allFiles,
-    cfg,
     displayClass,
   }: QuartzComponentProps) => {
     const slug = (fileData.slug ?? "") as string
@@ -41,17 +38,23 @@ export default ((opts?: Partial<NotePlantOptions>) => {
 
     const plant = drawPlant({ seed: slug, words, linksOut, linksIn })
 
-    const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
-    const dated = {
-      ...fileData,
-      defaultDateType: fileData.defaultDateType ?? cfgDateType,
-    } as QuartzPluginData
-    const date = dated.defaultDateType ? getDate(dated) : undefined
-
     const description =
       `A plant drawn from this note. Its height comes from the note's length, ` +
       `it has ${plural(plant.leaves, "leaf", "leaves")} for the notes it links to ` +
       `and ${plural(plant.buds, "bud", "buds")} for the notes that link here.`
+
+    // "719 words tall, with 2 leaves for 2 links out and 1 bud for 1 link in."
+    const grown = [
+      linksOut > 0 &&
+        `${plural(plant.leaves, "leaf", "leaves")} for ${plural(linksOut, "link", "links")} out`,
+      linksIn > 0 &&
+        `${plural(plant.buds, "bud", "buds")} for ${plural(linksIn, "link", "links")} in`,
+    ].filter(Boolean)
+    const caption =
+      `${plural(words, "word", "words")} tall, ` +
+      (grown.length > 0
+        ? `with ${grown.join(" and ")}.`
+        : "with no links in or out yet, so no leaves or buds.")
 
     return (
       <figure class={`note-plant ${displayClass ?? ""}`}>
@@ -62,16 +65,8 @@ export default ((opts?: Partial<NotePlantOptions>) => {
           dangerouslySetInnerHTML={{ __html: plant.svg }}
         />
         <figcaption>
-          {date && (
-            <p class="note-plant-tended">
-              Tended{" "}
-              <time datetime={date.toISOString()}>{formatDate(date, cfg.locale || "en-US")}</time>
-            </p>
-          )}
-          <p class="note-plant-stats">
-            {plural(words, "word", "words")} · {plural(linksOut, "link", "links")} out ·{" "}
-            {plural(linksIn, "link", "links")} in
-          </p>
+          <p class="note-plant-name">This note’s plant</p>
+          <p class="note-plant-stats">{caption}</p>
         </figcaption>
       </figure>
     )

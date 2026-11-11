@@ -1,34 +1,75 @@
 .socials {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.9rem;
-  align-items: center;
-
-  & .social-link {
-    color: var(--darkgray);
-    background: none;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    opacity: 0.8;
-    transition:
-      color 0.2s ease,
-      opacity 0.2s ease;
-
-    &:hover {
-      color: var(--secondary);
-      opacity: 1;
-    }
+  .socials-label {
+    margin: 0 0 0.35rem;
+    font-family: var(--headerFont);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--label);
   }
 
-  & .social-icon {
-    display: inline-flex;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-    & svg {
-      width: 1.3rem;
-      height: 1.3rem;
-      display: block;
+  li {
+    margin: 0;
+  }
+
+  // A global label: a box with a point on the side the signal leaves by. The
+  // link is the outline, in the rule colour; its ::before is the inside, 1px
+  // smaller all round, with the point pulled in to keep the slanted sides
+  // as thin as the straight ones.
+  .social-link {
+    --point: 0.55rem;
+    position: relative;
+    display: block;
+    padding: 0.14rem calc(var(--point) + 0.3rem) 0.14rem 0.4rem;
+    font-family: var(--codeFont);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--tertiary);
+    background-color: var(--rule);
+    text-decoration: none;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--point)) 0,
+      100% 50%,
+      calc(100% - var(--point)) 100%,
+      0 100%
+    );
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      z-index: -1;
+      background-color: var(--light);
+      clip-path: polygon(
+        0 0,
+        calc(100% - var(--point) + 0.5px) 0,
+        calc(100% - 0.4px) 50%,
+        calc(100% - var(--point) + 0.5px) 100%,
+        0 100%
+      );
+    }
+
+    &:hover::before,
+    &:focus-visible::before {
+      background-color: var(--fill);
+    }
+
+    // the clip would cut an outline off, so focus underlines the label
+    &:focus-visible {
+      outline: none;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.15em;
     }
   }
 }

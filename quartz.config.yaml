@@ -16,41 +16,44 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Vollkorn
-      body: Vollkorn
-      code: Fira Code
-    # Green ink on greenbar paper: the green this site has always used, as the
-    # colour of the text itself and not as an accent on grey. There is no second
-    # hue. Dark mode is a near-black page with pale ink; green stays in the site
-    # title, the rules under links and the stripes.
-    #   light      the paper
-    #   lightgray  rules and borders
-    #   gray       the lightest text: dates and captions (5.4:1 on light)
-    #   darkgray   body text
-    #   dark       headings, links, and the plants
-    #   secondary  the brand green: the site title and hover
-    # quartz/styles/custom.scss adds --bar (the greenbar stripe) and --underline.
+      header: IBM Plex Sans Condensed
+      body: IBM Plex Sans
+      code: IBM Plex Mono
+    # KiCad's default schematic theme, which anyone who has opened Eeschema
+    # knows: cream paper, a dark red sheet frame and component outlines, green
+    # wires, teal reference text. Body text is near-black, as KiCad sets local
+    # labels. Dark mode is the PCB editor: a near-black board, copper red,
+    # a muted green layer and silkscreen off-white.
+    #   light      the paper (the board)
+    #   lightgray  the lightest rules: between table rows, inside boxes
+    #   gray       the lightest text: captions, counts (5.5:1 on light, 6.2:1 dark)
+    #   darkgray   body text (15.3:1 on light, 13:1 dark)
+    #   dark       headings
+    #   secondary  the wire green, darkened until it can also set text
+    #   tertiary   the frame red, for hover in community components
+    # quartz/styles/custom.scss adds --rule (the frame), --wire (links),
+    # --label (teal) and --fill (the body of a component).
     colors:
       lightMode:
-        light: "#F5F9F3"
-        lightgray: "#CFE0CC"
-        gray: "#566A5D"
-        darkgray: "#2B4233"
-        dark: "#12351F"
-        secondary: "#2E7D32"
-        tertiary: "#1B5E20"
-        highlight: "rgba(46, 125, 50, 0.12)"
-        textHighlight: "rgba(46, 125, 50, 0.22)"
+        light: "#F5F4EF"
+        lightgray: "#D8D4C8"
+        gray: "#66635B"
+        darkgray: "#1E1D1A"
+        dark: "#12110F"
+        secondary: "#006A00"
+        tertiary: "#840000"
+        highlight: "rgba(0, 132, 0, 0.1)"
+        textHighlight: "rgba(255, 233, 80, 0.55)"
       darkMode:
-        light: "#131413"
-        lightgray: "#2F342F"
-        gray: "#8C968D"
-        darkgray: "#CDD5CE"
-        dark: "#EEF2EE"
-        secondary: "#81C784"
-        tertiary: "#A5D6A7"
-        highlight: "rgba(129, 199, 132, 0.12)"
-        textHighlight: "rgba(129, 199, 132, 0.25)"
+        light: "#181B20"
+        lightgray: "#353A43"
+        gray: "#9D9B8F"
+        darkgray: "#E2E0D4"
+        dark: "#F1EFE3"
+        secondary: "#7CC987"
+        tertiary: "#E0685F"
+        highlight: "rgba(88, 174, 101, 0.14)"
+        textHighlight: "rgba(217, 180, 74, 0.35)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -111,10 +114,6 @@ plugins:
   - source: github:quartz-community/hard-line-breaks
     enabled: true
     order: 90
-  # acronyms in note bodies are set in small caps
-  - source: ./plugins/small-caps
-    enabled: true
-    order: 95
   - source: github:quartz-community/ox-hugo
     enabled: false
     order: 91
@@ -124,9 +123,9 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Vollkorn
-      body: Vollkorn
-      code: Fira Code
+      header: IBM Plex Sans Condensed
+      body: IBM Plex Sans
+      code: IBM Plex Mono
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
   - source: github:quartz-community/remove-draft
@@ -178,8 +177,7 @@ plugins:
     enabled: true
     layout:
       position: left
-      priority: 20
-      group: toolbar
+      priority: 14
   - source: github:quartz-community/backlinks
     enabled: true
     layout:
@@ -191,8 +189,11 @@ plugins:
       position: beforeBody
       priority: 10
       condition: not-index
+  # disabled: the date, the word count and the link to the page's history are
+  # fields of the title block (./plugins/footer), so the page header is only
+  # the path and the title
   - source: ./plugins/content-meta
-    enabled: true
+    enabled: false
     layout:
       position: beforeBody
       priority: 20
@@ -202,8 +203,8 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # Left sidebar, top to bottom: the site title, the nav, then the toolbar
-  # group (socials, search, theme, reader mode) at the foot.
+  # Left column, top to bottom: the site title, the sheet index (nav), search,
+  # then at the foot the links out and the toolbar group (theme, reader mode).
   - source: github:quartz-community/page-title
     enabled: true
     layout:
@@ -256,11 +257,19 @@ plugins:
       position: afterBody
       priority: 10
       condition: not-index
+  # The sheet: the drawing frame with its zone markers, and the title block
+  # filled in from the page (title, date, revision, sheet path, size). It
+  # takes the footer slot, so it is on every page.
   - source: ./plugins/footer
     enabled: true
     options:
-      links:
-        License: /License
+      site: Tom’s Garden
+      drawnBy: Tom Plant
+      repository: https://github.com/pl4nty/garden
+      branch: main
+      licence:
+        label: CC BY-SA 4.0
+        href: /License
   - source: ./plugins/socials
     enabled: true
     options:
@@ -270,10 +279,11 @@ plugins:
         Homelab: https://lab.tplant.com.au/
     layout:
       position: left
-      priority: 15
-      group: toolbar
+      priority: 32
   # Homepage: a row of plants above the note, one for each of the most
-  # recently tended notes, and contents lists below it. Index page only.
+  # recently tended notes; below the note, the posts as a parts list; and in
+  # the right-hand column the latest changes to notes, as a drawing keeps its
+  # revision history. Index page only.
   - source: ./plugins/home
     enabled: true
     options:
@@ -287,22 +297,33 @@ plugins:
     options:
       section: contents
       postsFolder: posts
-      notesFolder: notes
-      recentCount: 6
     layout:
       position: afterBody
       priority: 5
-  # Every note below a folder, grouped by subfolder, on the folder's own page.
+  - source: ./plugins/home
+    enabled: true
+    options:
+      section: revisions
+      notesFolder: notes
+      recentCount: 8
+    layout:
+      position: right
+      priority: 5
+  # Every page below a folder as one parts list, grouped by subfolder, on the
+  # folder's own page. Posts are listed newest first, notes by title.
   - source: ./plugins/folder-tree
     enabled: true
     options:
       roots:
         - notes
+        - posts
+      newestFirst:
+        - posts
     layout:
       position: afterBody
       priority: 1
-  # The colophon: a plant at the end of each note, drawn from its length and
-  # its links, with the date it was last tended.
+  # A plant at the end of each note, drawn as traces and pads from its length
+  # and its links.
   - source: ./plugins/note-plant
     enabled: true
     layout:

@@ -146,33 +146,19 @@ function noteStats(file, allFiles) {
   return { words, linksOut, linksIn };
 }
 
-// ../shared/smallCaps.tsx
-import { jsx } from "preact/jsx-runtime";
-var ACRONYM = /\b[A-Z]{2,}s?\b/g;
-function smallCaps(text) {
-  const out = [];
-  let last = 0;
-  for (const match of text.matchAll(ACRONYM)) {
-    if (match.index > last) out.push(text.slice(last, match.index));
-    out.push(/* @__PURE__ */ jsx("abbr", { class: "sc", children: match[0] }));
-    last = match.index + match[0].length;
-  }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
-}
-
 // src/components/styles/home.scss
-var home_default = ".home-bed{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;height:8rem;overflow:hidden;border-bottom:1px solid var(--dark);color:var(--dark)}.home-bed a{flex:none;display:block;color:inherit;transition:color .15s ease}.home-bed a:hover{color:var(--secondary)}.home-bed svg{display:block;width:100%;height:100%;overflow:visible}@media(max-width: 800px){.home-bed{height:6rem;justify-content:flex-start;gap:6px}}.home-contents section{margin-top:2.75rem}.home-contents h2{margin:0 0 .5rem;font-size:1rem;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:.06em;color:var(--gray)}.home-contents ol{margin:0;padding:0;list-style:none}.home-contents li{display:flex;align-items:baseline;gap:.5rem;margin:0;padding:.16rem 0}.home-contents a{color:var(--dark);background-color:rgba(0,0,0,0);text-decoration:none}.home-contents a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}.home-contents .home-dots{flex:1;min-width:1rem;border-bottom:1px dotted var(--underline, var(--gray));transform:translateY(-0.28em)}.home-contents time{color:var(--gray);white-space:nowrap}.home-contents p{margin:.8rem 0 0;font-style:italic}.home-contents p a{text-decoration:underline;text-decoration-color:var(--underline, var(--gray));text-decoration-thickness:1px;text-underline-offset:.16em}";
+var home_default = ".home-bed{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;height:8rem;overflow:hidden;border-bottom:1px solid var(--wire)}.home-bed a{flex:none;display:block}.home-bed svg{display:block;width:100%;height:100%;overflow:visible}@media(max-width: 800px){.home-bed{height:6rem;justify-content:flex-start;gap:6px}}.home-contents section{margin-top:2.5rem}.home-contents h2{margin:0 0 .5rem;font-size:1.3rem;font-weight:600;line-height:1.25;color:var(--dark)}.home-contents h2 a{color:inherit;background-color:rgba(0,0,0,0);text-decoration:none}.home-contents h2 a:hover{text-decoration:underline;text-decoration-color:var(--wire);text-decoration-thickness:1.5px;text-underline-offset:.2em}.home-revisions h2{margin:0 0 .35rem;font-size:.78rem;font-weight:500;line-height:1.3;color:var(--label)}.home-revisions .folder{display:block;font-family:var(--headerFont);font-size:.78rem;font-weight:500;line-height:1.3;color:var(--gray)}.home-revisions p{margin:.5rem 0 0;font-family:var(--headerFont);font-size:.84rem;font-weight:500;line-height:1.35;color:var(--gray)}.home-revisions p a{color:var(--darkgray);background-color:rgba(0,0,0,0);text-decoration:underline;text-decoration-color:var(--wire);text-decoration-thickness:1.5px;text-underline-offset:.2em}.home-revisions p a:hover{color:var(--secondary)}";
 
 // src/components/Home.tsx
-import { jsx as jsx2, jsxs } from "preact/jsx-runtime";
+import { jsx, jsxs } from "preact/jsx-runtime";
 var defaultOptions = {
   section: "contents",
   postsFolder: "posts",
   notesFolder: "notes",
   plants: 22,
-  recentCount: 6
+  recentCount: 8
 };
+var isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 var Home_default = ((opts) => {
   const options = { ...defaultOptions, ...opts };
   const postsPrefix = `${options.postsFolder.replace(/\/$/, "")}/`;
@@ -184,7 +170,6 @@ var Home_default = ((opts) => {
     displayClass
   }) => {
     if (fileData.slug !== "index") return null;
-    const locale = cfg.locale || "en-US";
     const cfgDateType = cfg.defaultDateType;
     const dateOf = (f) => {
       const data = { ...f, defaultDateType: f.defaultDateType ?? cfgDateType };
@@ -192,17 +177,16 @@ var Home_default = ((opts) => {
     };
     const href = (slug) => resolveRelative(fileData.slug, slug);
     const title = (f) => f.frontmatter?.title ?? f.slug ?? "";
-    const month = (d) => d.toLocaleDateString(locale, { month: "short", year: "numeric" });
     const newestFirst = (prefix) => allFiles.filter((f) => f.slug?.startsWith(prefix) && !f.slug.endsWith("/index")).map((f) => ({ f, date: dateOf(f) })).filter((n) => Boolean(n.date)).sort((a, b) => b.date.getTime() - a.date.getTime());
     const notes = newestFirst(notesPrefix);
     if (options.section === "bed") {
-      return /* @__PURE__ */ jsx2("nav", { class: `home-bed ${displayClass ?? ""}`, "aria-label": "Recently tended notes", children: notes.slice(0, options.plants).map(({ f, date }) => {
+      return /* @__PURE__ */ jsx("nav", { class: `home-bed ${displayClass ?? ""}`, "aria-label": "Recently tended notes", children: notes.slice(0, options.plants).map(({ f, date }) => {
         const plant = drawPlant({ seed: f.slug, ...noteStats(f, allFiles) });
-        return /* @__PURE__ */ jsx2(
+        return /* @__PURE__ */ jsx(
           "a",
           {
             href: href(f.slug),
-            title: `${title(f)} \xB7 ${month(date)}`,
+            title: `${title(f)}, ${isoDate(date)}`,
             "aria-label": title(f),
             style: `aspect-ratio:${plant.width}/${plant.height};height:${Math.round(plant.height / 280 * 100)}%`,
             dangerouslySetInnerHTML: { __html: plant.svg }
@@ -210,27 +194,54 @@ var Home_default = ((opts) => {
         );
       }) });
     }
-    const posts = newestFirst(postsPrefix);
-    const list = (items) => /* @__PURE__ */ jsx2("ol", { children: items.map(({ f, date }) => /* @__PURE__ */ jsxs("li", { children: [
-      /* @__PURE__ */ jsx2("a", { href: href(f.slug), children: smallCaps(title(f)) }),
-      /* @__PURE__ */ jsx2("span", { class: "home-dots" }),
-      /* @__PURE__ */ jsx2("time", { datetime: date.toISOString(), children: month(date) })
-    ] })) });
-    return /* @__PURE__ */ jsxs("div", { class: `home-contents ${displayClass ?? ""}`, children: [
-      posts.length > 0 && /* @__PURE__ */ jsxs("section", { children: [
-        /* @__PURE__ */ jsx2("h2", { children: "Writing" }),
-        list(posts)
-      ] }),
-      notes.length > 0 && /* @__PURE__ */ jsxs("section", { children: [
-        /* @__PURE__ */ jsx2("h2", { children: "Lately tended" }),
-        list(notes.slice(0, options.recentCount)),
-        /* @__PURE__ */ jsx2("p", { children: /* @__PURE__ */ jsxs("a", { href: href(`${notesPrefix}index`), children: [
-          "The index of all ",
+    if (options.section === "revisions") {
+      if (notes.length === 0) return null;
+      const folderOf = (f) => (f.relativePath ?? "").split("/").slice(1, -1).join(" / ");
+      const shown = notes.slice(0, options.recentCount);
+      return /* @__PURE__ */ jsxs("section", { class: `home-revisions ${displayClass ?? ""}`, children: [
+        /* @__PURE__ */ jsx("h2", { children: "Revision history" }),
+        /* @__PURE__ */ jsxs("table", { class: "bom", children: [
+          /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
+            /* @__PURE__ */ jsx("th", { scope: "col", children: "Date" }),
+            /* @__PURE__ */ jsx("th", { scope: "col", children: "Note" })
+          ] }) }),
+          /* @__PURE__ */ jsx("tbody", { children: shown.map(({ f, date }) => /* @__PURE__ */ jsxs("tr", { children: [
+            /* @__PURE__ */ jsx("td", { class: "date", children: /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: isoDate(date) }) }),
+            /* @__PURE__ */ jsxs("td", { children: [
+              /* @__PURE__ */ jsx("a", { href: href(f.slug), children: title(f) }),
+              /* @__PURE__ */ jsx("span", { class: "folder", children: folderOf(f) })
+            ] })
+          ] })) })
+        ] }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          "The last ",
+          shown.length,
+          " changes. ",
+          /* @__PURE__ */ jsx("a", { href: href(`${notesPrefix}index`), children: "All notes" }),
+          " are in the index: there are ",
           notes.length,
-          " notes"
-        ] }) })
+          "."
+        ] })
+      ] });
+    }
+    const posts = newestFirst(postsPrefix);
+    return /* @__PURE__ */ jsx("div", { class: `home-contents ${displayClass ?? ""}`, children: posts.length > 0 && /* @__PURE__ */ jsxs("section", { children: [
+      /* @__PURE__ */ jsx("h2", { children: /* @__PURE__ */ jsx("a", { href: href(`${postsPrefix}index`), children: "Posts" }) }),
+      /* @__PURE__ */ jsxs("table", { class: "bom", children: [
+        /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
+          /* @__PURE__ */ jsx("th", { scope: "col", class: "num", children: "Item" }),
+          /* @__PURE__ */ jsx("th", { scope: "col", children: "Title" }),
+          /* @__PURE__ */ jsx("th", { scope: "col", children: "Date" }),
+          /* @__PURE__ */ jsx("th", { scope: "col", class: "num", children: "Words" })
+        ] }) }),
+        /* @__PURE__ */ jsx("tbody", { children: posts.map(({ f, date }, i) => /* @__PURE__ */ jsxs("tr", { children: [
+          /* @__PURE__ */ jsx("td", { class: "num ref", children: posts.length - i }),
+          /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsx("a", { href: href(f.slug), children: title(f) }) }),
+          /* @__PURE__ */ jsx("td", { class: "date", children: /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: isoDate(date) }) }),
+          /* @__PURE__ */ jsx("td", { class: "num", children: noteStats(f, allFiles).words.toLocaleString("en") })
+        ] })) })
       ] })
-    ] });
+    ] }) });
   };
   Home.css = home_default;
   return Home;

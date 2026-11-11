@@ -3,7 +3,8 @@
  * https://github.com/primer/primitives/blob/main/LICENSE
  *
  * Surfaces, borders, text and accent colours follow the site palette in
- * quartz.config.yaml. Update both files when the palette changes.
+ * quartz.config.yaml and quartz/styles/custom.scss (the paper, the rules, the
+ * text and the wire green). Update this file when the palette changes.
  */
 
 main {
@@ -37,46 +38,46 @@ main {
   --color-prettylights-syntax-brackethighlighter-angle: #57606a;
   --color-prettylights-syntax-sublimelinter-gutter-mark: #8c959f;
   --color-prettylights-syntax-constant-other-reference-link: #0a3069;
-  --color-btn-text: #4e4e4e; /* --darkgray */
-  --color-btn-bg: #f5f9f3;
-  --color-btn-border: #cfe0cc;
+  --color-btn-text: #1e1d1a;
+  --color-btn-bg: #f5f4ef;
+  --color-btn-border: #840000;
   --color-btn-shadow: 0 1px 0 rgb(31 35 40 / 4%);
   --color-btn-inset-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
-  --color-btn-hover-bg: #f3f4f6;
-  --color-btn-hover-border: rgb(43, 43, 43 / 15%); /* --dark */
-  --color-btn-active-bg: hsl(220deg 14% 93% / 100%);
-  --color-btn-active-border: rgb(31 35 40 / 15%);
-  --color-btn-selected-bg: hsl(220deg 14% 94% / 100%);
-  --color-btn-primary-text: #fff;
-  --color-btn-primary-bg: #2e7d32;
-  --color-btn-primary-border: rgb(43, 43, 43 / 15%); /* --dark */
+  --color-btn-hover-bg: #ffffc2;
+  --color-btn-hover-border: #840000;
+  --color-btn-active-bg: #ffffc2;
+  --color-btn-active-border: #840000;
+  --color-btn-selected-bg: #ffffc2;
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #006a00;
+  --color-btn-primary-border: #006a00;
   --color-btn-primary-shadow: 0 1px 0 rgb(31 35 40 / 10%);
   --color-btn-primary-inset-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
-  --color-btn-primary-hover-bg: #1b5e20;
-  --color-btn-primary-hover-border: rgb(43, 43, 43 / 15%); /* --dark */
-  --color-btn-primary-selected-bg: #284b63; /* --secondary */
+  --color-btn-primary-hover-bg: #005300;
+  --color-btn-primary-hover-border: #005300;
+  --color-btn-primary-selected-bg: #005300;
   --color-btn-primary-selected-shadow: inset 0 1px 0 rgb(0 45 17 / 20%);
   --color-btn-primary-disabled-text: rgb(255 255 255 / 80%);
-  --color-btn-primary-disabled-bg: #94d3a2;
-  --color-btn-primary-disabled-border: rgb(31 35 40 / 15%);
-  --color-action-list-item-default-hover-bg: rgb(208 215 222 / 32%);
-  --color-segmented-control-bg: #eaeef2;
-  --color-segmented-control-button-bg: #fff;
-  --color-segmented-control-button-selected-border: #8c959f;
-  --color-fg-default: #12351f;
-  --color-fg-muted: #566a5d;
-  --color-fg-subtle: #4e4e4e; /* --darkgray */
-  --color-canvas-default: #f5f9f3;
-  --color-canvas-overlay: #f5f9f3;
-  --color-canvas-inset: #e3efdf;
-  --color-canvas-subtle: #e3efdf;
-  --color-border-default: #cfe0cc;
-  --color-border-muted: #cfe0cc;
-  --color-neutral-muted: rgb(86 106 93 / 15%);
-  --color-accent-fg: #2e7d32;
-  --color-accent-emphasis: #2e7d32;
-  --color-accent-muted: rgb(84 174 255 / 40%);
-  --color-accent-subtle: #ddf4ff;
+  --color-btn-primary-disabled-bg: #7fae7f;
+  --color-btn-primary-disabled-border: #7fae7f;
+  --color-action-list-item-default-hover-bg: rgb(216 212 200 / 40%);
+  --color-segmented-control-bg: #ecebe3;
+  --color-segmented-control-button-bg: #f5f4ef;
+  --color-segmented-control-button-selected-border: #840000;
+  --color-fg-default: #1e1d1a;
+  --color-fg-muted: #66635b;
+  --color-fg-subtle: #66635b;
+  --color-canvas-default: #f5f4ef;
+  --color-canvas-overlay: #f5f4ef;
+  --color-canvas-inset: #ecebe3;
+  --color-canvas-subtle: #ecebe3;
+  --color-border-default: #d8d4c8;
+  --color-border-muted: #d8d4c8;
+  --color-neutral-muted: rgb(102 99 91 / 15%);
+  --color-accent-fg: #006a00;
+  --color-accent-emphasis: #006a00;
+  --color-accent-muted: rgb(0 132 0 / 40%);
+  --color-accent-subtle: #e6f0dc;
   --color-success-fg: #1a7f37;
   --color-attention-fg: #9a6700;
   --color-attention-muted: rgb(212 167 44 / 40%);
@@ -85,7 +86,7 @@ main {
   --color-danger-muted: rgb(255 129 130 / 40%);
   --color-danger-subtle: #ffebe9;
   --color-primer-shadow-inset: inset 0 1px 0 rgb(208 215 222 / 20%);
-  --color-scale-gray-1: #eaeef2;
+  --color-scale-gray-1: #ecebe3;
   --color-scale-blue-1: #b6e3ff;
 
   /*! Extensions from @primer/css/alerts/flash.scss */
@@ -99,4 +100,18 @@ main .pagination-loader-container {
 
 main .gsc-loading-image {
   background-image: url("https://github.githubassets.com/images/mona-loading-default.gif");
+}
+
+/* Square corners, as everywhere on the sheet. */
+main .gsc-comment-box,
+main .gsc-comment-box-tabs,
+main .gsc-comment-box-textarea,
+main .gsc-comment,
+main .gsc-comment > div,
+main .gsc-reply-box,
+main .gsc-replies,
+main .btn,
+main .color-box-border-info,
+main .tabnav-tab {
+  border-radius: 0 !important;
 }

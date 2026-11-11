@@ -1,371 +1,138 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
 // src/components/Footer.tsx
+import { getDate } from "@quartz-community/utils";
 
-// src/i18n/locales/en-US.ts
-var en_US_default = {
-  components: {
-    footer: {
-      createdWith: "Created with"
+// src/components/revisions.ts
+import { execFileSync } from "node:child_process";
+var cache = /* @__PURE__ */ new Map();
+function revisions(dir) {
+  const known = cache.get(dir);
+  if (known) return known;
+  const counts = /* @__PURE__ */ new Map();
+  try {
+    const out = execFileSync(
+      "git",
+      ["-c", "core.quotepath=off", "log", "--format=", "--name-only", "--", dir],
+      { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] }
+    );
+    for (const line of out.split("\n")) {
+      if (line) counts.set(line, (counts.get(line) ?? 0) + 1);
     }
+  } catch {
   }
-};
-
-// src/i18n/locales/ar-SA.ts
-var ar_SA_default = {
-  components: {
-    footer: {
-      createdWith: "\u0623\u064F\u0646\u0634\u0626 \u0628\u0627\u0633\u062A\u062E\u062F\u0627\u0645"
-    }
-  }
-};
-
-// src/i18n/locales/ca-ES.ts
-var ca_ES_default = {
-  components: {
-    footer: {
-      createdWith: "Creat amb"
-    }
-  }
-};
-
-// src/i18n/locales/cs-CZ.ts
-var cs_CZ_default = {
-  components: {
-    footer: {
-      createdWith: "Vytvo\u0159eno pomoc\xED"
-    }
-  }
-};
-
-// src/i18n/locales/de-DE.ts
-var de_DE_default = {
-  components: {
-    footer: {
-      createdWith: "Erstellt mit"
-    }
-  }
-};
-
-// src/i18n/locales/en-GB.ts
-var en_GB_default = {
-  components: {
-    footer: {
-      createdWith: "Created with"
-    }
-  }
-};
-
-// src/i18n/locales/es-ES.ts
-var es_ES_default = {
-  components: {
-    footer: {
-      createdWith: "Creado con"
-    }
-  }
-};
-
-// src/i18n/locales/fa-IR.ts
-var fa_IR_default = {
-  components: {
-    footer: {
-      createdWith: "\u0633\u0627\u062E\u062A\u0647 \u0634\u062F\u0647 \u0628\u0627"
-    }
-  }
-};
-
-// src/i18n/locales/fi-FI.ts
-var fi_FI_default = {
-  components: {
-    footer: {
-      createdWith: "Luotu k\xE4ytt\xE4en"
-    }
-  }
-};
-
-// src/i18n/locales/fr-FR.ts
-var fr_FR_default = {
-  components: {
-    footer: {
-      createdWith: "Cr\xE9\xE9 avec"
-    }
-  }
-};
-
-// src/i18n/locales/he-IL.ts
-var he_IL_default = {
-  components: {
-    footer: {
-      createdWith: "\u05E0\u05D5\u05E6\u05E8 \u05D1\u05D0\u05DE\u05E6\u05E2\u05D5\u05EA"
-    }
-  }
-};
-
-// src/i18n/locales/hu-HU.ts
-var hu_HU_default = {
-  components: {
-    footer: {
-      createdWith: "K\xE9sz\xEDtve ezzel:"
-    }
-  }
-};
-
-// src/i18n/locales/id-ID.ts
-var id_ID_default = {
-  components: {
-    footer: {
-      createdWith: "Dibuat dengan"
-    }
-  }
-};
-
-// src/i18n/locales/it-IT.ts
-var it_IT_default = {
-  components: {
-    footer: {
-      createdWith: "Creato con"
-    }
-  }
-};
-
-// src/i18n/locales/ja-JP.ts
-var ja_JP_default = {
-  components: {
-    footer: {
-      createdWith: "\u4F5C\u6210"
-    }
-  }
-};
-
-// src/i18n/locales/kk-KZ.ts
-var kk_KZ_default = {
-  components: {
-    footer: {
-      createdWith: "\u049A\u04B1\u0440\u0430\u0441\u0442\u044B\u0440\u044B\u043B\u0493\u0430\u043D \u049B\u04B1\u0440\u0430\u043B:"
-    }
-  }
-};
-
-// src/i18n/locales/ko-KR.ts
-var ko_KR_default = {
-  components: {
-    footer: {
-      createdWith: "Created with"
-    }
-  }
-};
-
-// src/i18n/locales/lt-LT.ts
-var lt_LT_default = {
-  components: {
-    footer: {
-      createdWith: "Sukurta Su"
-    }
-  }
-};
-
-// src/i18n/locales/nb-NO.ts
-var nb_NO_default = {
-  components: {
-    footer: {
-      createdWith: "Laget med"
-    }
-  }
-};
-
-// src/i18n/locales/nl-NL.ts
-var nl_NL_default = {
-  components: {
-    footer: {
-      createdWith: "Gemaakt met"
-    }
-  }
-};
-
-// src/i18n/locales/pl-PL.ts
-var pl_PL_default = {
-  components: {
-    footer: {
-      createdWith: "Stworzone z u\u017Cyciem"
-    }
-  }
-};
-
-// src/i18n/locales/pt-BR.ts
-var pt_BR_default = {
-  components: {
-    footer: {
-      createdWith: "Criado com"
-    }
-  }
-};
-
-// src/i18n/locales/ro-RO.ts
-var ro_RO_default = {
-  components: {
-    footer: {
-      createdWith: "Creat cu"
-    }
-  }
-};
-
-// src/i18n/locales/ru-RU.ts
-var ru_RU_default = {
-  components: {
-    footer: {
-      createdWith: "\u0421\u043E\u0437\u0434\u0430\u043D\u043E \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E"
-    }
-  }
-};
-
-// src/i18n/locales/th-TH.ts
-var th_TH_default = {
-  components: {
-    footer: {
-      createdWith: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E14\u0E49\u0E27\u0E22"
-    }
-  }
-};
-
-// src/i18n/locales/tr-TR.ts
-var tr_TR_default = {
-  components: {
-    footer: {
-      createdWith: "\u015Eununla olu\u015Fturuldu"
-    }
-  }
-};
-
-// src/i18n/locales/uk-UA.ts
-var uk_UA_default = {
-  components: {
-    footer: {
-      createdWith: "\u0421\u0442\u0432\u043E\u0440\u0435\u043D\u043E \u0437\u0430 \u0434\u043E\u043F\u043E\u043C\u043E\u0433\u043E\u044E"
-    }
-  }
-};
-
-// src/i18n/locales/vi-VN.ts
-var vi_VN_default = {
-  components: {
-    footer: {
-      createdWith: "\u0110\u01B0\u1EE3c t\u1EA1o b\u1EB1ng"
-    }
-  }
-};
-
-// src/i18n/locales/zh-CN.ts
-var zh_CN_default = {
-  components: {
-    footer: {
-      createdWith: "Created with"
-    }
-  }
-};
-
-// src/i18n/locales/zh-TW.ts
-var zh_TW_default = {
-  components: {
-    footer: {
-      createdWith: "Created with"
-    }
-  }
-};
-
-// src/i18n/index.ts
-var locales = {
-  "en-US": en_US_default,
-  "ar-SA": ar_SA_default,
-  "ca-ES": ca_ES_default,
-  "cs-CZ": cs_CZ_default,
-  "de-DE": de_DE_default,
-  "en-GB": en_GB_default,
-  "es-ES": es_ES_default,
-  "fa-IR": fa_IR_default,
-  "fi-FI": fi_FI_default,
-  "fr-FR": fr_FR_default,
-  "he-IL": he_IL_default,
-  "hu-HU": hu_HU_default,
-  "id-ID": id_ID_default,
-  "it-IT": it_IT_default,
-  "ja-JP": ja_JP_default,
-  "kk-KZ": kk_KZ_default,
-  "ko-KR": ko_KR_default,
-  "lt-LT": lt_LT_default,
-  "nb-NO": nb_NO_default,
-  "nl-NL": nl_NL_default,
-  "pl-PL": pl_PL_default,
-  "pt-BR": pt_BR_default,
-  "ro-RO": ro_RO_default,
-  "ru-RU": ru_RU_default,
-  "th-TH": th_TH_default,
-  "tr-TR": tr_TR_default,
-  "uk-UA": uk_UA_default,
-  "vi-VN": vi_VN_default,
-  "zh-CN": zh_CN_default,
-  "zh-TW": zh_TW_default
-};
-function i18n(locale) {
-  return locales[locale] || en_US_default;
+  cache.set(dir, counts);
+  return counts;
 }
 
 // src/components/styles/footer.scss
-var footer_default = "footer {\n  text-align: left;\n  margin-bottom: 4rem;\n  opacity: 0.7;\n}\nfooter ul {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n  display: flex;\n  flex-direction: row;\n  gap: 1rem;\n  margin-top: -1rem;\n}";
-var l;
-l = { __e: function(n2, l2, u3, t2) {
-  for (var i2, r2, o2; l2 = l2.__; ) if ((i2 = l2.__c) && !i2.__) try {
-    if ((r2 = i2.constructor) && null != r2.getDerivedStateFromError && (i2.setState(r2.getDerivedStateFromError(n2)), o2 = i2.__d), null != i2.componentDidCatch && (i2.componentDidCatch(n2, t2 || {}), o2 = i2.__d), o2) return i2.__E = i2;
-  } catch (l3) {
-    n2 = l3;
-  }
-  throw n2;
-} }, "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Math.random().toString(8);
-
-// node_modules/preact/jsx-runtime/dist/jsxRuntime.mjs
-var f2 = 0;
-function u2(e2, t2, n2, o2, i2, u3) {
-  t2 || (t2 = {});
-  var a2, c2, p2 = t2;
-  if ("ref" in p2) for (c2 in p2 = {}, t2) "ref" == c2 ? a2 = t2[c2] : p2[c2] = t2[c2];
-  var l2 = { type: e2, props: p2, key: n2, ref: a2, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f2, __i: -1, __u: 0, __source: i2, __self: u3 };
-  if ("function" == typeof e2 && (a2 = e2.defaultProps)) for (c2 in a2) void 0 === p2[c2] && (p2[c2] = a2[c2]);
-  return l.vnode && l.vnode(l2), l2;
-}
+var footer_default = '.sheet{opacity:1;text-align:left}.sheet-frame{position:fixed;inset:0;z-index:20;max-width:var(--sheet-max);margin:0 auto;pointer-events:none;font-family:var(--headerFont);font-size:.625rem;font-weight:500;line-height:1;color:var(--rule)}.sheet-frame::before,.sheet-frame::after{content:"";position:absolute;z-index:1;border:1px solid var(--rule)}.sheet-frame::before{inset:var(--frame-m)}.sheet-frame::after{inset:calc(var(--frame) - 2px);border-width:2px}@media(max-width: 800px){.sheet-frame{display:none}}.sheet-zones{position:absolute;display:flex;box-sizing:border-box;background-color:var(--light)}.sheet-zones>span{flex:1;display:flex;align-items:center;justify-content:center}.sheet-zones.top,.sheet-zones.bottom{left:0;right:0;height:var(--frame)}.sheet-zones.top>span+span,.sheet-zones.bottom>span+span{border-left:1px solid var(--rule)}.sheet-zones.top{top:0;padding:var(--frame-m) var(--frame) 0}.sheet-zones.bottom{bottom:0;padding:0 var(--frame) var(--frame-m)}.sheet-zones.left,.sheet-zones.right{top:var(--frame);bottom:var(--frame);flex-direction:column;width:var(--frame)}.sheet-zones.left>span+span,.sheet-zones.right>span+span{border-top:1px solid var(--rule)}.sheet-zones.left{left:0;padding-left:var(--frame-m)}.sheet-zones.right{right:0;padding-right:var(--frame-m)}.title-block{display:grid;grid-template-columns:repeat(12, minmax(0, 1fr));gap:1px;box-sizing:border-box;margin:0;border:2px solid var(--rule);background-color:var(--rule);font-family:var(--headerFont);font-variant-numeric:lining-nums tabular-nums;color:var(--dark)}.title-block>div{grid-column:span 12;min-width:0;padding:.28rem .45rem .34rem;background-color:var(--light)}.title-block>.tb-date,.title-block>.tb-licence{grid-column:span 4}.title-block>.tb-size,.title-block>.tb-tool{grid-column:span 5}.title-block>.tb-rev,.title-block>.tb-drawn{grid-column:span 3}.title-block dt{margin:0;font-size:.66rem;font-weight:500;line-height:1.25;color:var(--label)}.title-block dd{margin:0;font-size:.84rem;font-weight:500;line-height:1.3;overflow-wrap:anywhere}.title-block a{color:inherit;background-color:rgba(0,0,0,0);text-decoration:underline;text-decoration-color:var(--wire);text-decoration-thickness:1.5px;text-underline-offset:.18em}.title-block a:hover{color:var(--secondary)}.title-block .tb-site{padding-top:.4rem;padding-bottom:.4rem}.title-block .tb-site dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.title-block .tb-site dd{display:flex;align-items:center;gap:.4rem;font-size:1rem;font-weight:600}.title-block .tb-site dd>span{display:flex}.title-block .mark{width:1.25rem;height:1.25rem}.title-block .mark-plant{color:var(--wire)}.title-block .mark-earth{color:var(--rule)}.title-block .tb-sheet dd{font-family:var(--codeFont);font-size:.72rem;font-weight:400;line-height:1.4}.title-block .tb-title dd{font-size:1.06rem;font-weight:600;line-height:1.22;text-wrap:balance}@media(min-width: 801px){.title-block{width:var(--margin);border-right-width:0;border-bottom-width:0}}@media(min-width: 801px)and (max-width: 1199px){.sheet{display:flex;justify-content:flex-end}}@media(min-width: 1200px){.title-block{position:fixed;right:calc(max(0px,(100% - var(--sheet-max))/2) + var(--frame));bottom:var(--frame);z-index:21}}';
 
 // src/components/Footer.tsx
-function getQuartzVersion() {
-  try {
-    const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf-8"));
-    return pkg.version ?? "";
-  } catch {
-    return "";
-  }
-}
+import { jsx, jsxs } from "preact/jsx-runtime";
+var defaultOptions = {
+  site: "",
+  drawnBy: "",
+  repository: "",
+  branch: "main"
+};
+var COLUMNS = ["1", "2", "3", "4", "5", "6"];
+var ROWS = ["A", "B", "C", "D"];
+var mark = '<svg class="mark" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke-linecap="square" aria-hidden="true"><g class="mark-plant" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 15.5V6"/><path fill="currentColor" d="M12 11.5Q7.2 12.3 4.5 6.5Q10.6 6.4 12 11.5Z"/><path fill="currentColor" d="M12 8Q11.6 3.6 18.5 1.5Q18.8 6.6 12 8Z"/></g><g class="mark-earth" stroke="currentColor" stroke-width="1.5"><path d="M5 16.25h14M8 19.5h8M10.75 22.75h2.5"/></g></svg>';
+var words = (text) => text.split(/\s+/).filter(Boolean).length;
+var isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 var Footer_default = ((opts) => {
-  const version = getQuartzVersion();
-  const Footer = ({ displayClass, cfg }) => {
-    const year = (/* @__PURE__ */ new Date()).getFullYear();
-    const links = opts?.links ?? [];
-    return /* @__PURE__ */ u2("footer", { class: `${displayClass ?? ""}`, children: [
-      /* @__PURE__ */ u2("p", { children: [
-        i18n(cfg?.locale ?? "en-US").components.footer.createdWith,
-        " ",
-        /* @__PURE__ */ u2("a", { href: "https://quartz.jzhao.xyz/", children: [
-          "Quartz",
-          version ? ` v${version}` : ""
-        ] }),
-        " \xA9",
-        " ",
-        year
+  const options = { ...defaultOptions, ...opts };
+  const repository = options.repository.replace(/\/$/, "");
+  const Footer = ({
+    fileData,
+    allFiles,
+    cfg,
+    displayClass
+  }) => {
+    const slug = fileData.slug ?? "";
+    const folder = slug === "index" ? void 0 : slug.match(/^(.*)\/index$/)?.[1];
+    const title = fileData.frontmatter?.title ?? "";
+    const sheet = slug === "index" ? "/" : folder !== void 0 ? `/${folder}/` : `/${slug}`;
+    const cfgDateType = cfg.defaultDateType;
+    const dateOf = (f) => {
+      const data = { ...f, defaultDateType: f.defaultDateType ?? cfgDateType };
+      return data.defaultDateType && data.dates ? getDate(data) : void 0;
+    };
+    const below = folder === void 0 ? [] : allFiles.filter((f) => {
+      const s = f.slug ?? "";
+      return s.startsWith(`${folder}/`) && !s.endsWith("/index");
+    });
+    const filePath = fileData.filePath;
+    const fromFile = Boolean(filePath?.endsWith(".md") && fileData.text !== void 0);
+    const count = fromFile ? words(fileData.text ?? "") : 0;
+    const size = below.length > 0 ? `${below.length} ${below.length === 1 ? "sheet" : "sheets"}` : count > 0 ? `${count.toLocaleString("en")} ${count === 1 ? "word" : "words"}` : void 0;
+    const date = below.length > 0 ? below.map(dateOf).filter((d) => Boolean(d)).sort((a, b) => b.getTime() - a.getTime())[0] : dateOf(fileData);
+    const revision = fromFile ? revisions(filePath.split("/")[0]).get(filePath) : void 0;
+    const history = fromFile && repository ? `${repository}/commits/${options.branch}/${filePath.split("/").map(encodeURIComponent).join("/")}` : void 0;
+    return /* @__PURE__ */ jsxs("footer", { class: `sheet ${displayClass ?? ""}`, children: [
+      /* @__PURE__ */ jsxs("div", { class: "sheet-frame", "aria-hidden": "true", children: [
+        ["top", "bottom"].map((edge) => /* @__PURE__ */ jsx("div", { class: `sheet-zones ${edge}`, children: COLUMNS.map((zone) => /* @__PURE__ */ jsx("span", { children: zone })) })),
+        ["left", "right"].map((edge) => /* @__PURE__ */ jsx("div", { class: `sheet-zones ${edge}`, children: ROWS.map((zone) => /* @__PURE__ */ jsx("span", { children: zone })) }))
       ] }),
-      /* @__PURE__ */ u2("ul", { children: Object.entries(links).map(([text, link]) => /* @__PURE__ */ u2("li", { children: /* @__PURE__ */ u2("a", { href: link, children: text }) })) })
+      /* @__PURE__ */ jsxs("dl", { class: "title-block", "aria-label": "Title block", children: [
+        /* @__PURE__ */ jsxs("div", { class: "tb-site", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Site" }),
+          /* @__PURE__ */ jsxs("dd", { children: [
+            /* @__PURE__ */ jsx("span", { dangerouslySetInnerHTML: { __html: mark } }),
+            options.site
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-sheet", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Sheet" }),
+          /* @__PURE__ */ jsx("dd", { children: sheet })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-title", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Title" }),
+          /* @__PURE__ */ jsx("dd", { children: title })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-date", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Date" }),
+          /* @__PURE__ */ jsx("dd", { children: date ? /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: isoDate(date) }) : "\u2013" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-size", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Size" }),
+          /* @__PURE__ */ jsx("dd", { children: size ?? "\u2013" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-rev", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Rev" }),
+          /* @__PURE__ */ jsx("dd", { children: history ? /* @__PURE__ */ jsx(
+            "a",
+            {
+              href: history,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              "aria-label": revision ? `Revision ${revision}: history on GitHub` : "History on GitHub",
+              children: revision ?? "history"
+            }
+          ) : "\u2013" })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-drawn", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Drawn by" }),
+          /* @__PURE__ */ jsx("dd", { children: options.drawnBy })
+        ] }),
+        options.licence && /* @__PURE__ */ jsxs("div", { class: "tb-licence", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Licence" }),
+          /* @__PURE__ */ jsx("dd", { children: /* @__PURE__ */ jsx("a", { href: options.licence.href, children: options.licence.label }) })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { class: "tb-tool", children: [
+          /* @__PURE__ */ jsx("dt", { children: "Tools" }),
+          /* @__PURE__ */ jsxs("dd", { children: [
+            /* @__PURE__ */ jsx("a", { href: "https://obsidian.md/", children: "Obsidian" }),
+            ",",
+            " ",
+            /* @__PURE__ */ jsx("a", { href: "https://quartz.jzhao.xyz/", children: "Quartz" })
+          ] })
+        ] })
+      ] })
     ] });
   };
   Footer.css = footer_default;
   return Footer;
 });
-
-export { Footer_default as Footer };
-//# sourceMappingURL=index.js.map
-//# sourceMappingURL=index.js.map
+export {
+  Footer_default as Footer
+};

@@ -13,7 +13,10 @@ same plant, and the plant changes only when the note does.
 
 A note with no links in either direction is a seedling with two seed leaves.
 
-The caption shows the date the note was last modified and the three numbers.
+The caption says what the plant is drawn from: the three numbers. The colours
+are in `quartz/styles/custom.scss`: on paper the plant is drawn as a schematic
+(green wires, pads outlined in red), in dark mode as copper (ringed vias, gold
+pads).
 The homepage shows the same plants in a row (see `../home`).
 The plant renders on notes only: not on the homepage, folder pages or tag pages.
 

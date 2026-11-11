@@ -1,17 +1,20 @@
 # @tplant/folder-tree
 
-An index of every note below a folder, grouped by subfolder. It renders on the
-index page of each configured root folder and of every folder below it, and
-nowhere else. It is set like the index at the back of a book, and it replaces the
-file tree that the explorer showed in the sidebar.
+The index of a folder as a parts list: one ruled table of every page below the
+folder, grouped by subfolder, with an item number, the date and the word count
+of each. It renders on the index page of each configured root folder and of
+every folder below it, and nowhere else. It replaces the file tree that the
+explorer showed in the sidebar.
 
-`quartz/styles/custom.scss` hides the stock folder listing on the same pages.
+The table uses the class `bom`, which `quartz/styles/custom.scss` rules. The
+same file hides the stock folder listing on the pages that have this table.
 
 ## Options
 
-| Option  | Type       | Default     | Description                          |
-| ------- | ---------- | ----------- | ------------------------------------ |
-| `roots` | `string[]` | `["notes"]` | Folder slugs to render a tree below. |
+| Option        | Type       | Default     | Description                                                |
+| ------------- | ---------- | ----------- | ---------------------------------------------------------- |
+| `roots`       | `string[]` | `["notes"]` | Folder slugs to render a list below.                       |
+| `newestFirst` | `string[]` | `[]`        | Roots listed newest first. The others are listed by title. |
 
 ## Example
 
@@ -21,6 +24,9 @@ file tree that the explorer showed in the sidebar.
   options:
     roots:
       - notes
+      - posts
+    newestFirst:
+      - posts
   layout:
     position: afterBody
     priority: 1

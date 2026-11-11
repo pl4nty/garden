@@ -1,1 +1,1 @@
-export { Socials } from "../index.js";
+export { Socials } from "../index.js"

@@ -4,7 +4,6 @@ import type {
   QuartzComponentProps,
 } from "@quartz-community/types"
 import { resolveRelative } from "@quartz-community/utils"
-import { smallCaps } from "../../../shared/smallCaps"
 import style from "./styles/nav.scss"
 
 export interface NavOptions {
@@ -15,6 +14,7 @@ export interface NavOptions {
 
 type Slug = Parameters<typeof resolveRelative>[0]
 
+// The sheet index: the top-level sheets of the site as a numbered, ruled list.
 export default ((opts?: Partial<NavOptions>) => {
   const links = Object.entries(opts?.links ?? {}).map(([label, target]) => {
     const folder = target.endsWith("/")
@@ -25,28 +25,30 @@ export default ((opts?: Partial<NavOptions>) => {
   const Nav: QuartzComponent = ({ fileData, displayClass }: QuartzComponentProps) => {
     const current = (fileData.slug ?? "") as string
     return (
-      <nav class={`site-nav ${displayClass ?? ""}`} aria-label="Site">
-        <ul>
+      <nav class={`site-nav ${displayClass ?? ""}`} aria-labelledby="site-nav-label">
+        <p class="site-nav-label" id="site-nav-label">
+          Sheets
+        </p>
+        <ol>
           {links.map(({ label, slug, prefix }) => {
             const inside = prefix !== undefined && current.startsWith(prefix)
             const active = current === slug || inside
-            // a page below a folder is listed under the folder's link, as the
-            // running head of a book names the chapter
+            // a page below a folder hangs from the folder's entry, as a
+            // sub-sheet does in a hierarchy
             const here = inside && !current.endsWith("/index") ? fileData.frontmatter?.title : null
             return (
-              <li>
+              <li class={active ? "active" : undefined}>
                 <a
                   href={resolveRelative(current as Slug, slug as Slug)}
-                  class={active ? "active" : undefined}
                   aria-current={current === slug ? "page" : undefined}
                 >
                   {label}
                 </a>
-                {here && <span class="here">{smallCaps(here)}</span>}
+                {here && <span class="here">{here}</span>}
               </li>
             )
           })}
-        </ul>
+        </ol>
       </nav>
     )
   }

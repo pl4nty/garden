@@ -1,305 +1,80 @@
 // ============================================================================
-// Plain: the site with scripting off.
+// The site with scripting off.
 //
-// Without JavaScript there is no search, no theme switch, no graph and no
-// comments, so the page drops to what a plain document needs: the system font,
-// one column, rules and lists. It loads no web font, and it follows the
-// system's colour scheme, because the theme switch cannot run.
+// The sheet is drawn with CSS alone, so it stays as it is: the frame, the
+// title block, the index and the type. What cannot work without JavaScript is
+// taken off the page (search, the theme switch, reader mode, the graph and
+// the comments), and the colours follow the system's colour scheme, because
+// the theme switch that would set `saved-theme` cannot run.
 //
 // `scripting: none` is true when the browser has scripting turned off:
 // Chrome 120, Firefox 113, Safari 17. An older browser with scripting off
-// gets the main theme with controls that do nothing.
+// gets the light theme with controls that do nothing.
 //
 // A mixin, so that custom.scss can emit these rules after its own: both files
 // are unlayered, and the later rule wins.
 // ============================================================================
 @mixin plain {
   @media (scripting: none) {
-    :root {
-      --light: #fbfbf8;
-      --lightgray: #d9d9d2;
-      --gray: #666660;
-      --darkgray: #111111;
-      --dark: #111111;
-      --secondary: #19692b;
-      --tertiary: #19692b;
-      --bar: #f0f0ea;
-      --underline: #19692b;
-      --bodyFont: Helvetica, Arial, sans-serif;
-      --headerFont: Helvetica, Arial, sans-serif;
-      --titleFont: Helvetica, Arial, sans-serif;
-      --codeFont: ui-monospace, Menlo, Consolas, "DejaVu Sans Mono", monospace;
-      --measure: 50rem;
-
-      @media (prefers-color-scheme: dark) {
-        --light: #121212;
-        --lightgray: #33332f;
-        --gray: #9a9a94;
-        --darkgray: #e9e9e4;
-        --dark: #e9e9e4;
-        --secondary: #7fd08a;
-        --tertiary: #7fd08a;
-        --bar: #1c1c1a;
-        --underline: #7fd08a;
-        color-scheme: dark;
-      }
-    }
-
-    body {
-      font-size: 1rem;
-      line-height: 1.45;
-      font-variant-numeric: normal;
-    }
-
-    tbody,
-    li,
-    p {
-      line-height: 1.45;
-    }
-
-    // The fonts plugin sets the family on headings in an inline stylesheet that
-    // comes after this one, so these selectors carry `body` to outrank it.
-    body :is(h1, h2, h3, h4, h5, h6, thead, .page-title, .article-title) {
-      font-family: var(--headerFont);
-    }
-
-    .sc {
-      font-variant-caps: normal;
-      letter-spacing: 0;
-    }
-
-    // what cannot work, and the drawings
     .search,
     .darkmode,
     .readermode,
     .graph,
     .giscus,
-    .toc,
-    .home-bed,
-    .note-plant,
-    .page-title a::before {
+    .clipboard-button {
       display: none !important;
     }
 
-    // one column
-    .page > #quartz-body {
-      display: block;
-      max-width: var(--measure);
-      margin: 0 auto;
-      padding: 1.5rem 1.25rem 4rem;
+    // the table of contents cannot follow the page; its list is still a list
+    // of links, and its button to fold it away is only a label
+    .toc button.toc-header {
+      pointer-events: none;
 
-      > .center {
-        padding-top: 0;
-      }
-
-      // the sidebar becomes a masthead: title and links out on one line, the
-      // nav on the next, a heavy rule below
-      > .sidebar.left {
-        position: static;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.5rem 1rem;
-        height: auto;
-        margin-bottom: 1.5rem;
-        padding: 0 0 0.6rem;
-        border-bottom: 2px solid var(--dark);
-
-        > .flex-component {
-          margin: 0 0 0 auto;
-        }
-
-        > .site-nav {
-          order: 3;
-          flex: 0 0 100%;
-        }
-      }
-
-      > .sidebar.right {
-        position: static;
-        display: block;
-        height: auto;
-        padding: 0;
-        font-size: 1rem;
-      }
-    }
-
-    .page-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-
-      a {
-        color: var(--dark);
-      }
-    }
-
-    .site-nav {
-      ul {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.2rem 1.4rem;
-      }
-
-      a {
-        color: var(--secondary);
-
-        &.active {
-          font-weight: 700;
-          color: var(--dark);
-        }
-
-        &:hover {
-          color: var(--secondary);
-          text-decoration: underline;
-        }
-      }
-
-      .here {
+      .fold {
         display: none;
       }
     }
+  }
 
-    .article-title {
-      font-size: 1.7rem;
-      font-weight: 700;
-      line-height: 1.2;
+  // The dark palette of quartz.config.yaml and of custom.scss, for a system
+  // set to dark. Keep the three in step.
+  @media (scripting: none) and (prefers-color-scheme: dark) {
+    :root {
+      --light: #181b20;
+      --lightgray: #353a43;
+      --gray: #9d9b8f;
+      --darkgray: #e2e0d4;
+      --dark: #f1efe3;
+      --secondary: #7cc987;
+      --tertiary: #e0685f;
+      --highlight: rgba(88, 174, 101, 0.14);
+      --textHighlight: rgba(217, 180, 74, 0.35);
+      --rule: #c4473f;
+      --wire: #58ae65;
+      --label: #63bdb8;
+      --fill: #23272f;
+      --pad: #d9b44a;
+      --via: #c9c7bb;
+      color-scheme: dark;
     }
 
-    .breadcrumb-container {
-      font-variant-caps: normal;
-      letter-spacing: 0;
-      font-size: 0.9rem;
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-dark);
     }
 
-    .content-meta {
-      padding-bottom: 1.1rem;
-      border-bottom: 2px solid var(--dark);
-      font-style: italic;
-    }
-
-    article {
-      p {
-        text-align: left;
-        hyphens: manual;
+    :is(.home-bed, .note-plant) svg {
+      .v {
+        fill: var(--light);
+        stroke: var(--via);
+        stroke-width: 1.5;
       }
 
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        font-weight: 700;
-        font-style: normal;
-        font-variant-caps: normal;
-        letter-spacing: 0;
+      .b,
+      .p {
+        stroke: none;
+        rx: 2px;
       }
-
-      h2 {
-        font-size: 1.3rem;
-      }
-
-      h3 {
-        font-size: 1.05rem;
-      }
-
-      a {
-        color: var(--secondary);
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-
-      hr {
-        height: 2px;
-        background-color: var(--dark);
-
-        &::before,
-        &::after {
-          display: none;
-        }
-      }
-    }
-
-    blockquote {
-      margin-left: 1.25rem;
-      padding-left: 0.9rem;
-      border-left: 2px solid var(--dark);
-      font-size: 1em;
-      color: var(--dark);
-    }
-
-    code {
-      font-size: 0.88em;
-    }
-
-    pre {
-      border: 1px dotted var(--dark);
-      background-color: var(--bar);
-
-      > code {
-        background-image: none;
-      }
-    }
-
-    .table-container > table tbody tr:nth-child(odd) {
-      background-color: transparent;
-    }
-
-    th {
-      border-bottom-width: 2px;
-      font-variant-caps: normal;
-      font-weight: 700;
-      letter-spacing: 0;
-      color: var(--dark);
-    }
-
-    // headings of lists
-    .home-contents h2,
-    .folder-tree-group h2,
-    .backlinks > h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      font-variant-caps: normal;
-      letter-spacing: 0;
-      color: var(--dark);
-    }
-
-    .home-contents,
-    .folder-tree,
-    li.section-li {
-      a,
-      > .section > .desc > h3 > a {
-        color: var(--secondary);
-      }
-    }
-
-    .home-contents .home-dots,
-    li.section-li > .section > .desc::after {
-      border: 0;
-    }
-
-    .home-contents section:first-child {
-      padding-top: 1.1rem;
-      border-top: 2px solid var(--dark);
-    }
-
-    .folder-tree-groups {
-      columns: 2;
-    }
-
-    .folder-tree-group h2 {
-      border-bottom: 0;
-    }
-
-    .center > hr {
-      display: block;
-      height: 2px;
-      margin: 1.5rem 0 1rem;
-      background-color: var(--dark);
     }
   }
 }

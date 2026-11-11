@@ -1,8 +1,9 @@
 # @tplant/nav
 
-The site navigation: a list of links for the left sidebar. The link for the
-section that holds the current page is marked as active, and the title of the
-current page is listed under it.
+The site navigation, set as a sheet index: a numbered, ruled list of the
+top-level sheets, for the left column. The entry for the section that holds
+the current page is marked with a junction dot, and the title of the current
+page hangs from it on a branch.
 
 ## Options
 

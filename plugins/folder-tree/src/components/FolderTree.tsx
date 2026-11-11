@@ -5,32 +5,42 @@ import type {
   QuartzPluginData,
 } from "@quartz-community/types"
 import { getDate, resolveRelative } from "@quartz-community/utils"
-import { smallCaps } from "../../../shared/smallCaps"
 import style from "./styles/folderTree.scss"
 
 export interface FolderTreeOptions {
-  // Folder slugs to render a tree for. The tree shows on the index page of each
-  // root and of every folder below it.
+  // Folder slugs to render a list for. The list shows on the index page of
+  // each root and of every folder below it.
   roots: string[]
+  // Roots whose pages are listed newest first. The others are listed by title.
+  newestFirst: string[]
 }
 
 const defaultOptions: FolderTreeOptions = {
   roots: ["notes"],
+  newestFirst: [],
 }
 
 type Slug = Parameters<typeof resolveRelative>[0]
+type Entry = { f: QuartzPluginData; date?: Date; words: number }
 
 interface Group {
   // slug of the folder, without a trailing slash
   folder: string
   // display names of the folder, relative to the page's folder
   names: string[]
-  notes: { f: QuartzPluginData; date?: Date }[]
+  entries: Entry[]
 }
 
+const isoDate = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+
+// The index of a folder as a parts list: one ruled table of every page below
+// the folder, grouped by subfolder, with the date and the length of each.
 export default ((opts?: Partial<FolderTreeOptions>) => {
   const options: FolderTreeOptions = { ...defaultOptions, ...opts }
-  const roots = options.roots.map((r) => r.replace(/\/$/, "").toLowerCase())
+  const clean = (r: string) => r.replace(/\/$/, "").toLowerCase()
+  const roots = options.roots.map(clean)
+  const newestFirst = options.newestFirst.map(clean)
 
   const FolderTree: QuartzComponent = ({
     fileData,
@@ -41,7 +51,9 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
     const slug = (fileData.slug ?? "") as string
     if (!slug.endsWith("/index")) return null
     const here = slug.slice(0, -"/index".length)
-    if (!roots.some((r) => here === r || here.startsWith(`${r}/`))) return null
+    const root = roots.find((r) => here === r || here.startsWith(`${r}/`))
+    if (root === undefined) return null
+    const byDate = newestFirst.includes(root)
 
     const locale = cfg.locale || "en-US"
     const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
@@ -52,6 +64,7 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
       } as QuartzPluginData
       return data.defaultDateType ? getDate(data) : undefined
     }
+    const titleOf = (f: QuartzPluginData) => (f.frontmatter?.title ?? f.slug ?? "") as string
     const depth = here.split("/").length
 
     const groups = new Map<string, Group>()
@@ -60,67 +73,83 @@ export default ((opts?: Partial<FolderTreeOptions>) => {
       if (!s || !s.startsWith(`${here}/`) || s.endsWith("/index")) continue
       const folder = s.split("/").slice(0, -1).join("/")
       const names = ((f.relativePath ?? "") as string).split("/").slice(depth, -1)
-      const group = groups.get(folder) ?? { folder, names, notes: [] }
-      group.notes.push({ f, date: dateOf(f) })
+      const group = groups.get(folder) ?? { folder, names, entries: [] }
+      const words = ((f.text ?? "") as string).split(/\s+/).filter(Boolean).length
+      group.entries.push({ f, date: dateOf(f), words })
       groups.set(folder, group)
     }
     if (groups.size === 0) return null
 
-    // Notes that sit directly in this folder go last, below the subfolders.
+    // Pages that sit directly in this folder go last, below the subfolders.
     const sorted = [...groups.values()].sort((a, b) => {
       if (a.folder === here) return 1
       if (b.folder === here) return -1
       return a.folder.localeCompare(b.folder)
     })
-    const total = sorted.reduce((n, g) => n + g.notes.length, 0)
+    for (const group of sorted) {
+      group.entries.sort((a, b) =>
+        byDate
+          ? (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0)
+          : titleOf(a.f).localeCompare(titleOf(b.f), locale, {
+              numeric: true,
+              sensitivity: "base",
+            }),
+      )
+    }
+    const total = sorted.reduce((n, g) => n + g.entries.length, 0)
     const hasSubfolders = sorted.some((g) => g.folder !== here)
+
+    // Items are numbered through the whole table. A list that is newest first
+    // counts down, so an item keeps its number when a newer one is added.
+    let item = 0
+    const number = () => (byDate ? total - item++ : ++item)
 
     return (
       <section class={`folder-tree ${displayClass ?? ""}`}>
-        <p class="folder-tree-count">
-          {total} {total === 1 ? "note" : "notes"}
-          {hasSubfolders && ` in ${sorted.filter((g) => g.folder !== here).length} folders`}
-        </p>
-        <div class={`folder-tree-groups ${hasSubfolders ? "" : "single"}`}>
+        <table class="bom">
+          <thead>
+            <tr>
+              <th scope="col" class="num">
+                Item
+              </th>
+              <th scope="col">Title</th>
+              <th scope="col">{byDate ? "Date" : "Updated"}</th>
+              <th scope="col" class="num">
+                Words
+              </th>
+            </tr>
+          </thead>
           {sorted.map((group) => (
-            <div class="folder-tree-group">
+            <tbody>
               {hasSubfolders && (
-                <h2>
-                  {group.folder === here ? (
-                    "Everything else"
-                  ) : (
-                    <a href={resolveRelative(slug as Slug, `${group.folder}/index` as Slug)}>
-                      {group.names.join(" / ")}
-                    </a>
-                  )}
-                  <span class="folder-tree-n">{group.notes.length}</span>
-                </h2>
-              )}
-              <ul>
-                {group.notes
-                  .sort((a, b) =>
-                    (a.f.frontmatter?.title ?? "").localeCompare(
-                      b.f.frontmatter?.title ?? "",
-                      locale,
-                      { numeric: true, sensitivity: "base" },
-                    ),
-                  )
-                  .map(({ f, date }) => (
-                    <li>
-                      <a href={resolveRelative(slug as Slug, f.slug as Slug)}>
-                        <span>{smallCaps((f.frontmatter?.title ?? f.slug ?? "") as string)}</span>
-                        {date && (
-                          <time datetime={date.toISOString()}>
-                            {date.toLocaleDateString(locale, { month: "short", year: "numeric" })}
-                          </time>
-                        )}
+                <tr class="bom-group">
+                  <th colSpan={4} scope="rowgroup">
+                    {group.folder === here ? (
+                      "Loose sheets"
+                    ) : (
+                      <a href={resolveRelative(slug as Slug, `${group.folder}/index` as Slug)}>
+                        {group.names.join(" / ")}
                       </a>
-                    </li>
-                  ))}
-              </ul>
-            </div>
+                    )}
+                    <span class="bom-count">{group.entries.length}</span>
+                  </th>
+                </tr>
+              )}
+              {group.entries.map(({ f, date, words }) => (
+                <tr>
+                  <td class="num ref">{number()}</td>
+                  <td>
+                    <a href={resolveRelative(slug as Slug, f.slug as Slug)}>{titleOf(f)}</a>
+                  </td>
+                  <td class="date">
+                    {date && <time datetime={date.toISOString()}>{isoDate(date)}</time>}
+                  </td>
+                  <td class="num">{words.toLocaleString("en")}</td>
+                </tr>
+              ))}
+            </tbody>
           ))}
-        </div>
+        </table>
       </section>
     )
   }

@@ -1,6 +1,3 @@
-// src/components/NotePlant.tsx
-import { formatDate, getDate } from "@quartz-community/utils";
-
 // src/components/plant.ts
 var MAX_LEAVES = 10;
 var MAX_BUDS = 8;
@@ -147,7 +144,7 @@ function noteStats(file, allFiles) {
 }
 
 // src/components/styles/notePlant.scss
-var notePlant_default = ".note-plant{display:flex;align-items:flex-end;gap:1.25rem;margin:3.25rem 0 0;border-bottom:1px solid var(--dark);color:var(--dark)}.note-plant figcaption{padding-bottom:.75rem;font-size:.92em;font-style:italic;line-height:1.5}.note-plant figcaption p{margin:0;line-height:1.5}.note-plant-tended{color:var(--darkgray)}.note-plant-stats{color:var(--gray)}.note-plant-art{flex-shrink:0}.note-plant-art svg{display:block;overflow:visible}svg .f{fill:currentColor;fill-opacity:.13}svg .r{stroke-width:1;opacity:.7}svg .v{fill:var(--light)}svg .b{fill:currentColor}svg .p{fill:currentColor;fill-opacity:.18;stroke-width:1.25}";
+var notePlant_default = ".note-plant{display:flex;align-items:flex-end;gap:1.25rem;margin:3.25rem 0 0;border-bottom:1px solid var(--wire)}.note-plant figcaption{padding-bottom:.7rem;font-family:var(--headerFont);line-height:1.4}.note-plant figcaption p{margin:0;line-height:1.4}.note-plant-name{font-size:.78rem;font-weight:500;color:var(--label)}.note-plant-stats{font-size:.92rem;font-weight:500;color:var(--gray)}.note-plant-art{flex-shrink:0}.note-plant-art svg{display:block;overflow:visible}";
 
 // src/components/NotePlant.tsx
 import { jsx, jsxs } from "preact/jsx-runtime";
@@ -161,7 +158,6 @@ var NotePlant_default = ((opts) => {
   const NotePlant = ({
     fileData,
     allFiles,
-    cfg,
     displayClass
   }) => {
     const slug = fileData.slug ?? "";
@@ -170,13 +166,12 @@ var NotePlant_default = ((opts) => {
     if (roots.length > 0 && !roots.some((root) => slug.startsWith(`${root}/`))) return null;
     const { words, linksOut, linksIn } = noteStats(fileData, allFiles);
     const plant = drawPlant({ seed: slug, words, linksOut, linksIn });
-    const cfgDateType = cfg.defaultDateType;
-    const dated = {
-      ...fileData,
-      defaultDateType: fileData.defaultDateType ?? cfgDateType
-    };
-    const date = dated.defaultDateType ? getDate(dated) : void 0;
     const description = `A plant drawn from this note. Its height comes from the note's length, it has ${plural(plant.leaves, "leaf", "leaves")} for the notes it links to and ${plural(plant.buds, "bud", "buds")} for the notes that link here.`;
+    const grown = [
+      linksOut > 0 && `${plural(plant.leaves, "leaf", "leaves")} for ${plural(linksOut, "link", "links")} out`,
+      linksIn > 0 && `${plural(plant.buds, "bud", "buds")} for ${plural(linksIn, "link", "links")} in`
+    ].filter(Boolean);
+    const caption = `${plural(words, "word", "words")} tall, ` + (grown.length > 0 ? `with ${grown.join(" and ")}.` : "with no links in or out yet, so no leaves or buds.");
     return /* @__PURE__ */ jsxs("figure", { class: `note-plant ${displayClass ?? ""}`, children: [
       /* @__PURE__ */ jsx(
         "div",
@@ -188,20 +183,8 @@ var NotePlant_default = ((opts) => {
         }
       ),
       /* @__PURE__ */ jsxs("figcaption", { children: [
-        date && /* @__PURE__ */ jsxs("p", { class: "note-plant-tended", children: [
-          "Tended",
-          " ",
-          /* @__PURE__ */ jsx("time", { datetime: date.toISOString(), children: formatDate(date, cfg.locale || "en-US") })
-        ] }),
-        /* @__PURE__ */ jsxs("p", { class: "note-plant-stats", children: [
-          plural(words, "word", "words"),
-          " \xB7 ",
-          plural(linksOut, "link", "links"),
-          " out \xB7",
-          " ",
-          plural(linksIn, "link", "links"),
-          " in"
-        ] })
+        /* @__PURE__ */ jsx("p", { class: "note-plant-name", children: "This note\u2019s plant" }),
+        /* @__PURE__ */ jsx("p", { class: "note-plant-stats", children: caption })
       ] })
     ] });
   };

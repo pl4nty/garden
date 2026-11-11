@@ -1,15 +1,269 @@
-footer {
-  text-align: left;
-  margin-bottom: 4rem;
-  opacity: 0.7;
+// The sheet. Sizes come from quartz/styles/custom.scss:
+//   --frame-m   from the edge of the viewport to the outer line of the frame
+//   --frame     from the edge of the viewport to the inner line
+//   --margin    the width of the right-hand column, and of the title block
+//   --sheet-max the widest the sheet gets
+// Line weights follow a drawing sheet: the frame and the outline of the title
+// block are 2px, everything inside them is 1px.
 
-  & ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+// The footer is a grid item of the page. On a wide screen both of its children
+// are fixed and it is empty.
+.sheet {
+  opacity: 1;
+  text-align: left;
+}
+
+// ---------------------------------------------------------------------------
+// The frame: fixed to the viewport, so the sheet stays in view while a long
+// page scrolls inside it. The four strips are opaque, and hide the text that
+// scrolls under them.
+// ---------------------------------------------------------------------------
+.sheet-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  max-width: var(--sheet-max);
+  margin: 0 auto;
+  pointer-events: none;
+  font-family: var(--headerFont);
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--rule);
+
+  // outer line
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    border: 1px solid var(--rule);
+  }
+
+  &::before {
+    inset: var(--frame-m);
+  }
+
+  // inner line
+  &::after {
+    inset: calc(var(--frame) - 2px);
+    border-width: 2px;
+  }
+
+  // phones get a plain page: no frame
+  @media (max-width: 800px) {
+    display: none;
+  }
+}
+
+.sheet-zones {
+  position: absolute;
+  display: flex;
+  box-sizing: border-box;
+  background-color: var(--light);
+
+  > span {
+    flex: 1;
     display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    margin-top: -1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.top,
+  &.bottom {
+    left: 0;
+    right: 0;
+    height: var(--frame);
+
+    // a tick between one zone and the next
+    > span + span {
+      border-left: 1px solid var(--rule);
+    }
+  }
+
+  // the zones run from the outer line to the inner one
+  &.top {
+    top: 0;
+    padding: var(--frame-m) var(--frame) 0;
+  }
+
+  &.bottom {
+    bottom: 0;
+    padding: 0 var(--frame) var(--frame-m);
+  }
+
+  &.left,
+  &.right {
+    top: var(--frame);
+    bottom: var(--frame);
+    flex-direction: column;
+    width: var(--frame);
+
+    > span + span {
+      border-top: 1px solid var(--rule);
+    }
+  }
+
+  &.left {
+    left: 0;
+    padding-left: var(--frame-m);
+  }
+
+  &.right {
+    right: 0;
+    padding-right: var(--frame-m);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The title block: a grid of cells with a 1px gap, on a ground of the rule
+// colour, so every division is one clean line.
+// ---------------------------------------------------------------------------
+.title-block {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1px;
+  box-sizing: border-box;
+  margin: 0;
+  border: 2px solid var(--rule);
+  background-color: var(--rule);
+  font-family: var(--headerFont);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--dark);
+
+  > div {
+    grid-column: span 12;
+    min-width: 0;
+    padding: 0.28rem 0.45rem 0.34rem;
+    background-color: var(--light);
+  }
+
+  // two rows of three cells, each as wide as what it holds
+  > .tb-date,
+  > .tb-licence {
+    grid-column: span 4;
+  }
+
+  > .tb-size,
+  > .tb-tool {
+    grid-column: span 5;
+  }
+
+  > .tb-rev,
+  > .tb-drawn {
+    grid-column: span 3;
+  }
+
+  // the name of a field, small in the top left of its cell
+  dt {
+    margin: 0;
+    font-size: 0.66rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--label);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.84rem;
+    font-weight: 500;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: inherit;
+    background-color: transparent;
+    text-decoration: underline;
+    text-decoration-color: var(--wire);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.18em;
+
+    &:hover {
+      color: var(--secondary);
+    }
+  }
+
+  // the site: the mark and the name, with no field name
+  .tb-site {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+
+    dt {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    dd {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1rem;
+      font-weight: 600;
+
+      > span {
+        display: flex;
+      }
+    }
+  }
+
+  .mark {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .mark-plant {
+    color: var(--wire);
+  }
+
+  .mark-earth {
+    color: var(--rule);
+  }
+
+  .tb-sheet dd {
+    font-family: var(--codeFont);
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .tb-title dd {
+    font-size: 1.06rem;
+    font-weight: 600;
+    line-height: 1.22;
+    text-wrap: balance;
+  }
+}
+
+// From the tablet up, the title block is in the bottom right corner of the
+// frame, whose inner line closes its right and bottom sides.
+@media (min-width: 801px) {
+  .title-block {
+    width: var(--margin);
+    border-right-width: 0;
+    border-bottom-width: 0;
+  }
+}
+
+// Tablet: the title block ends the page, and meets the corner of the frame
+// when the page is scrolled to its end.
+@media (min-width: 801px) and (max-width: 1199px) {
+  .sheet {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// Desktop: fixed in the corner, so the date and the revision of the page are
+// in view while it is read.
+@media (min-width: 1200px) {
+  .title-block {
+    position: fixed;
+    right: calc(max(0px, (100% - var(--sheet-max)) / 2) + var(--frame));
+    bottom: var(--frame);
+    z-index: 21;
   }
 }

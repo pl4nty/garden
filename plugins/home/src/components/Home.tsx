@@ -7,20 +7,21 @@ import type {
 import { getDate, resolveRelative } from "@quartz-community/utils"
 import { drawPlant } from "../../../note-plant/src/components/plant"
 import { noteStats } from "../../../note-plant/src/components/stats"
-import { smallCaps } from "../../../shared/smallCaps"
 import style from "./styles/home.scss"
 
 export interface HomeOptions {
   // "bed" renders the row of plants (place it in beforeBody); "contents"
-  // renders the lists that follow the page content (place it in afterBody).
-  section: "bed" | "contents"
+  // renders the list of posts that follows the page content (place it in
+  // afterBody); "revisions" renders the latest changes to notes (place it in
+  // right: a drawing keeps its revision history in the top right corner).
+  section: "bed" | "contents" | "revisions"
   // Folder slug that holds the posts.
   postsFolder: string
   // Folder slug that holds the notes.
   notesFolder: string
   // Bed: the number of plants. The most recently tended notes get one each.
   plants: number
-  // Contents: the number of recently tended notes to list.
+  // Revisions: the number of rows.
   recentCount: number
 }
 
@@ -29,11 +30,14 @@ const defaultOptions: HomeOptions = {
   postsFolder: "posts",
   notesFolder: "notes",
   plants: 22,
-  recentCount: 6,
+  recentCount: 8,
 }
 
 type Slug = Parameters<typeof resolveRelative>[0]
 type Dated = { f: QuartzPluginData; date: Date }
+
+const isoDate = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 
 export default ((opts?: Partial<HomeOptions>) => {
   const options: HomeOptions = { ...defaultOptions, ...opts }
@@ -49,7 +53,6 @@ export default ((opts?: Partial<HomeOptions>) => {
     // The component sits in a slot that every content page shares.
     if (fileData.slug !== "index") return null
 
-    const locale = cfg.locale || "en-US"
     const cfgDateType = (cfg as Record<string, unknown>).defaultDateType as string | undefined
     const dateOf = (f: QuartzPluginData) => {
       const data = { ...f, defaultDateType: f.defaultDateType ?? cfgDateType } as QuartzPluginData
@@ -57,7 +60,6 @@ export default ((opts?: Partial<HomeOptions>) => {
     }
     const href = (slug: string) => resolveRelative(fileData.slug as Slug, slug as Slug)
     const title = (f: QuartzPluginData) => (f.frontmatter?.title ?? f.slug ?? "") as string
-    const month = (d: Date) => d.toLocaleDateString(locale, { month: "short", year: "numeric" })
     const newestFirst = (prefix: string): Dated[] =>
       allFiles
         .filter((f) => f.slug?.startsWith(prefix) && !f.slug.endsWith("/index"))
@@ -76,7 +78,7 @@ export default ((opts?: Partial<HomeOptions>) => {
             return (
               <a
                 href={href(f.slug!)}
-                title={`${title(f)} · ${month(date)}`}
+                title={`${title(f)}, ${isoDate(date)}`}
                 aria-label={title(f)}
                 style={`aspect-ratio:${plant.width}/${plant.height};height:${Math.round((plant.height / 280) * 100)}%`}
                 dangerouslySetInnerHTML={{ __html: plant.svg }}
@@ -87,34 +89,81 @@ export default ((opts?: Partial<HomeOptions>) => {
       )
     }
 
+    if (options.section === "revisions") {
+      if (notes.length === 0) return null
+      // the folder of a note, as its path below the notes folder: "Microsoft / Intune"
+      const folderOf = (f: QuartzPluginData) =>
+        ((f.relativePath ?? "") as string).split("/").slice(1, -1).join(" / ")
+      const shown = notes.slice(0, options.recentCount)
+      return (
+        <section class={`home-revisions ${displayClass ?? ""}`}>
+          <h2>Revision history</h2>
+          <table class="bom">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map(({ f, date }) => (
+                <tr>
+                  <td class="date">
+                    <time datetime={date.toISOString()}>{isoDate(date)}</time>
+                  </td>
+                  <td>
+                    <a href={href(f.slug!)}>{title(f)}</a>
+                    <span class="folder">{folderOf(f)}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p>
+            The last {shown.length} changes. <a href={href(`${notesPrefix}index`)}>All notes</a> are
+            in the index: there are {notes.length}.
+          </p>
+        </section>
+      )
+    }
+
     const posts = newestFirst(postsPrefix)
-    const list = (items: Dated[]) => (
-      <ol>
-        {items.map(({ f, date }) => (
-          <li>
-            <a href={href(f.slug!)}>{smallCaps(title(f))}</a>
-            <span class="home-dots" />
-            <time datetime={date.toISOString()}>{month(date)}</time>
-          </li>
-        ))}
-      </ol>
-    )
 
     return (
       <div class={`home-contents ${displayClass ?? ""}`}>
         {posts.length > 0 && (
           <section>
-            <h2>Writing</h2>
-            {list(posts)}
-          </section>
-        )}
-        {notes.length > 0 && (
-          <section>
-            <h2>Lately tended</h2>
-            {list(notes.slice(0, options.recentCount))}
-            <p>
-              <a href={href(`${notesPrefix}index`)}>The index of all {notes.length} notes</a>
-            </p>
+            <h2>
+              <a href={href(`${postsPrefix}index`)}>Posts</a>
+            </h2>
+            <table class="bom">
+              <thead>
+                <tr>
+                  <th scope="col" class="num">
+                    Item
+                  </th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Date</th>
+                  <th scope="col" class="num">
+                    Words
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map(({ f, date }, i) => (
+                  <tr>
+                    <td class="num ref">{posts.length - i}</td>
+                    <td>
+                      <a href={href(f.slug!)}>{title(f)}</a>
+                    </td>
+                    <td class="date">
+                      <time datetime={date.toISOString()}>{isoDate(date)}</time>
+                    </td>
+                    <td class="num">{noteStats(f, allFiles).words.toLocaleString("en")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </section>
         )}
       </div>
