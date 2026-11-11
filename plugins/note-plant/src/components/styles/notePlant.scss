@@ -1,0 +1,42 @@
+// The note's plant grows from the wire that closes the note, with a caption
+// beside it that says what it is drawn from. The colours of the plant are in
+// custom.scss, shared with the row of plants on the homepage.
+.note-plant {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  margin: 3.25rem 0 0;
+  border-bottom: 1px solid var(--wire);
+
+  figcaption {
+    padding-bottom: 0.7rem;
+    font-family: var(--headerFont);
+    line-height: 1.4;
+
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+}
+
+.note-plant-name {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--label);
+}
+
+.note-plant-stats {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.note-plant-art {
+  flex-shrink: 0;
+
+  svg {
+    display: block;
+    overflow: visible;
+  }
+}

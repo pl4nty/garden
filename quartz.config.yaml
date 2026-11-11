@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "Tom's Garden"
+  pageTitle: "Tom’s Garden"
   pageTitleSuffix: " | Tom Plant"
   enableSPA: true
   enablePopovers: true
@@ -16,30 +16,44 @@ configuration:
     fontOrigin: local
     cdnCaching: true
     typography:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: IBM Plex Sans Condensed
+      body: IBM Plex Sans
+      code: IBM Plex Mono
+    # KiCad's default schematic theme, which anyone who has opened Eeschema
+    # knows: cream paper, a dark red sheet frame and component outlines, green
+    # wires, teal reference text. Body text is near-black, as KiCad sets local
+    # labels. Dark mode is the PCB editor: a near-black board, copper red,
+    # a muted green layer and silkscreen off-white.
+    #   light      the paper (the board)
+    #   lightgray  the lightest rules: between table rows, inside boxes
+    #   gray       the lightest text: captions, counts (5.5:1 on light, 6.2:1 dark)
+    #   darkgray   body text (15.3:1 on light, 13:1 dark)
+    #   dark       headings
+    #   secondary  the wire green, darkened until it can also set text
+    #   tertiary   the frame red, for hover in community components
+    # quartz/styles/custom.scss adds --rule (the frame), --wire (links),
+    # --label (teal) and --fill (the body of a component).
     colors:
       lightMode:
-        light: "#FFFFFF"
-        lightgray: "#F8F8F8"
-        gray: "#B0B0B0"
-        darkgray: "#666666"
-        dark: "#303030"
-        secondary: "#2E7D32"
-        tertiary: "#388E3C"
-        highlight: "rgba(46, 125, 50, 0.15)"
-        textHighlight: "rgba(46, 125, 50, 0.15)"
+        light: "#F5F4EF"
+        lightgray: "#D8D4C8"
+        gray: "#66635B"
+        darkgray: "#1E1D1A"
+        dark: "#12110F"
+        secondary: "#006A00"
+        tertiary: "#840000"
+        highlight: "rgba(0, 132, 0, 0.1)"
+        textHighlight: "rgba(255, 233, 80, 0.55)"
       darkMode:
-        light: "#141414"
-        lightgray: "#1f1f1f"
-        gray: "#7a8882"
-        darkgray: "darkgray"
-        dark: "#E0F0E9"
-        secondary: "#66BB6A"
-        tertiary: "#81C784"
-        highlight: "rgba(102, 187, 106, 0.15)"
-        textHighlight: "rgba(102, 187, 106, 0.15)"
+        light: "#181B20"
+        lightgray: "#353A43"
+        gray: "#9D9B8F"
+        darkgray: "#E2E0D4"
+        dark: "#F1EFE3"
+        secondary: "#7CC987"
+        tertiary: "#E0685F"
+        highlight: "rgba(88, 174, 101, 0.14)"
+        textHighlight: "rgba(217, 180, 74, 0.35)"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: true
@@ -109,9 +123,9 @@ plugins:
   - source: github:quartz-community/fonts
     enabled: true
     options:
-      header: Titillium Web
-      body: Titillium Web
-      code: Fira Code
+      header: IBM Plex Sans Condensed
+      body: IBM Plex Sans
+      code: IBM Plex Mono
       # faces are self-hosted from quartz/static/fonts via quartz/styles/fonts.scss
       fontOrigin: local
   - source: github:quartz-community/remove-draft
@@ -143,8 +157,10 @@ plugins:
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
+  # The file tree is replaced by the sidebar links (./plugins/nav) and the
+  # index of notes on each folder page (./plugins/folder-tree).
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -161,8 +177,7 @@ plugins:
     enabled: true
     layout:
       position: left
-      priority: 20
-      group: toolbar
+      priority: 14
   - source: github:quartz-community/backlinks
     enabled: true
     layout:
@@ -174,8 +189,11 @@ plugins:
       position: beforeBody
       priority: 10
       condition: not-index
+  # disabled: the date, the word count and the link to the page's history are
+  # fields of the title block (./plugins/footer), so the page header is only
+  # the path and the title
   - source: ./plugins/content-meta
-    enabled: true
+    enabled: false
     layout:
       position: beforeBody
       priority: 20
@@ -185,11 +203,25 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # Left column, top to bottom: the site title, the sheet index (nav), search,
+  # then at the foot the links out and the toolbar group (theme, reader mode).
   - source: github:quartz-community/page-title
     enabled: true
     layout:
       position: left
       priority: 10
+  - source: ./plugins/nav
+    enabled: true
+    options:
+      links:
+        Posts: posts/
+        Notes: notes/
+        Ideas: ideas
+        Now: now
+        Whoami: whoami
+    layout:
+      position: left
+      priority: 12
   - source: github:quartz-community/darkmode
     enabled: true
     layout:
@@ -204,6 +236,9 @@ plugins:
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      spacerSymbol: /
+      showCurrentPage: false
     layout:
       position: beforeBody
       priority: 5
@@ -222,11 +257,19 @@ plugins:
       position: afterBody
       priority: 10
       condition: not-index
+  # The sheet: the drawing frame with its zone markers, and the title block
+  # filled in from the page (title, date, revision, sheet path, size). It
+  # takes the footer slot, so it is on every page.
   - source: ./plugins/footer
     enabled: true
     options:
-      links:
-        License: /License
+      site: Tom’s Garden
+      drawnBy: Tom Plant
+      repository: https://github.com/pl4nty/garden
+      branch: main
+      licence:
+        label: CC BY-SA 4.0
+        href: /License
   - source: ./plugins/socials
     enabled: true
     options:
@@ -236,40 +279,58 @@ plugins:
         Homelab: https://lab.tplant.com.au/
     layout:
       position: left
-      priority: 15
-      group: toolbar
-  # Desktop/tablet: the curated posts live in the left sidebar. Hidden below
-  # 800px, where the sidebar collapses into a cramped horizontal toolbar row.
-  - source: ./plugins/featured
+      priority: 32
+  # Homepage: a row of plants above the note, one for each of the most
+  # recently tended notes; below the note, the posts as a parts list; and in
+  # the right-hand column the latest changes to notes, as a drawing keeps its
+  # revision history. Index page only.
+  - source: ./plugins/home
     enabled: true
     options:
-      title: ""
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: bed
+      plants: 22
     layout:
-      position: left
-      priority: 40
-      display: desktop-only
-  # Mobile: same list, moved to the bottom of the homepage (after the content)
-  # so it stays reachable without cluttering the top toolbar. Shown below 800px.
-  - source: ./plugins/featured
+      position: beforeBody
+      priority: 1
+  - source: ./plugins/home
     enabled: true
     options:
-      title: "Top posts"
-      folder: posts
-      posts:
-        - "posts/building-australia's-largest-highschool-ctf"
-        - "posts/finding-an-unreleased-windows-feature"
-        - "posts/use-a-custom-outlook.com-email-without-godaddy"
+      section: contents
+      postsFolder: posts
     layout:
       position: afterBody
       priority: 5
-      display: mobile-only
-  - source: ./plugins/explorer-tweaks
+  - source: ./plugins/home
     enabled: true
+    options:
+      section: revisions
+      notesFolder: notes
+      recentCount: 8
+    layout:
+      position: right
+      priority: 5
+  # Every page below a folder as one parts list, grouped by subfolder, on the
+  # folder's own page. Posts are listed newest first, notes by title.
+  - source: ./plugins/folder-tree
+    enabled: true
+    options:
+      roots:
+        - notes
+        - posts
+      newestFirst:
+        - posts
+    layout:
+      position: afterBody
+      priority: 1
+  # A plant at the end of each note, drawn as traces and pads from its length
+  # and its links.
+  - source: ./plugins/note-plant
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 3
+  - source: ./plugins/explorer-tweaks
+    enabled: false
     layout:
       position: body
       priority: 110
@@ -277,7 +338,7 @@ plugins:
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
-    enabled: true
+    enabled: false
     options: {}
     order: 25
     layout:
@@ -344,12 +405,14 @@ layout:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     tag:
       exclude:
         - reader-mode
         - tag-list
+        - comments
       positions:
         right: []
     canvas: {}

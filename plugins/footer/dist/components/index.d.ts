@@ -1,2 +1,1 @@
-export { Footer, FooterOptions } from '../index.js';
-import '@quartz-community/types';
+export { Footer } from "../index.js"

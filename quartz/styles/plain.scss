@@ -1,0 +1,80 @@
+// ============================================================================
+// The site with scripting off.
+//
+// The sheet is drawn with CSS alone, so it stays as it is: the frame, the
+// title block, the index and the type. What cannot work without JavaScript is
+// taken off the page (search, the theme switch, reader mode, the graph and
+// the comments), and the colours follow the system's colour scheme, because
+// the theme switch that would set `saved-theme` cannot run.
+//
+// `scripting: none` is true when the browser has scripting turned off:
+// Chrome 120, Firefox 113, Safari 17. An older browser with scripting off
+// gets the light theme with controls that do nothing.
+//
+// A mixin, so that custom.scss can emit these rules after its own: both files
+// are unlayered, and the later rule wins.
+// ============================================================================
+@mixin plain {
+  @media (scripting: none) {
+    .search,
+    .darkmode,
+    .readermode,
+    .graph,
+    .giscus,
+    .clipboard-button {
+      display: none !important;
+    }
+
+    // the table of contents cannot follow the page; its list is still a list
+    // of links, and its button to fold it away is only a label
+    .toc button.toc-header {
+      pointer-events: none;
+
+      .fold {
+        display: none;
+      }
+    }
+  }
+
+  // The dark palette of quartz.config.yaml and of custom.scss, for a system
+  // set to dark. Keep the three in step.
+  @media (scripting: none) and (prefers-color-scheme: dark) {
+    :root {
+      --light: #181b20;
+      --lightgray: #353a43;
+      --gray: #9d9b8f;
+      --darkgray: #e2e0d4;
+      --dark: #f1efe3;
+      --secondary: #7cc987;
+      --tertiary: #e0685f;
+      --highlight: rgba(88, 174, 101, 0.14);
+      --textHighlight: rgba(217, 180, 74, 0.35);
+      --rule: #c4473f;
+      --wire: #58ae65;
+      --label: #63bdb8;
+      --fill: #23272f;
+      --pad: #d9b44a;
+      --via: #c9c7bb;
+      color-scheme: dark;
+    }
+
+    code[data-theme*=" "],
+    code[data-theme*=" "] span {
+      color: var(--shiki-dark);
+    }
+
+    :is(.home-bed, .note-plant) svg {
+      .v {
+        fill: var(--light);
+        stroke: var(--via);
+        stroke-width: 1.5;
+      }
+
+      .b,
+      .p {
+        stroke: none;
+        rx: 2px;
+      }
+    }
+  }
+}
